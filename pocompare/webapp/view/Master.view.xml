@@ -15,7 +15,6 @@
 		<headerTitle>
 			<ObjectPageDynamicHeaderTitle>
 				<heading>
-					<!-- <m:Title text="PO Confirmation" /> -->
 					<core:Fragment fragmentName="com.sap.pocompare.view.fragments.Input" type="XML"/>
 				</heading>
 				<actions>
@@ -28,13 +27,10 @@
 		</headerTitle>
 
 		<headerContent>
-			<!-- <core:Fragment fragmentName="com.sap.pocompare.view.fragments.HeaderContent" type="XML"/> -->
 		</headerContent>
 
 		<sections>
-			<!-- <core:Fragment fragmentName="com.sap.pocompare.view.fragments.sections.IllustratedMessage" type="XML"/> -->
 			<core:Fragment fragmentName="com.sap.pocompare.view.fragments.sections.ProductsTable" type="XML"/>
-			<!-- <core:Fragment fragmentName="com.sap.pocompare.view.fragments.sections.SupplierDetails" type="XML"/> -->
 		</sections>
 		<footer>
 			<m:OverflowToolbar>

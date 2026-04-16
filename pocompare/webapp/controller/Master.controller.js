@@ -62,9 +62,7 @@ sap.ui.define([
                 });
 
                 if (!bIsValid) {
-                    // Punish user: Clear UI and show error
                     that.onClearFile();
-                    // oErrorStrip.setVisible(true);
                     MessageBox.error("Incorrect Template. Please use the official template with the correct columns");
                     return;  
                 }
@@ -109,10 +107,6 @@ sap.ui.define([
 
             var oPayload = { items: aData };
 
-            // sap.ui.core.BusyIndicator.show(0);
-
-            // Bind to your CAP OData V4 action
-            // var oODataModel = this.getOwnerComponent().getModel(); 
             MessageBox.success("Data submitted. Any mismatches will be routed for manager approval.", {
 				actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
 				emphasizedAction: MessageBox.Action.OK,
@@ -123,22 +117,6 @@ sap.ui.define([
 				},
 				dependentOn: this.getView()
 			});
-
-
-
-            // oAction.setParameter("payload", JSON.stringify(oPayload));
-            
-            // oAction.execute().then(function () {
-            //     sap.ui.core.BusyIndicator.hide();
-            //     MessageBox.success("Data submitted. Any mismatches will be routed for manager approval.", {
-            //         onClose: function() {
-            //             this.onClearFile(); // Reset the UI
-            //         }.bind(this)
-            //     });
-            // }.bind(this)).catch(function (oError) {
-            //     sap.ui.core.BusyIndicator.hide();
-            //     MessageBox.error("Failed to submit data: " + oError.message);
-            // });
         },
         onDownloadTemplate: function () {
             // Fetch the specific column configuration for the PO template
@@ -149,7 +127,6 @@ sap.ui.define([
                 workbook: {
                     columns: aCols
                 },
-                // An empty array guarantees no rows are added, keeping it a pure template
                 dataSource: [], 
                 fileName: 'PO_Template.xlsx',
                 worker: false 
@@ -163,12 +140,11 @@ sap.ui.define([
         },
 
         _createColumnConfig: function() {
-            // Defined based on your provided file structure
             return [
                 {
                     label: 'PO Number',
                     property: 'poNumber',
-                    type: 'string', // Stored as a string to preserve leading zeros if any
+                    type: 'string', 
                     width: 20
                 },
                 {
@@ -187,7 +163,7 @@ sap.ui.define([
                     label: 'Delivery Date',
                     property: 'deliveryDate',
                     type: 'date',
-                    format: 'yyyy-MM-dd', // Common standard for SAP/S4HANA date formats
+                    format: 'yyyy-MM-dd', 
                     width: 20
                 }
             ];
