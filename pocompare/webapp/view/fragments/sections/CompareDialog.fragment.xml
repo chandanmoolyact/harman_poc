@@ -1,0 +1,98 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout">
+    
+    <Dialog 
+        contentWidth="900px" 
+        resizable="true"
+        draggable="true"
+        class="sapUiSizeCompact">
+        
+        <customHeader>
+            <Toolbar style="Clear">
+                <Title text="COMPARISON — PO {excelModel>PONumber} / LINE {excelModel>LineItem}" titleStyle="H5" class="sapUiSmallMarginBegin"/>
+            </Toolbar>
+        </customHeader>
+
+        <content>
+            <layout:Grid defaultSpan="L7 M7 S12" class="sapUiSmallMargin">
+                
+                <VBox class="sapUiTinyMarginEnd" style="border: 2px solid #000; border-radius: 4px; padding: 4px;">
+                    <HBox style="background-color: #e3ebf6; padding: 4px 8px; border-radius: 4px;" class="sapUiTinyMarginBottom">
+                        <Title text="VENDOR UPLOADED INFO" level="H6" style="color: #0b4a99;" />
+                    </HBox>
+                    
+                    <Table mode="None" showSeparators="Inner" backgroundDesign="Solid">
+                        <columns>
+                            <Column width="30%"><Text text="QUANTITY" style="color: #0b4a99; font-weight: bold;" /></Column>
+                            <Column width="50%"><Text text="DELIVERY DATE" style="color: #0b4a99; font-weight: bold;" /></Column>
+                            <Column width="20%" hAlign="Center"><Text text="DELETE" style="color: #0b4a99; font-weight: bold;"/></Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <Input value="{excelModel>Quantity}" />
+                                    <DatePicker value="{excelModel>DeliveryDate}" valueFormat="yyyy-MM-dd" displayFormat="MM/dd/yyyy" />
+                                    <Button icon="sap-icon://minus" type="Reject" press=".onDeleteVendorRow" />
+                                </cells>
+                            </ColumnListItem>
+                            <ColumnListItem>
+                                <cells>
+                                    <Input value="" />
+                                    <DatePicker placeholder="MM/DD/YYYY" />
+                                    <Button icon="sap-icon://minus" type="Reject" press=".onDeleteVendorRow" />
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                    
+                    <HBox class="sapUiTinyMargin">
+                        <Button text="+ Add row" type="Transparent" press=".onAddVendorRow" style="color: #0b4a99; border: 1px dashed #0b4a99;" />
+                    </HBox>
+                </VBox>
+
+                <VBox style="background-color: #f7f9fa; border-radius: 4px; padding: 4px;">
+                    <HBox style="padding: 4px 8px;" class="sapUiTinyMarginBottom">
+                        <Title text="SAP PO DATA" level="H6" style="color: #555;" />
+                    </HBox>
+                    
+                    <Table mode="None" showSeparators="Inner" backgroundDesign="Transparent">
+                        <columns>
+                            <Column width="30%"><Text text="QUANTITY" style="color: #555; font-weight: bold;" /></Column>
+                            <Column width="70%"><Text text="DELIVERY DATE" style="color: #555; font-weight: bold;" /></Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="10" />
+                                    <Text text="02/12/2026" />
+                                </cells>
+                            </ColumnListItem>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="5" />
+                                    <Text text="02/20/2026" />
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </VBox>
+            </layout:Grid>
+        </content>
+
+        <footer>
+            <Toolbar>
+                <Button text="Approve" type="Accept" press=".onApprovePress" width="100px" class="sapUiSmallMarginBegin" />
+                <Button text="Reject" type="Reject" press=".onRejectPress" width="100px" />
+                
+                <ToolbarSpacer />
+                
+                <VBox style="border: 1px solid #000; padding: 4px 8px;" class="sapUiSmallMarginEnd">
+                    <Text text="Approval will write vendor dates to SAP schedule lines via BAPI_PO_CHANGE" style="font-style: italic; color: #888;" />
+                </VBox>
+            </Toolbar>
+        </footer>
+        
+    </Dialog>
+</core:FragmentDefinition>

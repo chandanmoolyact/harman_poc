@@ -16,15 +16,6 @@
       "toolsId": "a2bc0d2f-15fb-4e96-bdc6-d8420b1dd0bb"
     },
     "dataSources": {
-      "mainService": {
-        "uri": "/s4hanacloud/sap/opu/odata4/sap/api_purchaseorder_2/srvd_a2x/sap/purchaseorder/0001/",
-        "type": "OData",
-        "settings": {
-          "annotations": [],
-          "localUri": "localService/mainService/metadata.xml",
-          "odataVersion": "4.01"
-        }
-      }
     },
     "crossNavigation": {
       "inbounds": {
@@ -75,15 +66,6 @@
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
           "bundleName": "com.sap.pocompare.i18n.i18n"
-        }
-      },
-      "": {
-        "dataSource": "mainService",
-        "preload": true,
-        "settings": {
-          "operationMode": "Server",
-          "autoExpandSelect": true,
-          "earlyRequests": true
         }
       }
     },

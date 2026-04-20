@@ -3,6 +3,7 @@
     xmlns="sap.uxap"
     xmlns:m="sap.m"
     xmlns:core="sap.ui.core"
+	xmlns:layout="sap.ui.layout"
 	class="sapuiSizeCompact"
     >
     	<ObjectPageLayout
@@ -27,6 +28,18 @@
 		</headerTitle>
 
 		<headerContent>
+			<m:FlexBox id="idHeaderFB" wrap="Wrap" fitContainer="true" binding="{excelModel>/data/0}">
+
+				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+					<m:Label design="Bold" text="Vendor : {excelModel>Vendor} "/>
+				</layout:VerticalLayout>
+				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+					<m:Label design="Bold" text="Material :  {excelModel>Material}"/>
+				</layout:VerticalLayout>
+				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+					<m:Label design="Bold" text="Material Desc : {excelModel>MaterialDesc}"/>
+				</layout:VerticalLayout>
+			</m:FlexBox>
 		</headerContent>
 
 		<sections>

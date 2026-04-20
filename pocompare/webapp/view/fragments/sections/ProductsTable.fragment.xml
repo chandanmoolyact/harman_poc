@@ -10,6 +10,7 @@
 					items="{
 						path: 'excelModel>/data'
 					}"
+					sticky="ColumnHeaders"
 					class="sapUxAPObjectPageSubSectionAlignContent"
 					width="auto">
 					<columns>
@@ -32,14 +33,27 @@
 						<Column hAlign="Center">
 							<Text text="Delivery Date" />
 						</Column>
+						<Column hAlign="Center">
+							<Text text="Actions" />
+						</Column>
+						<Column hAlign="Center">
+							<Text text="Status" />
+						</Column>
 					</columns>
 					<items>
-						<ColumnListItem>
+						<ColumnListItem type="Navigation" press=".onRowPress">
 							<cells>
-								<Text text="{excelModel>PONumber}" />
+								<ObjectIdentifier title="{excelModel>PONumber}" />
 								<Text text="{excelModel>LineItem}" />
 								<Text text="{excelModel>Quantity}" />
 								<Text text="{excelModel>DeliveryDate}" />
+								<FlexBox fitContainer="true" wrap="Wrap" alignItems="Center" justifyContent="Center">
+									<Button type="Accept" icon="sap-icon://accept"></Button>
+									<Button type="Reject" icon="sap-icon://decline"></Button>
+								</FlexBox>
+								<ObjectStatus inverted="true" text="{excelModel>Status}" state="{path:'excelModel>StatusState'}"></ObjectStatus>
+								<Panel visible="{excelModel>PanelVisible}">
+								</Panel>
 							</cells>
 						</ColumnListItem>
 					</items>

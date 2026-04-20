@@ -15,10 +15,6 @@ server:
             - /resources
             - /test-resources
           url: https://ui5.sap.com
-        backend:
-          - path: /s4hanacloud
-            url: https://sandbox.api.sap.com
-            destination: S4HANA_UI
     - name: fiori-tools-appreload
       afterMiddleware: compression
       configuration:
