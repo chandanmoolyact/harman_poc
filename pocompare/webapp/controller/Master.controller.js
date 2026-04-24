@@ -18,8 +18,8 @@ sap.ui.define([
                 data: []
             });
             this.getOwnerComponent().setModel(oModel, "excelModel");
-            this._headerFB=this.getView().byId("idHeaderFB")
-            this._headerFB.setVisible(false)
+            // this._headerFB=this.getView().byId("idHeaderFB")
+            // this._headerFB.setVisible(false)
         },
 
         // Triggered when a file is selected via the FileUploader
@@ -28,7 +28,12 @@ sap.ui.define([
             
             if (aFiles && aFiles.length > 0) {
                 var oFile = aFiles[0];
-                this._readExcel(oFile);
+                this._loadExternalLibrary("https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js").then(function() {
+                    this._readExcel(oFile);
+                }.bind(this))
+                .catch(function() {
+                    sap.m.MessageToast.show("Failed to load the Excel library from CDN.");
+                });
             }
         },
 
@@ -36,7 +41,7 @@ sap.ui.define([
         onClearFile: function () {
             this.byId("excelUploader").clear();
             this.getView().getModel("excelModel").setProperty("/data", []);
-            this._headerFB.setVisible(false)
+            // this._headerFB.setVisible(false)
         },
 
         // Helper function using SheetJS (XLSX)
@@ -97,12 +102,17 @@ sap.ui.define([
                         StatusCode:"1",
                         Status:"New",
                         StatusState:formatter.stateFormatter("1"),
-                        VisiblePanel:false
+                        PanelVisible:false,
+                        VendorInputTable:[{
+                            LineItem: row["Line Item"] || row["LineItem"],
+                            Quantity: row["Quantity"],
+                            DeliveryDate: new Date(row["Delivery Date"] || row["Date"])?.toISOString()?.split('T')[0]
+                        }]
                     };
                 });
 
                 that.getOwnerComponent().getModel("excelModel").setProperty("/data", formattedData);
-                that._headerFB.setVisible(true)
+                // that._headerFB.setVisible(true)
                 MessageToast.show("Excel loaded for preview.");
             };
 
@@ -188,29 +198,89 @@ sap.ui.define([
             ];
         },
         // --- NEW: Handle Row Click & Open Dialog ---
-        onRowPress: function (oEvent) {
-            var oView = this.getView();
-            // Get the specific data context of the row that was clicked
-            var oContext = oEvent.getSource().getBindingContext("excelModel");
+        onRowPress: async function (oEvent) {
+            // var oView = this.getView();
+            // // Get the specific data context of the row that was clicked
+            // var oContext = oEvent.getSource().getBindingContext("excelModel");
 
-            // If the dialog hasn't been created yet, load it
-            if (!this._pCompareDialog) {
-                this._pCompareDialog = Fragment.load({
-                    id: oView.getId(),
-                    // Replace "com.sap.pocompare.view.fragments" with your actual path
-                    name: "com.sap.pocompare.view.fragments.CompareDialog", 
-                    controller: this
-                }).then(function (oDialog) {
-                    oView.addDependent(oDialog);
-                    return oDialog;
-                });
+            // // If the dialog hasn't been created yet, load it
+            // if (!this._pCompareDialog) {
+            //     this._pCompareDialog = await this.loadFragment({
+            //         // id: oView.getId(),
+            //         // Replace "com.sap.pocompare.view.fragments" with your actual path
+            //         name: "com.sap.pocompare.view.fragments.sections.CompareDialog"
+            //         // controller: this
+            //     });
+            //     oView.addDependent(this._pCompareDialog);
+            // }
+
+            // // Once the dialog is ready, bind the row context to it and open
+            // this._pCompareDialog.setBindingContext(oContext, "excelModel");
+            // this._pCompareDialog.open();
+        },
+        onShowExpanded:function(oEvent){
+            let oSource=oEvent.getSource()
+            let oBindingContext=oSource.getBindingContext("excelModel")
+            let oPath=oBindingContext.getPath()
+            let oPanelVisiblePath=oPath+"/PanelVisible"
+
+            let bVisiblePath=this.getOwnerComponent().getModel("excelModel").getProperty(oPanelVisiblePath)
+            if(bVisiblePath){
+                this.getOwnerComponent().getModel("excelModel").setProperty(oPanelVisiblePath,false)
+                oSource.setIcon("sap-icon://dropdown")
+            }else{
+             this.getOwnerComponent().getModel("excelModel").setProperty(oPanelVisiblePath,true)
+             oSource.setIcon("sap-icon://slim-arrow-up")
             }
-
-            // Once the dialog is ready, bind the row context to it and open
-            this._pCompareDialog.then(function (oDialog) {
-                oDialog.setBindingContext(oContext, "excelModel");
-                oDialog.open();
+             
+        },
+        onAddVendorRow: function (oEvent) {
+            // 1. Get the button that was clicked
+            var oButton = oEvent.getSource();
+            
+            // 2. Get the binding context of the outer row 
+            // (since the Add button is outside the inner table, but inside the outer row)
+            var oContext = oButton.getBindingContext("excelModel");
+            var sOuterRowPath = oContext.getPath(); // e.g., "/data/0"
+            
+            // 3. Get the model
+            var oModel = this.getOwnerComponent().getModel("excelModel");
+            
+            // 4. Get the current array for this specific inner table
+            var aVendorInputTable = oModel.getProperty(sOuterRowPath + "/VendorInputTable");
+            
+            // 5. Push a new blank object. 
+            // Make sure the keys match exactly what you defined in your map function
+            aVendorInputTable.push({
+                LineItem: oContext.getProperty("LineItem"), // Optional: carry over the line item
+                Quantity: "",
+                DeliveryDate: "" 
             });
+            
+            // 6. Update the model to trigger the UI refresh
+            oModel.setProperty(sOuterRowPath + "/VendorInputTable", aVendorInputTable);
+        },
+        onDeleteVendorRow: function (oEvent) {
+            // 1. Get the delete button that was clicked inside the inner table row
+            var oButton = oEvent.getSource();
+            
+            // 2. Get the binding context for this specific INNER row
+            var oContext = oButton.getBindingContext("excelModel");
+            var sInnerRowPath = oContext.getPath(); // e.g., "/data/0/VendorInputTable/1"
+            
+            // 3. Get the model
+            var oModel = this.getOwnerComponent().getModel("excelModel");
+            
+            // 4. Split the path to figure out the parent array and the index of the row to delete
+            // sInnerRowPath.lastIndexOf("/") finds the last slash to separate array path from the index
+            var sParentArrayPath = sInnerRowPath.substring(0, sInnerRowPath.lastIndexOf("/")); // "/data/0/VendorInputTable"
+            var sRowIndex = sInnerRowPath.substring(sInnerRowPath.lastIndexOf("/") + 1); // "1"
+            
+            // 5. Get the array, splice out the deleted row, and update the model
+            var aVendorInputTable = oModel.getProperty(sParentArrayPath);
+            aVendorInputTable.splice(parseInt(sRowIndex, 10), 1); 
+            
+            oModel.setProperty(sParentArrayPath, aVendorInputTable);
         },
 
         // --- Dialog Actions ---
@@ -223,6 +293,37 @@ sap.ui.define([
             MessageToast.show("Line Item Rejected!");
             this._closeDialog();
         },
+        onActionTaken:function(oEvent){
+
+            let sButtonText=oEvent.getSource().getText()
+
+
+
+            var oButton = oEvent.getSource();
+            var oContext = oButton.getBindingContext("excelModel");
+            var sInnerRowPath = oContext.getPath();
+        
+            // 3. Get the model
+            var oModel = this.getOwnerComponent().getModel("excelModel");
+            
+            // 4. Split the path to figure out the parent array and the index of the row to delete
+            // sInnerRowPath.lastIndexOf("/") finds the last slash to separate array path from the index
+            // var sParentArrayPath = sInnerRowPath.substring(0, sInnerRowPath.lastIndexOf("/")); // "/data/0/VendorInputTable"
+            // var sRowIndex = sInnerRowPath.substring(sInnerRowPath.lastIndexOf("/") + 1); // "1"
+            
+            // 5. Get the array, splice out the deleted row, and update the model
+            // var aVendorInputTable = oModel.getProperty(sParentArrayPath);
+            let sChangeProperty=sInnerRowPath+"/StatusCode"
+            // var aVendorInputTable = oModel.setProperty(sInnerRowPath,2);
+            // aVendorInputTable.splice(parseInt(sRowIndex, 10), 1); 
+            
+            // oModel.setProperty(sParentArrayPath, aVendorInputTable);
+            if(sButtonText=="Approve"){
+                oModel.setProperty(sInnerRowPath,2);
+            }else if(sButtonText=="Reject"){
+                oModel.setProperty(sInnerRowPath,3);
+            }
+        },
 
         _closeDialog: function () {
             if (this._pCompareDialog) {
@@ -230,6 +331,27 @@ sap.ui.define([
                     oDialog.close();
                 });
             }
+        },
+
+
+
+
+
+        _loadExternalLibrary: function (sUrl) {
+            return new Promise(function (resolve, reject) {
+                // If already loaded, resolve immediately
+                if (window.XLSX) {
+                    resolve();
+                    return;
+                }
+
+                var script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = sUrl;
+                script.onload = resolve;
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
         }
     });
 });
