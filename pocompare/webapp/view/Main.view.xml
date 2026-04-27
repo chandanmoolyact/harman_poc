@@ -27,6 +27,11 @@
 				</heading>
 				<actions>
 					<m:Button 
+						text="Save Template" 
+						icon="sap-icon://excel-attachment" 
+						press=".onSaveTemplate" />
+					<m:Button 
+					visible="false"
 						text="Download Template" 
 						icon="sap-icon://excel-attachment" 
 						press=".onDownloadTemplate" />

@@ -92,26 +92,26 @@ sap.ui.define([
                 var formattedData = jsonData.map(function(row) {
                     return {
                         Vendor: row["Vendor"],
+                        VendorCode: row["Vendor Code"],
+                        VendorName: row["Vendor Name"],
                         Material: row["Material"],
                         MaterialDesc: row["Material Desc"],
-                        PONumber: row["PO Number"] || row["PONumber"],
+                        PONumber: row["PO Number"] || row["PONumber"]||row["PO/PR No."],
                         LineItem: row["Line Item"] || row["LineItem"],
                         Quantity: row["Quantity"],
-                        DeliveryDate: new Date(row["Delivery Date"] || row["Date"])?.toISOString()?.split('T')[0],
+                        DocumentDate: new Date(row["Document Date"])?.toISOString()?.split('T')[0],
                         ScheduleLineCategory:row["Schedule Line Category"],
                         StatusCode:"1",
                         Status:"New",
                         StatusState:formatter.stateFormatter("1"),
                         PanelVisible:false,
-                        VendorInputTable:[{
-                            LineItem: row["Line Item"] || row["LineItem"],
-                            Quantity: row["Quantity"],
-                            DeliveryDate: new Date(row["Delivery Date"] || row["Date"])?.toISOString()?.split('T')[0]
-                        }]
+                        DeliveryDate: new Date(row["Delivery Date"])?.toISOString()?.split('T')[0]
                     };
                 });
 
-                that.getOwnerComponent().getModel("excelModel").setProperty("/data", formattedData);
+                let newData= that.transformDataForTreeTable(formattedData)
+
+                that.getOwnerComponent().getModel("excelModel").setProperty("/data", newData);
                 // that._headerFB.setVisible(true)
                 MessageToast.show("Excel loaded for preview.");
             };
@@ -121,6 +121,64 @@ sap.ui.define([
             };
 
             reader.readAsBinaryString(file);
+        },
+
+
+        transformDataForTreeTable:function(rawJsonString) {
+            const flatData = rawJsonString;
+            const groupedData = {};
+
+            flatData.forEach((item, index) => {
+                // Extract delivery date safely
+                const deliveryDate = item.DeliveryDate
+
+                // Create a unique key for the first hierarchy level
+                const groupKey = `${item.PONumber}_${item.VendorCode}_${deliveryDate}`;
+
+                // LEVEL 1: Initialize the group if it doesn't exist
+                if (!groupedData[groupKey]) {
+                    groupedData[groupKey] = {
+                        PONumber: item.PONumber,
+                        VendorCode: item.VendorCode,
+                        VendorName: item.VendorName,
+                        PanelVisible: item.PanelVisible,
+                        DocumentDate: item.DocumentDate,
+                        // Setting up the array for the next hierarchy level
+                        children: [] 
+                    };
+                }
+
+                // LEVEL 2: Create the line item
+                // Note: Mocking 'LineItemNumber' and 'Quantity' as they are missing in the source
+                const lineItemNum = (groupedData[groupKey].children.length + 1) * 10; 
+                
+                const level2Node = {
+                    LineItemNumber: lineItemNum.toString(),
+                    Material: item.Material,
+                    Quantity: "1", // Mocked quantity
+                    DeliveryDate: item.DeliveryDate,
+                    NextPanelVisible:false,
+                    children: []
+                };
+
+                // LEVEL 3: Create the exact replica of Level 2 (without further children to avoid infinite loops)
+                const level3Node = {
+                    LineItemNumber: level2Node.LineItemNumber,
+                    Material: level2Node.Material,
+                    Quantity: level2Node.Quantity,
+                    DeliveryDate: level2Node.DeliveryDate,
+                    Status:1
+                };
+
+                // Push level 3 into level 2
+                level2Node.children.push(level3Node);
+
+                // Push level 2 into level 1
+                groupedData[groupKey].children.push(level2Node);
+            });
+
+            // Convert the grouped object back into an array for the UI5 JSONModel
+            return Object.values(groupedData);
         },
 
         // Triggered on Submit
@@ -166,6 +224,78 @@ sap.ui.define([
             oSheet.build().finally(function() {
                 oSheet.destroy();
             });
+        },
+        onSaveTemplate: function (oEvent) {
+            var treeData = this.getView().getModel("excelModel").getProperty("/data");
+            var flatExcelData = this.transformTreeToFlatData(treeData);
+
+            // 2. Define your Excel columns
+            var aCols = [
+                { label: 'PO Number', property: 'PONumber', type: 'string' },
+                { label: 'Vendor Code', property: 'VendorCode', type: 'string' },
+                { label: 'Item No.', property: 'LineItemNumber', type: 'string' },
+                { label: 'Material', property: 'Material', type: 'string' },
+                { label: 'Quantity', property: 'Quantity', type: 'string' },
+                { label: 'Delivery Date', property: 'DeliveryDate', type: 'string' }
+            ];
+
+            // 3. Configure and start the export
+            var oSettings = {
+                workbook: { columns: aCols },
+                dataSource: flatExcelData,
+                fileName: 'PurchaseOrders.xlsx'
+            };
+
+            var oSheet = new Spreadsheet(oSettings);
+            oSheet.build().finally(function() {
+                oSheet.destroy();
+            });
+            
+        },
+        transformTreeToFlatData:function(treeData) {
+            const flatData = [];
+
+            // Loop through Level 1 (The PO / Vendor groups)
+            treeData.forEach(groupNode => {
+                // Extract the parent-level data
+                const poNumber = groupNode.PONumber;
+                const vendorCode = groupNode.VendorCode;
+
+                // Check if this group has children (Level 2 Line Items)
+                if (groupNode.children && groupNode.children.length > 0) {
+                    
+                    // Loop through Level 2
+                    groupNode.children.forEach(itemNode => {
+                        
+                        // Reconstruct the flat object
+                        // You can add or modify properties here based on exactly what columns 
+                        // you want your downloaded Excel file to have.
+                        if (itemNode.children && itemNode.children.length > 0) {
+                    
+                            // Loop through Level 3
+                            itemNode.children.forEach(subItemNode => {
+                                
+                                // Reconstruct the flat object
+                                // You can add or modify properties here based on exactly what columns 
+                                // you want your downloaded Excel file to have.
+                                const flatRow = {
+                                    PONumber: poNumber,
+                                    VendorCode: vendorCode,
+                                    LineItemNumber: itemNode.LineItemNumber,
+                                    Material: itemNode.Material,
+                                    Quantity: subItemNode.Quantity,
+                                    DeliveryDate: subItemNode.DeliveryDate
+                                };
+                                
+                                // Push the flattened row to our new array
+                                flatData.push(flatRow);
+                            });
+                        }
+                    });
+                }
+            });
+
+            return flatData;
         },
 
         _createColumnConfig: function() {
@@ -234,6 +364,22 @@ sap.ui.define([
             }
              
         },
+        onSubShowExpanded:function(oEvent){
+            let oSource=oEvent.getSource()
+            let oBindingContext=oSource.getBindingContext("excelModel")
+            let oPath=oBindingContext.getPath()
+            let oPanelVisiblePath=oPath+"/NextPanelVisible"
+
+            let bVisiblePath=this.getOwnerComponent().getModel("excelModel").getProperty(oPanelVisiblePath)
+            if(bVisiblePath){
+                this.getOwnerComponent().getModel("excelModel").setProperty(oPanelVisiblePath,false)
+                oSource.setIcon("sap-icon://dropdown")
+            }else{
+             this.getOwnerComponent().getModel("excelModel").setProperty(oPanelVisiblePath,true)
+             oSource.setIcon("sap-icon://slim-arrow-up")
+            }
+             
+        },
         onAddVendorRow: function (oEvent) {
             // 1. Get the button that was clicked
             var oButton = oEvent.getSource();
@@ -247,18 +393,28 @@ sap.ui.define([
             var oModel = this.getOwnerComponent().getModel("excelModel");
             
             // 4. Get the current array for this specific inner table
-            var aVendorInputTable = oModel.getProperty(sOuterRowPath + "/VendorInputTable");
+            var aVendorInputTable = oModel.getProperty(sOuterRowPath + "/children");
+            var iLINumber;
+            if(aVendorInputTable.length!=0){
+                var iMaxTabLength=aVendorInputTable.length
+                var iMaxLINumber=aVendorInputTable[iMaxTabLength-1].LineItemNumber
+                iLINumber=(Number(iMaxLINumber)+10).toString()
+            }else{
+                iLINumber=10
+            }
             
             // 5. Push a new blank object. 
             // Make sure the keys match exactly what you defined in your map function
+                   
             aVendorInputTable.push({
-                LineItem: oContext.getProperty("LineItem"), // Optional: carry over the line item
-                Quantity: "",
-                DeliveryDate: "" 
+                LineItemNumber: iLINumber, // Optional: carry over the line item
+                Quantity: 0,
+                DeliveryDate: "",
+                Status:1
             });
             
             // 6. Update the model to trigger the UI refresh
-            oModel.setProperty(sOuterRowPath + "/VendorInputTable", aVendorInputTable);
+            oModel.setProperty(sOuterRowPath + "/children", aVendorInputTable);
         },
         onDeleteVendorRow: function (oEvent) {
             // 1. Get the delete button that was clicked inside the inner table row
@@ -266,17 +422,12 @@ sap.ui.define([
             
             // 2. Get the binding context for this specific INNER row
             var oContext = oButton.getBindingContext("excelModel");
-            var sInnerRowPath = oContext.getPath(); // e.g., "/data/0/VendorInputTable/1"
+            var sInnerRowPath = oContext.getPath(); 
             
             // 3. Get the model
             var oModel = this.getOwnerComponent().getModel("excelModel");
-            
-            // 4. Split the path to figure out the parent array and the index of the row to delete
-            // sInnerRowPath.lastIndexOf("/") finds the last slash to separate array path from the index
-            var sParentArrayPath = sInnerRowPath.substring(0, sInnerRowPath.lastIndexOf("/")); // "/data/0/VendorInputTable"
-            var sRowIndex = sInnerRowPath.substring(sInnerRowPath.lastIndexOf("/") + 1); // "1"
-            
-            // 5. Get the array, splice out the deleted row, and update the model
+            var sParentArrayPath = sInnerRowPath.substring(0, sInnerRowPath.lastIndexOf("/")); 
+            var sRowIndex = sInnerRowPath.substring(sInnerRowPath.lastIndexOf("/") + 1); 
             var aVendorInputTable = oModel.getProperty(sParentArrayPath);
             aVendorInputTable.splice(parseInt(sRowIndex, 10), 1); 
             
@@ -324,13 +475,12 @@ sap.ui.define([
         onConfirmationRowPress: function (oEvent) {   
             var oItem = oEvent.getSource();
             var oCtx  = oItem.getBindingContext("excelModel");
-            var oModel = this.getView().getModel("excelModel");
-
-            // Store selected row info so dialog title binds correctly
-            oModel.setProperty("/SelectedLineItem", oCtx.getProperty("LineItem"));
-
-            // Optionally filter SAPPOTable based on selected row key here
-            // oModel.setProperty("/SAPPOTable", this._getFilteredPORows(oCtx));
+            var oModel=this.getOwnerComponent().getModel("excelModel")
+            var oCPath=oCtx.getPath()+"/children"
+            var oExcelTabData=[oCtx.getModel("excelData").getProperty(oCPath)]
+            this.getView().byId("idPOLIDataTable").bindItems(oCPath)
+            
+            // oModel.setProperty(oCPath, oExcelTabData);
 
             if (!this._oDialog) {
                 this._oDialog = this.byId("poDetailDialog");
