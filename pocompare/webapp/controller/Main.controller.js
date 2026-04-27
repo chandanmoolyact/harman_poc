@@ -10,7 +10,7 @@ sap.ui.define([
     "use strict";
     var that=this;
 
-    return Controller.extend("com.sap.pocompare.controller.Master", {
+    return Controller.extend("com.sap.pocompare.controller.Main", {
         formattter:formatter,
         onInit() {
             // Initialize the model that will hold our Excel data
@@ -72,15 +72,15 @@ sap.ui.define([
                 ];
 
                 // VALIDATION: Check if every required header exists in the uploaded file
-                var bIsValid = REQUIRED_HEADERS.every(function (header) {
-                    return headers.includes(header);
-                });
+                // var bIsValid = REQUIRED_HEADERS.every(function (header) {
+                //     return headers.includes(header);
+                // });
 
-                if (!bIsValid) {
-                    that.onClearFile();
-                    MessageBox.error("Incorrect Template. Please use the official template with the correct columns");
-                    return;  
-                }
+                // if (!bIsValid) {
+                //     that.onClearFile();
+                //     MessageBox.error("Incorrect Template. Please use the official template with the correct columns");
+                //     return;  
+                // }
 
                 // Convert to JSON
                 var jsonData = XLSX.utils.sheet_to_json(worksheet, {
@@ -318,6 +318,29 @@ sap.ui.define([
                 this._pCompareDialog.then(function (oDialog) {
                     oDialog.close();
                 });
+            }
+        },
+
+        onConfirmationRowPress: function (oEvent) {   
+            var oItem = oEvent.getSource();
+            var oCtx  = oItem.getBindingContext("excelModel");
+            var oModel = this.getView().getModel("excelModel");
+
+            // Store selected row info so dialog title binds correctly
+            oModel.setProperty("/SelectedLineItem", oCtx.getProperty("LineItem"));
+
+            // Optionally filter SAPPOTable based on selected row key here
+            // oModel.setProperty("/SAPPOTable", this._getFilteredPORows(oCtx));
+
+            if (!this._oDialog) {
+                this._oDialog = this.byId("poDetailDialog");
+            }
+            this._oDialog.open();
+        },
+
+        onCloseDialog: function () {
+            if (this._oDialog) {
+                this._oDialog.close();
             }
         },
 

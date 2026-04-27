@@ -1,0 +1,182 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core"
+	xmlns:layout="sap.ui.layout"
+	xmlns:uxap="sap.uxap">
+	<uxap:ObjectPageSection title="Purchase Order Items" visible="true" titleUppercase="false">
+		<uxap:subSections>
+			<uxap:ObjectPageSubSection>
+				<Table
+					id="idPOTable"
+					items="{
+						path: 'excelModel>/data'
+					}"
+					sticky="ColumnHeaders"
+					class="sapUxAPObjectPageSubSectionAlignContent"
+					width="auto">
+					<columns>
+						<Column width="12rem" minScreenWidth="Tablet"
+							demandPopin="true" 
+							hAlign="Center">
+							<Text text="PO Number" wrapping="true" />
+						</Column>
+						<Column minScreenWidth="Tablet"
+							demandPopin="true" popinDisplay="Inline"
+							hAlign="Center" >
+							<Text text="Vendor" wrapping="true" />
+						</Column>
+						<Column minScreenWidth="Tablet"
+							demandPopin="true" popinDisplay="Inline"
+							hAlign="Center" >
+							<Text text="Vendor Description" wrapping="true" />
+						</Column>
+						<!-- <Column minScreenWidth="Tablet"
+							demandPopin="true" popinDisplay="Inline"
+							hAlign="Center">
+							<Text text="Material" wrapping="true" />
+						</Column>
+						<Column minScreenWidth="Tablet"
+							demandPopin="true" popinDisplay="Inline"
+							hAlign="Center">
+							<Text text="Material Description" wrapping="true" />
+						</Column>
+						<Column
+							minScreenWidth="Tablet"
+							demandPopin="true" popinDisplay="Inline"
+							hAlign="Center">
+							<Text text="Line Item" wrapping="true" />
+						</Column>
+						<Column
+							minScreenWidth="Tablet"
+							demandPopin="true" popinDisplay="Inline"
+							hAlign="Center">
+						<Text text="Quantity" wrapping="true" />
+						</Column>
+						
+						<Column minScreenWidth="Tablet"
+							demandPopin="true"
+							hAlign="Center" popinDisplay="Inline">
+							<Text text="Status" wrapping="true"/>
+						</Column> -->
+						<Column 
+						minScreenWidth="Tablet"
+							demandPopin="true" popinDisplay="Inline"
+							hAlign="Center">
+							<Text text="Delivery Date" wrapping="true" />
+						</Column>
+						<Column minScreenWidth="10000px" demandPopin="true" popinDisplay="WithoutHeader">
+							<Text text="Additional Details" />
+						</Column>
+					</columns>
+					<items>
+						<ColumnListItem type="Active" press=".onRowPress">
+							<cells>
+								<ObjectIdentifier title="{excelModel>PONumber}" />
+								<Text text="{excelModel>Vendor}" />
+								<Text text="{excelModel>VendorDescription}" />
+								<!-- <Text text="{excelModel>Material}" />
+								<Text text="{excelModel>MaterialDesc}" />
+								<Text text="{excelModel>LineItem}" />
+								<Text text="{excelModel>Quantity}" /> -->
+								<!-- <Text text="{excelModel>DeliveryDate}" />
+								<FlexBox fitContainer="true" wrap="Wrap" alignItems="Center" justifyContent="Center">
+									<ObjectStatus inverted="true" text="{excelModel>Status}" state="{path:'excelModel>StatusState'}"></ObjectStatus>
+									<Button type="Transparent" icon="sap-icon://dropdown" press="onShowExpanded"></Button>  
+								</FlexBox> -->
+								<FlexBox fitContainer="true" wrap="Wrap" alignItems="Center" justifyContent="Center">
+									<Text text="{excelModel>DeliveryDate}" />
+									<Button type="Transparent" icon="sap-icon://dropdown" press="onShowExpanded"></Button>  
+								</FlexBox>
+								
+								<!-- <Panel visible="{excelModel>PanelVisible}">
+									<core:Fragment fragmentName="com.sap.pocompare.view.fragments.sections.ComparePanel" type="XML"/>
+								</Panel> -->
+
+
+								<Panel visible="{excelModel>PanelVisible}" width="auto" accessibleRole="Region">
+									<content>
+										<!-- TABLE 1: Confirmations List -->
+										<Table id="confirmationsTable"
+											mode="None"
+											showSeparators="All"
+											backgroundDesign="Transparent"
+											class="sapUiSizeCompact"
+											items="{excelModel>VendorInputTable}">
+											<columns>
+												<Column hAlign="Center" width="8%"><Text text="CC"/></Column>
+												<Column hAlign="Center" width="15%"><Text text="Delivery Date"/></Column>
+												<Column hAlign="Center" width="10%"><Text text="Time"/></Column>
+												<Column hAlign="Center" width="12%"><Text text="Quantity"/></Column>
+												<Column hAlign="Center" width="15%"><Text text="Reference"/></Column>
+												<Column hAlign="Center" width="12%"><Text text="Created On"/></Column>
+												<Column hAlign="Center" width="10%"><Text text="Inb. Deliv."/></Column>
+												<Column hAlign="Center" width="8%"><Text text="Itm"/></Column>
+												<Column hAlign="Center" width="10%"><Text text="MPN Material"/></Column>
+											</columns>
+											<items>
+												<ColumnListItem press=".onConfirmationRowPress" type="Active">
+													<cells>
+														<Text text="{excelModel>CC}"/>
+														<Text text="{excelModel>DeliveryDate}"/>
+														<Text text="{excelModel>Time}"/>
+														<Text text="{excelModel>Quantity}"/>
+														<Text text="{excelModel>Reference}"/>
+														<Text text="{excelModel>CreatedOn}"/>
+														<Text text="{excelModel>InbDeliv}"/>
+														<Text text="{excelModel>Itm}"/>
+														<Text text="{excelModel>MPNMaterial}"/>
+													</cells>
+												</ColumnListItem>
+											</items>
+										</Table>
+
+										<!-- Approve / Reject -->
+										<FlexBox fitContainer="true" wrap="Wrap" alignItems="Center" justifyContent="End" class="sapUiSmallMarginTop">
+											<Button press="onActionTaken" text="Approve" type="Accept" icon="sap-icon://accept"/>
+											<Button press="onActionTaken" text="Reject"  type="Reject" icon="sap-icon://decline"/>
+										</FlexBox>
+									</content>
+								</Panel>
+								
+							</cells>
+						</ColumnListItem>
+					</items>
+				</Table>
+				<Dialog id="poDetailDialog"
+					title="SAP PO Data — {excelModel>PONumber} / Line {excelModel>SelectedLineItem}"
+					contentWidth="600px"
+					resizable="true"
+					draggable="true">
+				<content>
+					<Table id="poDetailTable"
+						mode="None"
+						showSeparators="All"
+						backgroundDesign="Transparent"
+						class="sapUiSizeCompact sapUiSmallMargin"
+						items="{excelModel>SAPPOTable}">
+						<columns>
+							<Column hAlign="Center" width="20%"><Text text="Quantity"/></Column>
+							<Column hAlign="Center" width="30%"><Text text="Delivery Date"/></Column>
+							<Column hAlign="Center" width="25%"><Text text="Net Price"/></Column>
+							<Column hAlign="Center" width="25%"><Text text="Currency"/></Column>
+						</columns>
+						<items>
+							<ColumnListItem>
+								<cells>
+									<Text text="{excelModel>Quantity}"/>
+									<Text text="{excelModel>DeliveryDate}"/>
+									<Text text="{excelModel>NetPrice}"/>
+									<Text text="{excelModel>Currency}"/>
+								</cells>
+							</ColumnListItem>
+						</items>
+					</Table>
+				</content>
+				<beginButton>
+					<Button text="Close" press=".onCloseDialog"/>
+				</beginButton>
+			</Dialog>
+			</uxap:ObjectPageSubSection>
+		</uxap:subSections>
+	</uxap:ObjectPageSection>
+</core:FragmentDefinition>

@@ -1,0 +1,40 @@
+<!-- <core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core"
+	xmlns:layout="sap.ui.layout"
+	xmlns:uxap="sap.uxap">
+<Dialog id="poDetailDialog"
+        title="SAP PO Data — {excelModel>PONumber} / Line {excelModel>SelectedLineItem}"
+        contentWidth="600px"
+        resizable="true"
+        draggable="true">
+    <content>
+        <Table id="poDetailTable"
+               mode="None"
+               showSeparators="All"
+               backgroundDesign="Transparent"
+               class="sapUiSizeCompact sapUiSmallMargin"
+               items="{excelModel>SAPPOTable}">
+            <columns>
+                <Column hAlign="Center" width="20%"><Text text="Quantity"/></Column>
+                <Column hAlign="Center" width="30%"><Text text="Delivery Date"/></Column>
+                <Column hAlign="Center" width="25%"><Text text="Net Price"/></Column>
+                <Column hAlign="Center" width="25%"><Text text="Currency"/></Column>
+            </columns>
+            <items>
+                <ColumnListItem>
+                    <cells>
+                        <Text text="{excelModel>Quantity}"/>
+                        <Text text="{excelModel>DeliveryDate}"/>
+                        <Text text="{excelModel>NetPrice}"/>
+                        <Text text="{excelModel>Currency}"/>
+                    </cells>
+                </ColumnListItem>
+            </items>
+        </Table>
+    </content>
+    <beginButton>
+        <Button text="Close" press=".onCloseDialog"/>
+    </beginButton>
+</Dialog>
+</core:FragmentDefinition> -->

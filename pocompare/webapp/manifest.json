@@ -90,10 +90,10 @@
       },
       "routes": [
         {
-          "name": "RouteMaster",
+          "name": "RouteMain",
           "pattern": ":?query:",
           "target": [
-            "TargetMaster"
+            "TargetMain"
           ]
         }
       ],
@@ -101,6 +101,10 @@
         "TargetMaster": {
           "id": "Master",
           "name": "Master"
+        },
+        "TargetMain": {
+          "id": "Main",
+          "name": "Main"
         }
       }
     },
