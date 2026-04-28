@@ -104,6 +104,7 @@ sap.ui.define([
                         StatusCode:"1",
                         Status:"New",
                         StatusState:formatter.stateFormatter("1"),
+                        StatusMsg:formatter.statusDescription("1"),
                         PanelVisible:false,
                         DeliveryDate: new Date(row["Delivery Date"])?.toISOString()?.split('T')[0]
                     };
@@ -167,7 +168,9 @@ sap.ui.define([
                     Material: level2Node.Material,
                     Quantity: level2Node.Quantity,
                     DeliveryDate: level2Node.DeliveryDate,
-                    Status:1
+                    Status:1,
+                    StatusState:formatter.stateFormatter("1"),
+                    StatusMsg:formatter.statusDescription("1")
                 };
 
                 // Push level 3 into level 2
@@ -238,7 +241,9 @@ sap.ui.define([
                 { label: 'Material', property: 'Material', type: 'string' },
                 { label: 'Quantity', property: 'Quantity', type: 'string' },
                 { label: 'Delivery Date', property: 'DeliveryDate', type: 'string' },
-                { label: 'Document Date', property: 'DocumentDate', type: 'string' }
+                { label: 'Document Date', property: 'DocumentDate', type: 'string' },
+                { label: 'Status', property: 'Status', type: 'string' },
+                { label: 'StatusMsg', property: 'StatusMsg', type: 'string' },
             ];
 
             // 3. Configure and start the export
@@ -290,7 +295,10 @@ sap.ui.define([
                                     Material: itemNode.Material,
                                     Quantity: subItemNode.Quantity,
                                     DeliveryDate: subItemNode.DeliveryDate,
-                                    DocumentDate:docDate
+                                    DocumentDate:docDate,
+                                    Status:subItemNode.Status,
+                                    StatusMsg:subItemNode.StatusMsg
+                                    // StatusState:formatter.StatusState
                                 };
                                 
                                 // Push the flattened row to our new array
@@ -404,7 +412,9 @@ sap.ui.define([
                 LineItemNumber: iLINumber,
                 Quantity: 0,
                 DeliveryDate: "",
-                Status:1
+                Status:1,
+                StatusMsg:formatter.stateFormatter("1"),
+                StatusState:formatter.statusDescription("1")
             });
             
             // 6. Update the model to trigger the UI refresh
@@ -429,7 +439,9 @@ sap.ui.define([
                 LineItemNumber: iLINumber,
                 Quantity: 0,
                 DeliveryDate: "",
-                Status:1
+                Status:1,
+                StatusMsg:formatter.statusDescription("1"),
+                StatusState:formatter.stateFormatter("1")
             });
             oSPModel.setProperty("/",aVendorInputTable)
             // 6. Update the model to trigger the UI refresh
@@ -474,7 +486,7 @@ sap.ui.define([
             let iNewIndex = oSPModelData.findIndex(item => item.LineItemNumber == iLINumber);
             if (iIndex > -1) {
                 oModelData.splice(iIndex, 1);
-                oSPModelData.splice(iNewIndex, 1);
+                // oSPModelData.splice(iNewIndex, 1);
                 oModel.refresh(); 
                 oSPModel.refresh(); 
             }
@@ -501,16 +513,23 @@ sap.ui.define([
 
 
             var oButton = oEvent.getSource();
-            var oContext = oButton.getBindingContext("excelModel");
+            var oContext = oButton.getBindingContext("alSidePanel");
             var sInnerRowPath = oContext.getPath();
         
             // 3. Get the model
             var oModel = this.getOwnerComponent().getModel("excelModel");
-            let sChangeProperty=sInnerRowPath+"/StatusCode"
+            var oSPModel = this.getOwnerComponent().getModel("alSidePanel");
+            let sChangePropertyStatus=sInnerRowPath+"/Status"
+            let sChangePropertyStatusMsg=sInnerRowPath+"/StatusMsg"
+            let sChangePropertyStatusState=sInnerRowPath+"/StatusState"
             if(sButtonText=="Approve"){
-                oModel.setProperty(sInnerRowPath,2);
+                oSPModel.setProperty(sChangePropertyStatus,2);
+                oSPModel.setProperty(sChangePropertyStatusMsg,formatter.statusDescription("2"));
+                oSPModel.setProperty(sChangePropertyStatusState,formatter.stateFormatter("2"));
             }else if(sButtonText=="Reject"){
-                oModel.setProperty(sInnerRowPath,3);
+                oSPModel.setProperty(sChangePropertyStatus,3);
+                oSPModel.setProperty(sChangePropertyStatusMsg,formatter.statusDescription("3"));
+                oSPModel.setProperty(sChangePropertyStatusState,formatter.stateFormatter("3"));
             }
         },
 

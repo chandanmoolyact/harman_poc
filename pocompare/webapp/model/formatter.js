@@ -18,6 +18,15 @@ function (JSONModel, Device) {
             }else if(sStatus=="3"){
                 return "Error"
             }
+        },
+        statusDescription: function (sStatus) {
+            if(sStatus=="1"){
+                return "Pending"
+            }else if(sStatus=="2"){
+                return "Approved"
+            }else if(sStatus=="3"){
+                return "Rejected"
+            }
         }
     };
 

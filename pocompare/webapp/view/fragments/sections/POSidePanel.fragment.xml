@@ -5,6 +5,7 @@
 	xmlns:uxap="sap.uxap">
     <Panel visible="{alSidePanel>NextPanelVisible}" width="auto" accessibleRole="Region">
         <content>
+        <ScrollContainer height="600px" vertical="true" horizontal="false">
         <Table id="idPOItemsSPTable"
             mode="None"
             showSeparators="All"
@@ -37,6 +38,12 @@
                 minScreenWidth="10000px"
                     demandPopin="true" popinDisplay="Inline"
                     hAlign="Center">
+                    <Text text="Status" wrapping="true" />
+                </Column>
+                <Column 
+                minScreenWidth="10000px"
+                    demandPopin="true" popinDisplay="Inline"
+                    hAlign="Center">
                     <Text text="Action" wrapping="true" />
                 </Column>
                 
@@ -46,16 +53,18 @@
                     <cells>
                         <Input value="{alSidePanel>Quantity}" editable="true"/>
                         <DatePicker value="{alSidePanel>DeliveryDate}" valueFormat="yyyy-MM-dd" displayFormat="MM/dd/yyyy" />
-                        <Button icon="sap-icon://delete" type="Reject" press=".onDeleteVendorRowSP" />
+                        <!-- <Text text="{alSidePanel>Status}" /> -->
+                        <ObjectStatus inverted="true" text="{alSidePanel>StatusMsg}" state="{path:'alSidePanel>StatusState'}"></ObjectStatus>
+                        <FlexBox fitContainer="true" wrap="Wrap" alignItems="Center" justifyContent="Center">
+                            <Button press="onActionTaken" text="Approve" type="Accept" icon="sap-icon://accept"/>
+                            <Button press="onActionTaken" text="Reject"  type="Reject" icon="sap-icon://decline"/>
+                            <Button icon="sap-icon://delete" type="Reject" press=".onDeleteVendorRowSP" />
+                        </FlexBox>
                     </cells>
                 </ColumnListItem>
             </items>
         </Table>
-        <!-- Approve / Reject -->
-        <FlexBox fitContainer="true" wrap="Wrap" alignItems="Center" justifyContent="End" class="sapUiSmallMarginTop">
-            <Button press="onActionTaken" text="Approve" type="Accept" icon="sap-icon://accept"/>
-            <Button press="onActionTaken" text="Reject"  type="Reject" icon="sap-icon://decline"/>
-        </FlexBox>
+        </ScrollContainer>
         </content>
     </Panel>		
 </core:FragmentDefinition>

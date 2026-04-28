@@ -22,7 +22,7 @@
 	
     	<ObjectPageLayout
 		id="idObjectPageLayout"
-		showFooter="true"
+		showFooter="false"
 		showHeaderContent="true"
 		toggleHeaderOnTitleClick="true"
 		upperCaseAnchorBar="false">

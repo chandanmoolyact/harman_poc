@@ -152,10 +152,10 @@
 																</items>
 															</Table>
 															<!-- Approve / Reject -->
-															<FlexBox fitContainer="true" wrap="Wrap" alignItems="Center" justifyContent="End" class="sapUiSmallMarginTop">
+															<!-- <FlexBox fitContainer="true" wrap="Wrap" alignItems="Center" justifyContent="End" class="sapUiSmallMarginTop">
 																<Button press="onActionTaken" text="Approve" type="Accept" icon="sap-icon://accept"/>
 																<Button press="onActionTaken" text="Reject"  type="Reject" icon="sap-icon://decline"/>
-															</FlexBox>
+															</FlexBox> -->
 															</content>
 														</Panel>
 													</cells>
