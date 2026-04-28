@@ -21,18 +21,18 @@
 							<Text text="PO Number" wrapping="true" />
 						</Column>
 						<Column minScreenWidth="Tablet"
-							demandPopin="true" popinDisplay="Inline"
+							demandPopin="true" popinDisplay="Inline" 
 							hAlign="Center" >
 							<Text text="Vendor" wrapping="true" />
 						</Column>
 						<Column minScreenWidth="Tablet"
-							demandPopin="true" popinDisplay="Inline"
+							demandPopin="true" popinDisplay="Inline"  
 							hAlign="Center" >
 							<Text text="Vendor Description" wrapping="true" />
 							
 						</Column>
 						<Column 
-						minScreenWidth="Tablet"
+						minScreenWidth="Tablet"  
 							demandPopin="true" popinDisplay="Inline"
 							hAlign="Center">
 							<Text text="Document Date" wrapping="true" />

@@ -233,10 +233,12 @@ sap.ui.define([
             var aCols = [
                 { label: 'PO Number', property: 'PONumber', type: 'string' },
                 { label: 'Vendor Code', property: 'VendorCode', type: 'string' },
+                { label: 'Vendor Name', property: 'VendorName', type: 'string' },
                 { label: 'Item No.', property: 'LineItemNumber', type: 'string' },
                 { label: 'Material', property: 'Material', type: 'string' },
                 { label: 'Quantity', property: 'Quantity', type: 'string' },
-                { label: 'Delivery Date', property: 'DeliveryDate', type: 'string' }
+                { label: 'Delivery Date', property: 'DeliveryDate', type: 'string' },
+                { label: 'Document Date', property: 'DocumentDate', type: 'string' }
             ];
 
             // 3. Configure and start the export
@@ -260,6 +262,8 @@ sap.ui.define([
                 // Extract the parent-level data
                 const poNumber = groupNode.PONumber;
                 const vendorCode = groupNode.VendorCode;
+                const vendorName = groupNode.VendorName;
+                const docDate = groupNode.DocumentDate;
 
                 // Check if this group has children (Level 2 Line Items)
                 if (groupNode.children && groupNode.children.length > 0) {
@@ -281,10 +285,12 @@ sap.ui.define([
                                 const flatRow = {
                                     PONumber: poNumber,
                                     VendorCode: vendorCode,
+                                    VendorName: vendorName,
                                     LineItemNumber: itemNode.LineItemNumber,
                                     Material: itemNode.Material,
                                     Quantity: subItemNode.Quantity,
-                                    DeliveryDate: subItemNode.DeliveryDate
+                                    DeliveryDate: subItemNode.DeliveryDate,
+                                    DocumentDate:docDate
                                 };
                                 
                                 // Push the flattened row to our new array
@@ -381,18 +387,10 @@ sap.ui.define([
              
         },
         onAddVendorRow: function (oEvent) {
-            // 1. Get the button that was clicked
             var oButton = oEvent.getSource();
-            
-            // 2. Get the binding context of the outer row 
-            // (since the Add button is outside the inner table, but inside the outer row)
             var oContext = oButton.getBindingContext("excelModel");
             var sOuterRowPath = oContext.getPath(); // e.g., "/data/0"
-            
-            // 3. Get the model
             var oModel = this.getOwnerComponent().getModel("excelModel");
-            
-            // 4. Get the current array for this specific inner table
             var aVendorInputTable = oModel.getProperty(sOuterRowPath + "/children");
             var iLINumber;
             if(aVendorInputTable.length!=0){
@@ -402,12 +400,8 @@ sap.ui.define([
             }else{
                 iLINumber=10
             }
-            
-            // 5. Push a new blank object. 
-            // Make sure the keys match exactly what you defined in your map function
-                   
             aVendorInputTable.push({
-                LineItemNumber: iLINumber, // Optional: carry over the line item
+                LineItemNumber: iLINumber,
                 Quantity: 0,
                 DeliveryDate: "",
                 Status:1
@@ -415,6 +409,31 @@ sap.ui.define([
             
             // 6. Update the model to trigger the UI refresh
             oModel.setProperty(sOuterRowPath + "/children", aVendorInputTable);
+        },
+        onAddVendorRowSP: function (oEvent) {
+            var oButton = oEvent.getSource();
+            var oContext = oButton.getBindingContext("alSidePanel");
+            // var sOuterRowPath = oContext.getPath(); // e.g., "/data/0"
+            var oModel = this.getOwnerComponent().getModel("excelModel");
+            var oSPModel = this.getOwnerComponent().getModel("alSidePanel");
+            var aVendorInputTable=oModel.getProperty(this.sCurrentPath)
+            var iLINumber;
+            if(aVendorInputTable.length!=0){
+                var iMaxTabLength=aVendorInputTable.length
+                var iMaxLINumber=aVendorInputTable[iMaxTabLength-1].LineItemNumber
+                iLINumber=(Number(iMaxLINumber)+10).toString()
+            }else{
+                iLINumber=10
+            }
+            aVendorInputTable.push({
+                LineItemNumber: iLINumber,
+                Quantity: 0,
+                DeliveryDate: "",
+                Status:1
+            });
+            oSPModel.setProperty("/",aVendorInputTable)
+            // 6. Update the model to trigger the UI refresh
+            oModel.setProperty(this.sCurrentPath, aVendorInputTable);
         },
         onDeleteVendorRow: function (oEvent) {
             // 1. Get the delete button that was clicked inside the inner table row
@@ -432,6 +451,37 @@ sap.ui.define([
             aVendorInputTable.splice(parseInt(sRowIndex, 10), 1); 
             
             oModel.setProperty(sParentArrayPath, aVendorInputTable);
+        },
+        onDeleteVendorRowSP: function (oEvent) {
+            // 1. Get the delete button that was clicked inside the inner table row
+            var oButton = oEvent.getSource();
+            
+            // 2. Get the binding context for this specific INNER row
+            var oContext = oButton.getBindingContext("alSidePanel");
+            var sInnerRowPath = oContext.getPath(); 
+            
+            // 3. Get the model
+            var oModel = this.getOwnerComponent().getModel("excelModel");
+            var oModelData = this.getOwnerComponent().getModel("excelModel").getProperty(this.sCurrentPath);
+            var oSPModel = this.getOwnerComponent().getModel("alSidePanel");
+            var oSPModelData = this.getOwnerComponent().getModel("alSidePanel").getProperty("/");
+            // var sParentArrayPath = sInnerRowPath.substring(0, sInnerRowPath.lastIndexOf("/")); 
+            // var sRowIndex = sInnerRowPath.substring(sInnerRowPath.lastIndexOf("/") + 1); 
+            var aVendorInputTable = oSPModel.getProperty(sInnerRowPath);
+            var iLINumber=aVendorInputTable?.LineItemNumber
+
+            let iIndex = oModelData.findIndex(item => item.LineItemNumber == iLINumber);
+            let iNewIndex = oSPModelData.findIndex(item => item.LineItemNumber == iLINumber);
+            if (iIndex > -1) {
+                oModelData.splice(iIndex, 1);
+                oSPModelData.splice(iNewIndex, 1);
+                oModel.refresh(); 
+                oSPModel.refresh(); 
+            }
+            // aVendorInputTable.splice(parseInt(sRowIndex, 10), 1); 
+            
+            // oModel.setProperty(this.sCurrentPath, oModelData);
+            // oSPModel.setProperty(sInnerRowPath, oSPModelData);
         },
 
         // --- Dialog Actions ---
@@ -477,15 +527,18 @@ sap.ui.define([
             var oCtx  = oItem.getBindingContext("excelModel");
             var oModel=this.getOwnerComponent().getModel("excelModel")
             var oCPath=oCtx.getPath()+"/children"
-            var oExcelTabData=[oCtx.getModel("excelData").getProperty(oCPath)]
-            this.getView().byId("idPOLIDataTable").bindItems(oCPath)
+            this.sCurrentPath=oCPath;
+            var oExcelTabData=oCtx.getModel("excelData").getProperty(oCPath)
+            var oSPJSONModel=new JSONModel(oExcelTabData)
+            // this.getView().byId("idPOLIDataTable").bindItems(oCPath)
+            this.getOwnerComponent().setModel(oSPJSONModel,"alSidePanel")
             
             // oModel.setProperty(oCPath, oExcelTabData);
 
-            if (!this._oDialog) {
-                this._oDialog = this.byId("poDetailDialog");
-            }
-            this._oDialog.open();
+            // if (!this._oDialog) {
+            //     this._oDialog = this.byId("poDetailDialog");
+            // }
+            // this._oDialog.open();
         },
 
         onCloseDialog: function () {

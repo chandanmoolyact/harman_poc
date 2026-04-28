@@ -13,6 +13,13 @@
 			homeIcon="https://upload.wikimedia.org/wikipedia/commons/c/c2/Harman_International_logo.svg"
 			notificationsNumber="2">
 	</f:ShellBar> -->
+	<m:Page showHeader="false">
+
+	<m:content>
+	<f:SidePanel id="mySidePanel" toggle="onToggle">
+				<f:mainContent>
+	
+	
     	<ObjectPageLayout
 		id="idObjectPageLayout"
 		showFooter="true"
@@ -65,5 +72,15 @@
 		</footer>
 
 	</ObjectPageLayout>
+	</f:mainContent>
+				<f:items>
+					<f:SidePanelItem  icon="sap-icon://document" text="PO Line Item">
+						<core:Fragment fragmentName="com.sap.pocompare.view.fragments.sections.POSidePanel" type="XML"/>
+						
+					</f:SidePanelItem>
+				</f:items>
+			</f:SidePanel>
+			</m:content>
+			</m:Page>
 	
 </mvc:View>
