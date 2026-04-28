@@ -10,10 +10,7 @@
 					id="idPOTable"
 					items="{
 						path: 'excelModel>/data'
-					}"
-					sticky="ColumnHeaders"
-					class="sapUxAPObjectPageSubSectionAlignContent"
-					width="auto">
+					}">
 					<columns>
 						<Column minScreenWidth="Tablet"
 							demandPopin="true" 
@@ -58,7 +55,6 @@
 
 								<Panel visible="{excelModel>PanelVisible}" width="auto" accessibleRole="Region">
 									<content>
-										<!-- TABLE 1: Confirmations List -->
 										<Table id="confirmationsTable"
 											mode="None"
 											showSeparators="All"
@@ -76,12 +72,6 @@
 													hAlign="Center" >
 													<Text text="Material" wrapping="true" />
 												</Column>
-												<!-- <Column 
-												minScreenWidth="Tablet"
-													demandPopin="true" popinDisplay="Inline"
-													hAlign="Center">
-													<Text text="Quantity" wrapping="true" />
-												</Column> -->
 												<Column 
 												minScreenWidth="Tablet"
 													demandPopin="true" popinDisplay="Inline"
@@ -98,7 +88,6 @@
 													<cells>
 														<Text text="{excelModel>LineItemNumber}"/>
 														<Text text="{excelModel>Material}"/>
-														<!-- <Text text="{excelModel>Quantity}"/> -->
 														<FlexBox fitContainer="true" wrap="Wrap" alignItems="Center" justifyContent="Center">
 															<Text text="{excelModel>DeliveryDate}" />
 															<Button type="Transparent" icon="sap-icon://dropdown" press="onSubShowExpanded"></Button>  
@@ -151,11 +140,6 @@
 																	</ColumnListItem>
 																</items>
 															</Table>
-															<!-- Approve / Reject -->
-															<!-- <FlexBox fitContainer="true" wrap="Wrap" alignItems="Center" justifyContent="End" class="sapUiSmallMarginTop">
-																<Button press="onActionTaken" text="Approve" type="Accept" icon="sap-icon://accept"/>
-																<Button press="onActionTaken" text="Reject"  type="Reject" icon="sap-icon://decline"/>
-															</FlexBox> -->
 															</content>
 														</Panel>
 													</cells>
