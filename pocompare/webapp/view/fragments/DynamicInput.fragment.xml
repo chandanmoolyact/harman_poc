@@ -1,0 +1,17 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:u="sap.ui.unified"
+	xmlns:core="sap.ui.core">
+	<u:FileUploader
+	class="sapUiTinyMarginTop"
+		id="excelUploader"
+		name="excelUpload"
+		buttonText="Browse..."
+		icon="sap-icon://excel-attachment"
+		tooltip="Select your Excel file"
+		fileType="xlsx,xls"
+		change="onFileChange"
+		style="Emphasized"
+		placeholder="Choose an Excel file (.xlsx, .xls)" 
+		width="400px"/>
+</core:FragmentDefinition>

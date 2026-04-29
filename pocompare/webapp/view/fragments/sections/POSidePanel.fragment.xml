@@ -5,7 +5,7 @@
 	xmlns:uxap="sap.uxap">
     <Panel visible="{alSidePanel>NextPanelVisible}" width="auto" accessibleRole="Region">
         <content>
-        <ScrollContainer height="500px" vertical="true" horizontal="false">
+        <ScrollContainer height="375px" vertical="true" horizontal="false">
         <Table id="idPOItemsSPTable"
             mode="None"
             showSeparators="All"

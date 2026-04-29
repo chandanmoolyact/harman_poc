@@ -10,7 +10,7 @@ sap.ui.define([
     "use strict";
     var that=this;
 
-    return Controller.extend("com.sap.pocompare.controller.Main", {
+    return Controller.extend("com.sap.pocompare.controller.First", {
         formattter:formatter,
         onInit() {
             // Initialize the model that will hold our Excel data
@@ -91,22 +91,56 @@ sap.ui.define([
                 // Map columns
                 var formattedData = jsonData.map(function(row) {
                     return {
-                        Vendor: row["Vendor"],
+                        //Level 1 Start
+
                         VendorCode: row["Vendor Code"],
-                        VendorName: row["Vendor Name"],
-                        Material: row["Material"],
-                        MaterialDesc: row["Material Desc"],
+                        VendorName: row["Vendor Name"]||row["Vendor name"],
                         PONumber: row["PO Number"] || row["PONumber"]||row["PO/PR No."],
-                        LineItem: row["Line Item"] || row["LineItem"],
+                        // DocumentDate: new Date(row["Document Date"])?.toISOString()?.split('T')[0],
+                        PODate: new Date(row["PO date"])?.toISOString()?.split('T')[0],
+                        PanelVisible:false,
+
+                        //Level 2 Start
+
+                        // LineItem: row["Line Item"] || row["LineItem"],
+                        POLineItem: row["PO Line Item"] || row["LineItem"],
+                        Material: row["Material"],
+                        MaterialDesc: row["Material Description"],
+                        // Quantity: row["Quantity"],
+                        POQuantity: row["PO Quantity"],
+                        UOM: row["Unit of Measure"],
+                        DeliveryDate: new Date(row["Delivery Date"])?.toISOString()?.split('T')[0],
+                        NetPrice: row["Net Price"],
+                        Currency: row["Currency"],
+                        Per: row["Per"],
+                        MaterialGroup: row["Material Group"],
+                        Plant : row["Plant"],
+                        StorageLocation : row["Storage Location"],
+
+                        //Level 3 Start
+
+                        ConfirmationCategory:row["Confirmation category"]||row["Confirmation Category"],
+                        FDDCategory:row["Fdelivery Date category"]||row["FDelivery Date Category"],
                         Quantity: row["Quantity"],
-                        DocumentDate: new Date(row["Document Date"])?.toISOString()?.split('T')[0],
-                        ScheduleLineCategory:row["Schedule Line Category"],
+                        Reference: row["Reference"],
+                        CreationDate: row["Created on Date"],
+                        InboundDelivery: row["Inbound Delivery"],
+                        Item: row["Item"],
+                        HLItem: row["Higher Level Item"],
+                        Batch: row["Batch"],
+                        QtyReduced: row["Quantity Reduced"],
+                        MRPRelevant: row["MRP relevant"]||row["MRP Relevent"],
+                        MRPMaterial: row["MPN Material"]||row["MPN material"],
+                        CreationIndicator: row["Creation Indicator"]||row["Creation Indicator"],
+                        SequenceNumber: row["Sequence Number"]||row["Sequence number"],
+
+                        //Status 4
                         StatusCode:"1",
                         Status:"New",
                         StatusState:formatter.stateFormatter("1"),
                         StatusMsg:formatter.statusDescription("1"),
-                        PanelVisible:false,
-                        DeliveryDate: new Date(row["Delivery Date"])?.toISOString()?.split('T')[0]
+                        
+                        
                     };
                 });
 
@@ -144,6 +178,7 @@ sap.ui.define([
                         VendorName: item.VendorName,
                         PanelVisible: item.PanelVisible,
                         DocumentDate: item.DocumentDate,
+                        PODate: item.PODate,
                         // Setting up the array for the next hierarchy level
                         children: [] 
                     };
@@ -154,20 +189,45 @@ sap.ui.define([
                 const lineItemNum = (groupedData[groupKey].children.length + 1) * 10; 
                 
                 const level2Node = {
+                    PONumber: item.PONumber,
                     LineItemNumber: lineItemNum.toString(),
-                    Material: item.Material,
-                    Quantity: "1", // Mocked quantity
-                    DeliveryDate: item.DeliveryDate,
-                    NextPanelVisible:false,
-                    children: []
+                    POLineItem: item.POLineItem,
+                        Material: item.Material,
+                        MaterialDesc: item.MaterialDesc,
+                        // Quantity: row["Quantity"],
+                        POQuantity: item.POQuantity,
+                        UOM: item.UOM,
+                        DeliveryDate: item.DeliveryDate,
+                        NetPrice: item.NetPrice,
+                        Currency: item.Currency,
+                        Per: item.Per,
+                        MaterialGroup: item.MaterialGroup,
+                        Plant : item.Plant,
+                        StorageLocation : item.StorageLocation,
+                        NextPanelVisible:false,
+                        children: [],
+
+
                 };
 
                 // LEVEL 3: Create the exact replica of Level 2 (without further children to avoid infinite loops)
                 const level3Node = {
                     LineItemNumber: level2Node.LineItemNumber,
-                    Material: level2Node.Material,
-                    Quantity: level2Node.Quantity,
-                    DeliveryDate: level2Node.DeliveryDate,
+                    POLineItem: item.POLineItem,
+                    ConfirmationCategory:item.ConfirmationCategory,
+                    FDDCategory:item.FDDCategory,
+                    Quantity: item.Quantity,
+                    Reference: item.Reference,
+                    CreationDate: item.CreationDate,
+                    InboundDelivery: item.InboundDelivery,
+                    Item: item.Item,
+                    HLItem: item.HLItem,
+                    Batch: item.Batch,
+                    QtyReduced: item.QtyReduced,
+                    MRPRelevant: item.MRPRelevant,
+                    MRPMaterial: item.MRPMaterial,
+                    CreationIndicator: item.CreationIndicator,
+                    SequenceNumber: item.SequenceNumber,
                     Status:1,
                     StatusState:formatter.stateFormatter("1"),
                     StatusMsg:formatter.statusDescription("1")
@@ -242,8 +302,7 @@ sap.ui.define([
                 { label: 'Quantity', property: 'Quantity', type: 'string' },
                 { label: 'Delivery Date', property: 'DeliveryDate', type: 'string' },
                 { label: 'Document Date', property: 'DocumentDate', type: 'string' },
-                { label: 'Status', property: 'Status', type: 'string' },
-                { label: 'StatusMsg', property: 'StatusMsg', type: 'string' },
+                
             ];
 
             var aCols = [
@@ -281,14 +340,19 @@ sap.ui.define([
                 { label: 'MRP relevant', property: 'MRPRelevant', type: 'string' },
                 { label: 'MPN Material', property: 'MRPMaterial', type: 'string' },
                 { label: 'Creation Indicator', property: 'CreationIndicator', type: 'string' },
-                { label: 'Sequence Number', property: 'SequenceNumber', type: 'string' }
+                { label: 'Sequence Number', property: 'SequenceNumber', type: 'string' },
+
+                // Level 4
+
+                { label: 'Status', property: 'Status', type: 'string' },
+                { label: 'StatusMsg', property: 'StatusMsg', type: 'string' },
             ];
 
             // 3. Configure and start the export
             var oSettings = {
                 workbook: { columns: aCols },
                 dataSource: flatExcelData,
-                fileName: 'BTP_HAr.xlsx'
+                fileName: 'BTP_Harman_POC_Template.xlsx'
             };
 
             var oSheet = new Spreadsheet(oSettings);
@@ -306,7 +370,8 @@ sap.ui.define([
                 const poNumber = groupNode.PONumber;
                 const vendorCode = groupNode.VendorCode;
                 const vendorName = groupNode.VendorName;
-                const docDate = groupNode.DocumentDate;
+                // const docDate = groupNode.DocumentDate;
+                const poDate = groupNode.PODate;
 
                 // Check if this group has children (Level 2 Line Items)
                 if (groupNode.children && groupNode.children.length > 0) {
@@ -329,13 +394,42 @@ sap.ui.define([
                                     PONumber: poNumber,
                                     VendorCode: vendorCode,
                                     VendorName: vendorName,
-                                    LineItemNumber: itemNode.LineItemNumber,
+                                    PODate:poDate,
+                                    //Level 2 Start
+                                    // LineItem: row["Line Item"] || row["LineItem"],
+                                    POLineItem: itemNode.POLineItem,
                                     Material: itemNode.Material,
+                                    MaterialDesc: itemNode.MaterialDesc,
+                                    // Quantity: row["Quantity"],
+                                    POQuantity: itemNode.POQuantity,
+                                    UOM: itemNode.UOM,
+                                    DeliveryDate: itemNode.DeliveryDate,
+                                    NetPrice: itemNode.NetPrice,
+                                    Currency: itemNode.Currency,
+                                    Per: itemNode.Per,
+                                    MaterialGroup:itemNode.MaterialGroup,
+                                    Plant : itemNode.Plant,
+                                    StorageLocation : itemNode.StorageLocation,
+
+                                    //Level 3 Start
+                                    ConfirmationCategory:subItemNode.ConfirmationCategory,
+                                    FDDCategory:subItemNode.FDDCategory,
                                     Quantity: subItemNode.Quantity,
-                                    DeliveryDate: subItemNode.DeliveryDate,
-                                    DocumentDate:docDate,
+                                    Reference: subItemNode.Reference,
+                                    CreationDate: subItemNode.CreationDate,
+                                    InboundDelivery: subItemNode.InboundDelivery,
+                                    Item: subItemNode.Item,
+                                    HLItem: subItemNode.HLItem,
+                                    Batch: subItemNode.Batch,
+                                    QtyReduced: subItemNode.QtyReduced,
+                                    MRPRelevant: subItemNode.MRPRelevant,
+                                    MRPMaterial: subItemNode.MRPMaterial,
+                                    CreationIndicator: subItemNode.CreationIndicator,
+                                    SequenceNumber: subItemNode.SequenceNumber,
+
+                                    //Level 4
                                     Status:subItemNode.Status,
-                                    StatusMsg:subItemNode.StatusMsg
+                                    StatusMsg:subItemNode.StatusMsg,
                                     // StatusState:formatter.StatusState
                                 };
                                 
@@ -466,18 +560,32 @@ sap.ui.define([
             var oSPModel = this.getOwnerComponent().getModel("alSidePanel");
             var aVendorInputTable=oModel.getProperty(this.sCurrentPath)
             var iLINumber;
+            var oVendorObject;
             if(aVendorInputTable.length!=0){
+                oVendorObject=aVendorInputTable[0]
                 var iMaxTabLength=aVendorInputTable.length
                 var iMaxLINumber=aVendorInputTable[iMaxTabLength-1].LineItemNumber
                 iLINumber=(Number(iMaxLINumber)+10).toString()
             }else{
+                oVendorObject={}
                 iLINumber=10
             }
             aVendorInputTable.push({
                 LineItemNumber: iLINumber,
-                Quantity: 0,
-                DeliveryDate: "",
-                Status:1,
+                ConfirmationCategory:oVendorObject?.ConfirmationCategory,
+                FDDCategory:oVendorObject?.FDDCategory,
+                Quantity: oVendorObject?.Quantity,
+                Reference: oVendorObject?.Reference,
+                CreationDate: oVendorObject?.CreationDate,
+                InboundDelivery: oVendorObject?.InboundDelivery,
+                Item:oVendorObject?.Item,
+                HLItem: oVendorObject?.HLItem,
+                Batch: oVendorObject?.Batch,
+                QtyReduced: oVendorObject?.QtyReduced,
+                MRPRelevant: oVendorObject?.MRPRelevant,
+                MRPMaterial: oVendorObject?.MRPMaterial,
+                CreationIndicator: oVendorObject?.CreationIndicator,
+                SequenceNumber: oVendorObject?.SequenceNumber,
                 StatusMsg:formatter.statusDescription("1"),
                 StatusState:formatter.stateFormatter("1")
             });
