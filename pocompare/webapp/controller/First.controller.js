@@ -159,63 +159,163 @@ sap.ui.define([
         },
 
 
-        transformDataForTreeTable:function(rawJsonString) {
+        // transformDataForTreeTable:function(rawJsonString) {
+        //     const flatData = rawJsonString;
+        //     const groupedData = {};
+
+        //     flatData.forEach((item, index) => {
+        //         // Extract delivery date safely
+        //         const deliveryDate = item.DeliveryDate
+
+        //         // Create a unique key for the first hierarchy level
+        //         const groupKey = `${item.PONumber}_${item.VendorCode}_${deliveryDate}`;
+
+        //         // LEVEL 1: Initialize the group if it doesn't exist
+        //         if (!groupedData[groupKey]) {
+        //             groupedData[groupKey] = {
+        //                 PONumber: item.PONumber,
+        //                 VendorCode: item.VendorCode,
+        //                 VendorName: item.VendorName,
+        //                 PanelVisible: item.PanelVisible,
+        //                 DocumentDate: item.DocumentDate,
+        //                 PODate: item.PODate,
+        //                 // Setting up the array for the next hierarchy level
+        //                 children: [] 
+        //             };
+        //         }
+
+        //         // LEVEL 2: Create the line item
+        //         // Note: Mocking 'LineItemNumber' and 'Quantity' as they are missing in the source
+        //         const lineItemNum = (groupedData[groupKey].children.length + 1) * 10; 
+                
+        //         const level2Node = {
+        //             PONumber: item.PONumber,
+        //             LineItemNumber: lineItemNum.toString(),
+        //             POLineItem: item.POLineItem,
+        //                 Material: item.Material,
+        //                 MaterialDesc: item.MaterialDesc,
+        //                 // Quantity: row["Quantity"],
+        //                 POQuantity: item.POQuantity,
+        //                 UOM: item.UOM,
+        //                 DeliveryDate: item.DeliveryDate,
+        //                 NetPrice: item.NetPrice,
+        //                 Currency: item.Currency,
+        //                 Per: item.Per,
+        //                 MaterialGroup: item.MaterialGroup,
+        //                 Plant : item.Plant,
+        //                 StorageLocation : item.StorageLocation,
+        //                 NextPanelVisible:false,
+        //                 children: [],
+
+
+        //         };
+
+        //         // LEVEL 3: Create the exact replica of Level 2 (without further children to avoid infinite loops)
+        //         const level3Node = {
+        //             LineItemNumber: level2Node.LineItemNumber,
+        //             POLineItem: item.POLineItem,
+        //             ConfirmationCategory:item.ConfirmationCategory,
+        //             FDDCategory:item.FDDCategory,
+        //             Quantity: item.Quantity,
+        //             Reference: item.Reference,
+        //             CreationDate: item.CreationDate,
+        //             InboundDelivery: item.InboundDelivery,
+        //             Item: item.Item,
+        //             HLItem: item.HLItem,
+        //             Batch: item.Batch,
+        //             QtyReduced: item.QtyReduced,
+        //             MRPRelevant: item.MRPRelevant,
+        //             MRPMaterial: item.MRPMaterial,
+        //             CreationIndicator: item.CreationIndicator,
+        //             SequenceNumber: item.SequenceNumber,
+        //             Status:1,
+        //             StatusState:formatter.stateFormatter("1"),
+        //             StatusMsg:formatter.statusDescription("1")
+        //         };
+
+        //         // Push level 3 into level 2
+        //         level2Node.children.push(level3Node);
+
+        //         // Push level 2 into level 1
+        //         groupedData[groupKey].children.push(level2Node);
+        //     });
+
+        //     // Convert the grouped object back into an array for the UI5 JSONModel
+        //     return Object.values(groupedData);
+        // },
+        transformDataForTreeTable: function(rawJsonString) {
             const flatData = rawJsonString;
             const groupedData = {};
 
-            flatData.forEach((item, index) => {
-                // Extract delivery date safely
-                const deliveryDate = item.DeliveryDate
+            flatData.forEach((item) => {
+                // ==========================================
+                // LEVEL 1: Header Level Grouping
+                // Key based on PONumber, VendorCode, VendorName, PODate
+                // ==========================================
+                const level1Key = `${item.PONumber}_${item.VendorCode}_${item.VendorName}_${item.PODate}`;
 
-                // Create a unique key for the first hierarchy level
-                const groupKey = `${item.PONumber}_${item.VendorCode}_${deliveryDate}`;
-
-                // LEVEL 1: Initialize the group if it doesn't exist
-                if (!groupedData[groupKey]) {
-                    groupedData[groupKey] = {
+                // Initialize the Level 1 group if it doesn't exist
+                if (!groupedData[level1Key]) {
+                    groupedData[level1Key] = {
                         PONumber: item.PONumber,
                         VendorCode: item.VendorCode,
                         VendorName: item.VendorName,
+                        PODate: item.PODate,
                         PanelVisible: item.PanelVisible,
                         DocumentDate: item.DocumentDate,
-                        PODate: item.PODate,
-                        // Setting up the array for the next hierarchy level
+                        // We use a temporary map to easily group Level 2 items without duplicating them
+                        _level2ItemsMap: {}, 
                         children: [] 
                     };
                 }
 
-                // LEVEL 2: Create the line item
-                // Note: Mocking 'LineItemNumber' and 'Quantity' as they are missing in the source
-                const lineItemNum = (groupedData[groupKey].children.length + 1) * 10; 
-                
-                const level2Node = {
-                    PONumber: item.PONumber,
-                    LineItemNumber: lineItemNum.toString(),
-                    POLineItem: item.POLineItem,
+                // ==========================================
+                // LEVEL 2: Line Item Level Grouping
+                // Key based on POLineItem (to group multiple sequences under one line)
+                // ==========================================
+                const level2Key = `${item.POLineItem}`;
+
+                // Initialize Level 2 if it doesn't exist under this specific Level 1 node
+                if (!groupedData[level1Key]._level2ItemsMap[level2Key]) {
+                    groupedData[level1Key]._level2ItemsMap[level2Key] = {
+                        // Showing upper-level fields + Line item info
+                        PONumber: item.PONumber,
+                        VendorCode: item.VendorCode,
+                        VendorName: item.VendorName,
+                        PODate: item.PODate,
+                        POLineItem: item.POLineItem,
+                        LineItemNumber: item.POLineItem, // Using actual PO Line Item instead of mock
                         Material: item.Material,
                         MaterialDesc: item.MaterialDesc,
-                        // Quantity: row["Quantity"],
                         POQuantity: item.POQuantity,
                         UOM: item.UOM,
-                        DeliveryDate: item.DeliveryDate,
                         NetPrice: item.NetPrice,
                         Currency: item.Currency,
                         Per: item.Per,
                         MaterialGroup: item.MaterialGroup,
                         Plant : item.Plant,
                         StorageLocation : item.StorageLocation,
-                        NextPanelVisible:false,
-                        children: [],
+                        NextPanelVisible: false,
+                        DeliveryDate: item.DeliveryDate,
+                        children: [] // This will hold the Level 3 sequences
 
+                    };
+                }
 
-                };
-
-                // LEVEL 3: Create the exact replica of Level 2 (without further children to avoid infinite loops)
+                // ==========================================
+                // LEVEL 3: Sequence Level Details
+                // ==========================================
                 const level3Node = {
-                    LineItemNumber: level2Node.LineItemNumber,
+                    PONumber: item.PONumber, 
+                    VendorCode: item.VendorCode,
+                    VendorName: item.VendorName,
+                    PODate: item.PODate,
                     POLineItem: item.POLineItem,
-                    ConfirmationCategory:item.ConfirmationCategory,
-                    FDDCategory:item.FDDCategory,
+                    LineItemNumber: item.POLineItem,
+                    SequenceNumber: item.SequenceNumber, // The differentiator for Level 3
+                    DeliveryDate: item.DeliveryDate,
+                    ConfirmationCategory: item.ConfirmationCategory,
+                    FDDCategory: item.FDDCategory,
                     Quantity: item.Quantity,
                     Reference: item.Reference,
                     CreationDate: item.CreationDate,
@@ -227,21 +327,30 @@ sap.ui.define([
                     MRPRelevant: item.MRPRelevant,
                     MRPMaterial: item.MRPMaterial,
                     CreationIndicator: item.CreationIndicator,
-                    SequenceNumber: item.SequenceNumber,
-                    Status:1,
-                    StatusState:formatter.stateFormatter("1"),
-                    StatusMsg:formatter.statusDescription("1")
+                    Status: 1,
+                    StatusState: formatter.stateFormatter("1"),
+                    StatusMsg: formatter.statusDescription("1")
                 };
 
-                // Push level 3 into level 2
-                level2Node.children.push(level3Node);
-
-                // Push level 2 into level 1
-                groupedData[groupKey].children.push(level2Node);
+                // Push the Level 3 detail into the correct Level 2 node's children array
+                groupedData[level1Key]._level2ItemsMap[level2Key].children.push(level3Node);
             });
 
-            // Convert the grouped object back into an array for the UI5 JSONModel
-            return Object.values(groupedData);
+            // ==========================================
+            // FINAL CLEANUP: Convert Maps back to Arrays
+            // ==========================================
+            // UI5 JSONModels need standard arrays for "children", not object maps.
+            const treeData = Object.values(groupedData).map(level1Node => {
+                // Extract Level 2 items from the temporary map into the children array
+                level1Node.children = Object.values(level1Node._level2ItemsMap);
+                
+                // Remove the temporary map so it doesn't clutter your UI5 model
+                delete level1Node._level2ItemsMap; 
+                
+                return level1Node;
+            });
+
+            return treeData;
         },
 
         // Triggered on Submit
@@ -504,9 +613,14 @@ sap.ui.define([
             if(bVisiblePath){
                 this.getOwnerComponent().getModel("excelModel").setProperty(oPanelVisiblePath,false)
                 oSource.setIcon("sap-icon://dropdown")
+                // this.getView().byId('idAdditionalDetails').setVisible(false)
+                // this.getView().byId('idAdditionalDetails').setDemandPopin(false)
+                
             }else{
              this.getOwnerComponent().getModel("excelModel").setProperty(oPanelVisiblePath,true)
              oSource.setIcon("sap-icon://slim-arrow-up")
+            //  this.getView().byId('idAdditionalDetails').setVisible(true)
+            //  this.getView().byId('idAdditionalDetails').setDemandPopin(true)
             }
              
         },
@@ -559,19 +673,19 @@ sap.ui.define([
             var oModel = this.getOwnerComponent().getModel("excelModel");
             var oSPModel = this.getOwnerComponent().getModel("alSidePanel");
             var aVendorInputTable=oModel.getProperty(this.sCurrentPath)
-            var iLINumber;
+            var iSNum;
             var oVendorObject;
             if(aVendorInputTable.length!=0){
                 oVendorObject=aVendorInputTable[0]
                 var iMaxTabLength=aVendorInputTable.length
-                var iMaxLINumber=aVendorInputTable[iMaxTabLength-1].LineItemNumber
-                iLINumber=(Number(iMaxLINumber)+10).toString()
+                var iMaxSN=aVendorInputTable[iMaxTabLength-1].SequenceNumber
+                iSNum=(Number(iMaxSN)+1).toString()
             }else{
                 oVendorObject={}
-                iLINumber=10
+                iSNum=1
             }
             aVendorInputTable.push({
-                LineItemNumber: iLINumber,
+                // LineItemNumber: iLINumber,
                 ConfirmationCategory:oVendorObject?.ConfirmationCategory,
                 FDDCategory:oVendorObject?.FDDCategory,
                 Quantity: oVendorObject?.Quantity,
@@ -585,7 +699,7 @@ sap.ui.define([
                 MRPRelevant: oVendorObject?.MRPRelevant,
                 MRPMaterial: oVendorObject?.MRPMaterial,
                 CreationIndicator: oVendorObject?.CreationIndicator,
-                SequenceNumber: oVendorObject?.SequenceNumber,
+                SequenceNumber: iSNum,
                 StatusMsg:formatter.statusDescription("1"),
                 StatusState:formatter.stateFormatter("1")
             });

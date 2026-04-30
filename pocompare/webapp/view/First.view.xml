@@ -29,7 +29,7 @@
 					</f:content>
 					<f:actions>
 						<Button
-							text="Save Template"
+							text="Save"
 							icon="sap-icon://excel-attachment"
 							press=".onSaveTemplate"
 						/>
@@ -48,7 +48,7 @@
 			<f:content>
 			<VBox>
                             <core:Fragment
-                                fragmentName="com.sap.pocompare.view.fragments.sections.PODynamicDoubleTable"
+                                fragmentName="com.sap.pocompare.view.fragments.sections.POCSSTable"
                                 type="XML"
                             />
 			</VBox>

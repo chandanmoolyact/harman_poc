@@ -54,10 +54,11 @@
                     wrapping="true"
                 />
             </Column>
-            <Column
+            <Column 
                 minScreenWidth="10000px"
                 demandPopin="true"
                 popinDisplay="WithoutHeader"
+                visible="true"
             >
                 <Text text="Additional Details" />
             </Column>
@@ -86,12 +87,13 @@
                     </FlexBox>
 
                     <Panel
+                    
                         visible="{excelModel>PanelVisible}"
                         width="auto"
                         accessibleRole="Region"
                     >
                         <content>
-                            <VBox>
+                            <VBox class="sapUiTinyMarginTop customPanelBorder">
                                 <Table
                                     id="confirmationsTable"
                                     mode="None"
@@ -233,9 +235,6 @@
                                                 wrapping="true"
                                             />
                                         </Column>
-                                        <!-- <Column minScreenWidth="10000px" demandPopin="true" popinDisplay="WithoutHeader">
-													<Text text="Additional Details" />
-												</Column> -->
                                     </columns>
                                     <items>
                                         <ColumnListItem
@@ -300,12 +299,11 @@
                                     id="idPOItemsDataTable"
                                     mode="None"
                                     showSeparators="All"
-                                    backgroundDesign="Transparent"
-                                    class="sapUiSizeCompact"
+                                    class="sapUiSizeCompact sapUiSmallMarginTop blueTableHighlight customLightBlueTable"
                                     items="{alSidePanel>/}"
                                 >
-                                    <headerToolbar>
-                                        <OverflowToolbar>
+                                    <headerToolbar >
+                                        <OverflowToolbar > 
                                             <content>
                                                 <Title
                                                     text="PO Confirmation Lines"
@@ -339,6 +337,7 @@
                                         >
                                             <Text
                                                 text="CC"
+                                                tooltip="Confirmation Category"
                                                 wrapping="true"
                                             />
                                         </Column>
@@ -352,6 +351,7 @@
                                         >
                                             <Text
                                                 text="D"
+                                                tooltip="Delivery Date Category"
                                                 wrapping="true"
                                             />
                                         </Column>
@@ -464,6 +464,7 @@
                                         >
                                             <Text
                                                 text="CI"
+                                                tooltip="Creation Indicator"
                                                 wrapping="true"
                                                 
                                             />
@@ -479,6 +480,7 @@
                                         >
                                             <Text
                                                 text="SN"
+                                                 tooltip="Sequence Number"
                                                 wrapping="true"
                                             />
                                         </Column>
@@ -587,17 +589,19 @@
                                                 />
                                                 <Input
                                                     value="{alSidePanel>Quantity}"
-                                                    editable="true"
+                                                    editable="{= ${alSidePanel>ConfirmationCategory} === 'LA' ? false : true }"
                                                 />
                                                 <DatePicker
                                                     value="{alSidePanel>CreationDate}"
                                                     valueFormat="yyyy-MM-dd"
                                                     displayFormat="MM/dd/yyyy"
+                                                    enabled="{= ${alSidePanel>ConfirmationCategory} === 'LA' ? false : true }"
                                                 />
                                                 <Button
                                                     icon="sap-icon://delete"
                                                     type="Reject"
                                                     press=".onDeleteVendorRowSP"
+                                                    enabled="{= ${alSidePanel>ConfirmationCategory} === 'LA' ? false : true }"
                                                 />
                                             </cells>
                                         </ColumnListItem>

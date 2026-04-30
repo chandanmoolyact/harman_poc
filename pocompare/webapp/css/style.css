@@ -1,1 +1,43 @@
 /* Enter your custom styles here */
+
+
+/* Add a border to the Panel */
+.customPanelBorder {
+    border: 1px solid #d9d9d9;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Highlight the Table in Blue */
+/* Note: Targeting the internal table element for a clean look */
+.blueTableHighlight .sapMListTbl {
+    background-color: #e6f7ff !important; /* Light blue background */
+    /* border: 2px solid #1890ff !important; Bright blue border */
+}
+
+/* Optional: Highlight the header specifically */
+.blueTableHighlight .sapMListTblHeader {
+    background-color: #bae7ff !important;
+}
+
+
+
+
+/* Target the rows and cells specifically */
+.customLightBlueTable .sapMListTblRow,
+.customLightBlueTable .sapMListTblCell,
+.customLightBlueTable .sapUiTableTr,
+.customLightBlueTable .sapUiTableTd {
+    background-color: #e3f2fd !important; /* A soft light blue */
+}
+
+/* Optional: Adjust the header to match */
+.customLightBlueTable .sapMListTblHeaderCell,
+.customLightBlueTable .sapUiTableCol {
+    background-color: #bbdefb !important;
+}
+
+.customLightBlueTable .sapMTB {
+    background-color: #bae7ff !important;
+    border-bottom: 1px solid  #bae7ff;
+}
