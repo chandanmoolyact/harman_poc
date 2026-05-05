@@ -72,19 +72,7 @@
                     <ObjectIdentifier title="{excelModel>PONumber}" />
                     <Text text="{excelModel>VendorCode}" />
                     <Text text="{excelModel>VendorName}" />
-                    <FlexBox
-                        fitContainer="true"
-                        wrap="Wrap"
-                        alignItems="Center"
-                        justifyContent="Center"
-                    >
-                        <Text text="{excelModel>PODate}" />
-                        <Button
-                            type="Transparent"
-                            icon="sap-icon://dropdown"
-                            press="onShowExpanded"
-                        />
-                    </FlexBox>
+                    <Text text="{excelModel>PODate}" />
 
                     <Panel
                     
