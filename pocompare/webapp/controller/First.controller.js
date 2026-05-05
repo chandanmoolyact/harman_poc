@@ -39,6 +39,11 @@ sap.ui.define([
             this.getView().getModel("excelModel").setProperty("/data", []);
             // this._headerFB.setVisible(false)
         },
+        onCancelTemplate: function () {
+            this.byId("excelUploader").clear();
+            this.getView().getModel("excelModel").setProperty("/data", []);
+            // this._headerFB.setVisible(false)
+        },
 
         // Helper function using SheetJS (XLSX)
         _readExcel: function (file) {
@@ -119,6 +124,7 @@ sap.ui.define([
                 });
 
                 let newData= that.transformDataForTreeTable(formattedData)
+                that.aOldData=newData;
 
                 that.getOwnerComponent().getModel("excelModel").setProperty("/data", newData);
                 // that._headerFB.setVisible(true)
@@ -253,6 +259,8 @@ sap.ui.define([
         onSaveTemplate: function (oEvent) {
             var treeData = this.getView().getModel("excelModel").getProperty("/data");
             var flatExcelData = this.transformTreeToFlatData(treeData);
+            var sGeneratedMsg=this.getChangeSummary(this.aOldData,treeData)
+
             var aCols = [
                 // Level 1
                 { label: 'Vendor Code', property: 'VendorCode', type: 'string' },
@@ -302,7 +310,21 @@ sap.ui.define([
             oSheet.build().finally(function() {
                 oSheet.destroy();
             });
+
+            this.aOldData=flatExcelData;
+
+            this.onGenSaveMessage(sGeneratedMsg)
         },
+        onGenSaveMessage: function (sMsg) {
+			MessageBox.success(sMsg, {
+				actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
+				emphasizedAction: MessageBox.Action.OK,
+				onClose: function (sAction) {
+					MessageToast.show(sMsg);
+				},
+				dependentOn: this.getView()
+			});
+		},
         transformTreeToFlatData:function(treeData) {
             const flatData = [];
             // Loop through Level 1 (The PO / Vendor groups)
@@ -620,6 +642,61 @@ sap.ui.define([
             if (this._oDialog) {
                 this._oDialog.close();
             }
+        },
+        getChangeSummary:function(originalData, currentData) {
+            let updatedCount = 0;
+            let addedCount = 0;
+
+            // Helper to flatten the nested children into a simple array of records
+            const flatten = (data) => {
+                let results = [];
+                data.forEach(parent => {
+                    parent.children.forEach(lineItem => {
+                        lineItem.children.forEach(record => {
+                            results.push(record);
+                        });
+                    });
+                });
+                return results;
+            };
+
+            const oldRecords = flatten(originalData);
+            const newRecords = flatten(currentData);
+
+            newRecords.forEach(newRec => {
+                // 1. Check if it's a brand new record
+                if (newRec.newRecFlag === true) {
+                    addedCount++;
+                } else {
+                    // 2. Check if an existing record was modified
+                    // Find the matching record in the original snapshot by SequenceNumber
+                    const oldRec = oldRecords.find(r => r.SequenceNumber === newRec.SequenceNumber);
+                    
+                    if (oldRec) {
+                        // Compare relevant fields (Quantity, DeliveryDate, etc.)
+                        // We stringify to do a quick "dirty" deep comparison
+                        if (JSON.stringify(oldRec) !== JSON.stringify(newRec)) {
+                            updatedCount++;
+                        }
+                    }
+                }
+            });
+
+             
+            let sResMessage=this.generateMessage(addedCount, updatedCount);
+            return sResMessage;
+        },
+
+        generateMessage:function(added, updated) {
+            if (added === 0 && updated === 0) return "No changes to save.";
+            
+            let msg = "Your data has been saved";
+            let details = [];
+            
+            if (updated > 0) details.push(`${updated} record${updated > 1 ? 's' : ''} updated`);
+            if (added > 0) details.push(`${added} record${added > 1 ? 's' : ''} added`);
+            
+            return `${msg}, ${details.join(", ")}`;
         },
         _loadExternalLibrary: function (sUrl) {
             return new Promise(function (resolve, reject) {

@@ -34,6 +34,11 @@
 							press=".onSaveTemplate"
 						/>
 						<Button
+							text="Clear"
+							icon="sap-icon://clear-all"
+							press=".onCancelTemplate"
+						/>
+						<Button
 							visible="false"
 							text="Download Template"
 							icon="sap-icon://excel-attachment"
