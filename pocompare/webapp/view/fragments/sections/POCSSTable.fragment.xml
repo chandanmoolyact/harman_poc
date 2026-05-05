@@ -66,7 +66,7 @@
         <items>
             <ColumnListItem
                 type="Active"
-                press=".onRowPress"
+                press=".onShowExpanded"
             >
                 <cells>
                     <ObjectIdentifier title="{excelModel>PONumber}" />
@@ -537,9 +537,10 @@
                                                     wrapping="true"
                                                 />
 
-                                                <Text
-                                                    text="{alSidePanel>Reference}"
-                                                    wrapping="true"
+                                                <Input
+                                                    value="{alSidePanel>Reference}"
+                                                    editable="{alSidePanel>newRecFlag}"
+                                                    tooltip="{alSidePanel>Reference}"
                                                 />
                                                 
 
@@ -558,9 +559,11 @@
                                                     wrapping="true"
                                                 />
 
-                                                <Text
-                                                    text="{alSidePanel>Batch}"
-                                                    wrapping="true"
+                                                <Input
+                                                    value="{alSidePanel>Batch}"
+                                                    editable="{alSidePanel>newRecFlag}"
+                                                    tooltip="{alSidePanel>Batch}"
+                                                    
                                                 />
 
                                                 <Text
@@ -573,9 +576,10 @@
                                                     wrapping="true"
                                                 />
 
-                                                <Text
-                                                    text="{alSidePanel>MRPMaterial}"
-                                                    wrapping="true"
+                                                <Input
+                                                    value="{alSidePanel>MRPMaterial}"
+                                                    editable="{alSidePanel>newRecFlag}"
+                                                    tooltip="{alSidePanel>MRPMaterial}"
                                                 />
 
                                                 <Text
@@ -590,12 +594,14 @@
                                                 <Input
                                                     value="{alSidePanel>Quantity}"
                                                     editable="{= ${alSidePanel>ConfirmationCategory} === 'LA' ? false : true }"
+                                                    tooltip="{alSidePanel>Quantity}"
                                                 />
                                                 <DatePicker
                                                     value="{alSidePanel>CreationDate}"
                                                     valueFormat="yyyy-MM-dd"
                                                     displayFormat="MM/dd/yyyy"
                                                     enabled="{= ${alSidePanel>ConfirmationCategory} === 'LA' ? false : true }"
+                                                    tooltip="{alSidePanel>CreationDate}"
                                                 />
                                                 <Button
                                                     icon="sap-icon://delete"

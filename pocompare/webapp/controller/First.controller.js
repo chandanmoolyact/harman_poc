@@ -18,6 +18,7 @@ sap.ui.define([
                 data: []
             });
             this.getOwnerComponent().setModel(oModel, "excelModel");
+            this.lineItemFlag=true
         },
 
         // Triggered when a file is selected via the FileUploader
@@ -208,6 +209,7 @@ sap.ui.define([
                     MRPMaterial: item.MRPMaterial,
                     CreationIndicator: item.CreationIndicator,
                     Status: 1,
+                    newRecFlag:false,
                     StatusState: formatter.stateFormatter("1"),
                     StatusMsg: formatter.statusDescription("1")
                 };
@@ -393,21 +395,27 @@ sap.ui.define([
             ];
         },
         onShowExpanded:function(oEvent){
-            let oSource=oEvent.getSource()
-            let oBindingContext=oSource.getBindingContext("excelModel")
-            let oPath=oBindingContext.getPath()
-            let oPanelVisiblePath=oPath+"/PanelVisible"
 
-            let bVisiblePath=this.getOwnerComponent().getModel("excelModel").getProperty(oPanelVisiblePath)
-            if(bVisiblePath){
-                this.getOwnerComponent().getModel("excelModel").setProperty(oPanelVisiblePath,false)
-                oSource.setIcon("sap-icon://dropdown")
-                
-            }else{
-             this.getOwnerComponent().getModel("excelModel").setProperty(oPanelVisiblePath,true)
-             oSource.setIcon("sap-icon://slim-arrow-up")
+            if(this.lineItemFlag){
+                let oSource=oEvent.getSource()
+                let oBindingContext=oSource.getBindingContext("excelModel")
+                let oPath=oBindingContext.getPath()
+                let oPanelVisiblePath=oPath+"/PanelVisible"
+
+                let bVisiblePath=this.getOwnerComponent().getModel("excelModel").getProperty(oPanelVisiblePath)
+                if(bVisiblePath){
+                    this.getOwnerComponent().getModel("excelModel").setProperty(oPanelVisiblePath,false)
+                    // oSource.setIcon("sap-icon://dropdown")
+                    
+                }else{
+                    this.getOwnerComponent().getModel("excelModel").setProperty(oPanelVisiblePath,true)
+                    // oSource.setIcon("sap-icon://slim-arrow-up")
+                }
             }
-             
+            this.convertLIFlag(true)
+        },
+        convertLIFlag:function(bFlag){
+            this.lineItemFlag=bFlag
         },
         onSubShowExpanded:function(oEvent){
             let oSource=oEvent.getSource()
@@ -450,6 +458,7 @@ sap.ui.define([
             oModel.setProperty(sOuterRowPath + "/children", aVendorInputTable);
         },
         onAddVendorRowSP: function (oEvent) {
+            this.convertLIFlag(false)
             var oButton = oEvent.getSource();
             var oContext = oButton.getBindingContext("alSidePanel");
             var oModel = this.getOwnerComponent().getModel("excelModel");
@@ -482,9 +491,11 @@ sap.ui.define([
                 MRPMaterial: oVendorObject?.MRPMaterial,
                 CreationIndicator: oVendorObject?.CreationIndicator,
                 SequenceNumber: iSNum,
+                newRecFlag:true,
                 StatusMsg:formatter.statusDescription("1"),
                 StatusState:formatter.stateFormatter("1")
             });
+            oSPModel.refresh(true);
             oSPModel.setProperty("/",aVendorInputTable)
             oModel.setProperty(this.sCurrentPath, aVendorInputTable);
         },
@@ -501,6 +512,7 @@ sap.ui.define([
             oModel.setProperty(sParentArrayPath, aVendorInputTable);
         },
         onDeleteVendorRowSP: function (oEvent) {
+            this.convertLIFlag(false)
             var oButton = oEvent.getSource();
             var oContext = oButton.getBindingContext("alSidePanel");
             var sInnerRowPath = oContext.getPath(); 
@@ -566,7 +578,10 @@ sap.ui.define([
         //     this.getOwnerComponent().setModel(oSPJSONModel,"alSidePanel")
         // },
         onConfirmationRowPress: function (oEvent) {   
+            // oEvent.cancelBubble()
+            // oEvent.getParameter("event").stopPropagation();
             // 1. Get the current pressed row
+            this.convertLIFlag(false)
             var oCurrentItem = oEvent.getSource();
 
             // 2. Manage the highlight logic
@@ -584,6 +599,7 @@ sap.ui.define([
             var oCPath = oCtx.getPath() + "/children";
             this.sCurrentPath = oCPath;
             var oExcelTabData = oModel.getProperty(oCPath);
+            oExcelTabData.newRecFlag=false;
             var aCopiedData = JSON.parse(JSON.stringify(oExcelTabData));
             var oSPJSONModel = new JSONModel(aCopiedData);
             this.getOwnerComponent().setModel(oSPJSONModel, "alSidePanel");
