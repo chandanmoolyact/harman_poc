@@ -566,6 +566,18 @@ sap.ui.define([
         //     this.getOwnerComponent().setModel(oSPJSONModel,"alSidePanel")
         // },
         onConfirmationRowPress: function (oEvent) {   
+            // 1. Get the current pressed row
+            var oCurrentItem = oEvent.getSource();
+
+            // 2. Manage the highlight logic
+            if (this.prevRecord) {
+                this.prevRecord.removeStyleClass("myCustomHighlight");
+            }
+            
+            oCurrentItem.addStyleClass("myCustomHighlight");
+            
+            // 3. Store this item as the "previous" for the next time a row is pressed
+            this.prevRecord = oCurrentItem;
             var oItem = oEvent.getSource();
             var oCtx  = oItem.getBindingContext("excelModel");
             var oModel = this.getOwnerComponent().getModel("excelModel");
@@ -575,6 +587,18 @@ sap.ui.define([
             var aCopiedData = JSON.parse(JSON.stringify(oExcelTabData));
             var oSPJSONModel = new JSONModel(aCopiedData);
             this.getOwnerComponent().setModel(oSPJSONModel, "alSidePanel");
+        },
+        onRowSelect: function(oEvent) {
+            
+            // var oItem = oEvent.getSource();
+            // var oCtx  = oItem.getBindingContext("excelModel");
+            // var oModel = this.getOwnerComponent().getModel("excelModel");
+            // var oCPath = oCtx.getPath() + "/children";
+            // this.sCurrentPath = oCPath;
+            // var oExcelTabData = oModel.getProperty(oCPath);
+            // var aCopiedData = JSON.parse(JSON.stringify(oExcelTabData));
+            // var oSPJSONModel = new JSONModel(aCopiedData);
+            // this.getOwnerComponent().setModel(oSPJSONModel, "alSidePanel");
         },
         onCloseDialog: function () {
             if (this._oDialog) {
