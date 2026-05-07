@@ -52,8 +52,12 @@
 			<!-- DynamicPage Header -->
 			<f:content>
 			<VBox>
-                            <core:Fragment
+                            <!-- <core:Fragment
                                 fragmentName="com.sap.pocompare.view.fragments.sections.POCSSTable"
+                                type="XML"
+                            /> -->
+                            <core:Fragment
+                                fragmentName="com.sap.pocompare.view.fragments.sections.PODynaTab"
                                 type="XML"
                             />
 			</VBox>

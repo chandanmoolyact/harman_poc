@@ -19,6 +19,13 @@ sap.ui.define([
             });
             this.getOwnerComponent().setModel(oModel, "excelModel");
             this.lineItemFlag=true
+
+            // this._loadExternalLibrary("https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js").then(function() {
+            //     this._readExcel(oFile);
+            // }.bind(this))
+            // .catch(function() {
+            //     sap.m.MessageToast.show("Failed to load the Excel library from CDN.");
+            // });
         },
 
         // Triggered when a file is selected via the FileUploader
@@ -115,6 +122,9 @@ sap.ui.define([
                         MRPMaterial: row["MPN Material"]||row["MPN material"],
                         CreationIndicator: row["Creation Indicator"]||row["Creation Indicator"],
                         SequenceNumber: row["Sequence Number"]||row["Sequence number"],
+                        RejectFlag: row["Rejected"],
+                        RejectReason: row["Comment"],
+                        RejectDate: row["Rejection Date"],   
                         //Status 4
                         StatusCode:"1",
                         Status:"New",
@@ -216,6 +226,9 @@ sap.ui.define([
                     CreationIndicator: item.CreationIndicator,
                     Status: 1,
                     newRecFlag:false,
+                    RejectFlag:item.RejectFlag,
+                    RejectReason:item.RejectReason,
+                    RejectDate:item.RejectDate,   
                     StatusState: formatter.stateFormatter("1"),
                     StatusMsg: formatter.statusDescription("1")
                 };
@@ -295,6 +308,9 @@ sap.ui.define([
                 { label: 'MPN Material', property: 'MRPMaterial', type: 'string' },
                 { label: 'Creation Indicator', property: 'CreationIndicator', type: 'string' },
                 { label: 'Sequence Number', property: 'SequenceNumber', type: 'string' },
+                { label: 'Rejected', property: 'RejectFlag', type: 'string' },
+                { label: 'Comment', property: 'RejectReason', type: 'string' },
+                { label: 'Rejection Date', property: 'RejectDate', type: 'string' },
                 // Level 4
                 { label: 'Status', property: 'Status', type: 'string' },
                 { label: 'StatusMsg', property: 'StatusMsg', type: 'string' },
@@ -311,7 +327,7 @@ sap.ui.define([
                 oSheet.destroy();
             });
 
-            this.aOldData=flatExcelData;
+            this.aOldData=treeData;
 
             this.onGenSaveMessage(sGeneratedMsg)
         },
@@ -374,6 +390,12 @@ sap.ui.define([
                                     MRPMaterial: subItemNode.MRPMaterial,
                                     CreationIndicator: subItemNode.CreationIndicator,
                                     SequenceNumber: subItemNode.SequenceNumber,
+
+                                    RejectFlag:subItemNode.RejectFlag,
+                                    RejectReason:subItemNode.RejectReason,
+                                    RejectDate:subItemNode.RejectDate, 
+
+
                                     Status:subItemNode.Status,
                                     StatusMsg:subItemNode.StatusMsg
                                 };
@@ -440,6 +462,7 @@ sap.ui.define([
             this.lineItemFlag=bFlag
         },
         onSubShowExpanded:function(oEvent){
+            this.convertLIFlag(false)
             let oSource=oEvent.getSource()
             let oBindingContext=oSource.getBindingContext("excelModel")
             let oPath=oBindingContext.getPath()
@@ -448,11 +471,34 @@ sap.ui.define([
             let bVisiblePath=this.getOwnerComponent().getModel("excelModel").getProperty(oPanelVisiblePath)
             if(bVisiblePath){
                 this.getOwnerComponent().getModel("excelModel").setProperty(oPanelVisiblePath,false)
-                oSource.setIcon("sap-icon://dropdown")
+                // oSource.setIcon("sap-icon://dropdown")
             }else{
              this.getOwnerComponent().getModel("excelModel").setProperty(oPanelVisiblePath,true)
-             oSource.setIcon("sap-icon://slim-arrow-up")
+            //  oSource.setIcon("sap-icon://slim-arrow-up")
             }
+
+
+            var oCurrentItem = oEvent.getSource();
+
+            // 2. Manage the highlight logic
+            if (this.prevRecord) {
+                this.prevRecord.removeStyleClass("myCustomHighlight");
+            }
+            
+            oCurrentItem.addStyleClass("myCustomHighlight");
+            
+            // 3. Store this item as the "previous" for the next time a row is pressed
+            this.prevRecord = oCurrentItem;
+            var oItem = oEvent.getSource();
+            var oCtx  = oItem.getBindingContext("excelModel");
+            var oModel = this.getOwnerComponent().getModel("excelModel");
+            var oCPath = oCtx.getPath() + "/children";
+            this.sCurrentPath = oCPath;
+            var oExcelTabData = oModel.getProperty(oCPath);
+            oExcelTabData.newRecFlag=false;
+            var aCopiedData = JSON.parse(JSON.stringify(oExcelTabData));
+            var oSPJSONModel = new JSONModel(aCopiedData);
+            this.getOwnerComponent().setModel(oSPJSONModel, "alSidePanel");
              
         },
         onAddVendorRow: function (oEvent) {
@@ -521,37 +567,93 @@ sap.ui.define([
             oSPModel.setProperty("/",aVendorInputTable)
             oModel.setProperty(this.sCurrentPath, aVendorInputTable);
         },
-        onDeleteVendorRow: function (oEvent) {
-            var oButton = oEvent.getSource();
-            var oContext = oButton.getBindingContext("excelModel");
-            var sInnerRowPath = oContext.getPath(); 
-            var oModel = this.getOwnerComponent().getModel("excelModel");
-            var sParentArrayPath = sInnerRowPath.substring(0, sInnerRowPath.lastIndexOf("/")); 
-            var sRowIndex = sInnerRowPath.substring(sInnerRowPath.lastIndexOf("/") + 1); 
-            var aVendorInputTable = oModel.getProperty(sParentArrayPath);
-            aVendorInputTable.splice(parseInt(sRowIndex, 10), 1); 
-            
-            oModel.setProperty(sParentArrayPath, aVendorInputTable);
-        },
-        onDeleteVendorRowSP: function (oEvent) {
-            this.convertLIFlag(false)
-            var oButton = oEvent.getSource();
-            var oContext = oButton.getBindingContext("alSidePanel");
-            var sInnerRowPath = oContext.getPath(); 
-            var oModel = this.getOwnerComponent().getModel("excelModel");
-            var oModelData = this.getOwnerComponent().getModel("excelModel").getProperty(this.sCurrentPath);
-            var oSPModel = this.getOwnerComponent().getModel("alSidePanel");
-            var oSPModelData = this.getOwnerComponent().getModel("alSidePanel").getProperty("/");
-            var aVendorInputTable = oSPModel.getProperty(sInnerRowPath);
-            var iLINumber=aVendorInputTable?.LineItemNumber
+        onDeleteVendorTreeRow: function (oEvent) {
+            this.convertLIFlag(false);
 
-            let iIndex = oModelData.findIndex(item => item.LineItemNumber == iLINumber);
-            let iNewIndex = oSPModelData.findIndex(item => item.LineItemNumber == iLINumber);
-            if (iIndex > -1) {
-                oModelData.splice(iIndex, 1);
-                oModel.refresh(); 
-                oSPModel.refresh(); 
+            var oModel = this.getOwnerComponent().getModel("excelModel");
+            var oContext = oEvent.getSource().getBindingContext("excelModel");
+            var sPath = oContext.getPath(); // e.g., "/nodes/0/nodes/1/nodes/5"
+
+            // 1. Find the last slash to separate the index from the parent path
+            var iLastSlashIndex = sPath.lastIndexOf("/");
+            var sParentPath = sPath.substring(0, iLastSlashIndex);
+            var iIndex = sPath.substring(iLastSlashIndex + 1);
+
+            // 2. Get the actual array from the model (the parent collection)
+            var aParentCollection = oModel.getProperty(sParentPath);
+
+            // 3. Remove the item directly from the model's data
+            if (Array.isArray(aParentCollection)) {
+                aParentCollection.splice(iIndex, 1);
+                oModel.refresh(true); 
             }
+        },
+        onRejectVendorTreeRow: function (oEvent) {
+            var oResourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
+            var oModel = this.getOwnerComponent().getModel("excelModel");
+            
+            // Get the binding context of the row where the button was clicked
+            var oContext = oEvent.getSource().getBindingContext("excelModel");
+            var sRejPath = oContext.getPath();
+
+            // Create a Dialog dynamically
+            if (!this.oRejectDialog) {
+                this.oRejectDialog = new sap.m.Dialog({
+                    title: "Reject Record",
+                    type: "Message",
+                    content: [
+                        new sap.m.Label({
+                            text: "Please provide a reason for rejection:",
+                            labelFor: "rejectionTextArea"
+                        }),
+                        new sap.m.TextArea("rejectionTextArea", {
+                            width: "100%",
+                            placeholder: "Enter reason here...",
+                            rows: 4
+                        })
+                    ],
+                    beginButton: new sap.m.Button({
+                        type: "Emphasized",
+                        text: "Confirm",
+                        press: function () {
+                            var sReason = sap.ui.getCore().byId("rejectionTextArea").getValue();
+                            
+                            if (!sReason) {
+                                sap.m.MessageToast.show("Please enter a reason before submitting.");
+                                return;
+                            }
+
+                            // 1. Set the Reject Flag
+                            oModel.setProperty(sRejPath + "/RejectFlag", "X");
+                            
+                            // 2. Set the Reject Reason from TextArea
+                            oModel.setProperty(sRejPath + "/RejectReason", sReason);
+                            
+                            // 3. Set the Reject Date (Current Date)
+                            // You can format this as a string or keep it as a Date object
+                            var oToday = new Date().toLocaleDateString(); 
+                            oModel.setProperty(sRejPath + "/RejectDate", oToday);
+
+                            // Refresh the model to update the UI (especially if you have formatters/bindings)
+                            oModel.refresh(true);
+
+                            sap.m.MessageToast.show("Record rejected successfully.");
+                            
+                            // Close and clean up
+                            this.oRejectDialog.close();
+                            sap.ui.getCore().byId("rejectionTextArea").setValue(""); // Clear for next time
+                        }.bind(this)
+                    }),
+                    endButton: new sap.m.Button({
+                        text: "Cancel",
+                        press: function () {
+                            this.oRejectDialog.close();
+                        }.bind(this)
+                    })
+                });
+            }
+
+            this.oRejectDialog.open();
         },
         onApprovePress: function (oEvent) {
             MessageToast.show("Line Item Approved!");
@@ -698,6 +800,57 @@ sap.ui.define([
             
             return `${msg}, ${details.join(", ")}`;
         },
+        // handlePopoverPress: function (oEvent) {
+		// 	var oButton = oEvent.getSource(),
+		// 		oView = this.getView();
+
+		// 	// create popover
+		// 	if (!this._pPopover) {
+		// 		this._pPopover = Fragment.load({
+		// 			id: oView.getId(),
+		// 			name: "com.sap.pocompare.view.fragments.CommentPopover",
+		// 			controller: this
+		// 		}).then(function(oPopover) {
+		// 			oView.addDependent(oPopover);
+		// 			oPopover.bindElement("/ProductCollection/0");
+		// 			return oPopover;
+		// 		});
+		// 	}
+		// 	this._pPopover.then(function(oPopover) {
+		// 		oPopover.openBy(oButton);
+		// 	});
+		// },
+        handlePopoverPress: function (oEvent) {
+            var oButton = oEvent.getSource(),
+                oView = this.getView(),
+                // Capture the specific row context from the clicked button
+                oContext = oButton.getBindingContext("excelModel"); 
+
+            // Create popover if it doesn't exist
+            if (!this._pPopover) {
+                this._pPopover = sap.ui.core.Fragment.load({
+                    id: oView.getId(),
+                    name: "com.sap.pocompare.view.fragments.CommentPopover",
+                    controller: this
+                }).then(function(oPopover) {
+                    oView.addDependent(oPopover);
+                    return oPopover;
+                });
+            }
+
+            this._pPopover.then(function(oPopover) {
+                // Bind the popover to the specific row's context
+                oPopover.setBindingContext(oContext, "excelModel");
+                oPopover.openBy(oButton);
+            });
+        },
+
+        onClosePopover: function() {
+            this._pPopover.then(function(oPopover) {
+                oPopover.close();
+            });
+        },
+
         _loadExternalLibrary: function (sUrl) {
             return new Promise(function (resolve, reject) {
                 // If already loaded, resolve immediately

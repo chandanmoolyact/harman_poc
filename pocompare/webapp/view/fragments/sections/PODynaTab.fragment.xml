@@ -1,0 +1,651 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout"
+    xmlns:uxap="sap.uxap"
+>
+    <Table
+        id="idPOTable"
+        items="{
+						path: 'excelModel>/data'
+					}"
+    >
+        <columns>
+            <Column
+                minScreenWidth="Tablet"
+                demandPopin="true"
+                hAlign="Center"
+            >
+                <Text
+                    text="PO Number"
+                    wrapping="true"
+                />
+            </Column>
+            <Column
+                minScreenWidth="Tablet"
+                demandPopin="true"
+                popinDisplay="Inline"
+                hAlign="Center"
+            >
+                <Text
+                    text="Vendor"
+                    wrapping="true"
+                />
+            </Column>
+            <Column
+                minScreenWidth="Tablet"
+                demandPopin="true"
+                popinDisplay="Inline"
+                hAlign="Center"
+            >
+                <Text
+                    text="Vendor Description"
+                    wrapping="true"
+                />
+            </Column>
+            <Column
+                minScreenWidth="Tablet"
+                demandPopin="true"
+                popinDisplay="Inline"
+                hAlign="Center"
+            >
+                <Text
+                    text="PO Date"
+                    wrapping="true"
+                />
+            </Column>
+            <Column 
+                minScreenWidth="10000px"
+                demandPopin="true"
+                popinDisplay="WithoutHeader"
+                visible="true"
+            >
+                <Text text="Additional Details" />
+            </Column>
+        </columns>
+        <items>
+            <ColumnListItem
+                type="Active"
+                press=".onShowExpanded"
+            >
+                <cells>
+                    <ObjectIdentifier title="{excelModel>PONumber}" />
+                    <Text text="{excelModel>VendorCode}" />
+                    <Text text="{excelModel>VendorName}" />
+                    <Text text="{excelModel>PODate}" />
+
+                    <Panel
+                    
+                        visible="{excelModel>PanelVisible}"
+                        width="auto"
+                        accessibleRole="Region"
+                    >
+                        <content>
+                            <VBox class="sapUiTinyMarginTop customPanelBorder">
+                                <Table
+                                    id="confirmationsTable"
+                                    showSeparators="All"
+                                    backgroundDesign="Transparent"
+                                    class="sapUiSizeCompact"
+                                    items="{excelModel>children}"
+                                    mode="None" 
+                                >
+                                    <columns>
+                                        <Column
+                                            minScreenWidth="Tablet"
+                                            demandPopin="true"
+                                            hAlign="Center"
+                                        >
+                                            <Text
+                                                text="Item No."
+                                                wrapping="true"
+                                            />
+                                        </Column>
+                                        <Column
+                                            minScreenWidth="Tablet"
+                                            demandPopin="true"
+                                            popinDisplay="Inline"
+                                            hAlign="Center"
+                                        >
+                                            <Text
+                                                text="Material"
+                                                wrapping="true"
+                                            />
+                                        </Column>
+                                        <Column
+                                            minScreenWidth="Tablet"
+                                            demandPopin="true"
+                                            popinDisplay="Inline"
+                                            hAlign="Center"
+                                        >
+                                            <Text
+                                                text="Material Description"
+                                                wrapping="true"
+                                            />
+                                        </Column>
+                                        <Column
+                                            minScreenWidth="Tablet"
+                                            demandPopin="true"
+                                            popinDisplay="Inline"
+                                            hAlign="Center"
+                                        >
+                                            <Text
+                                                text="PO Quantity"
+                                                wrapping="true"
+                                            />
+                                        </Column>
+                                        <Column
+                                            minScreenWidth="Tablet"
+                                            demandPopin="true"
+                                            popinDisplay="Inline"
+                                            hAlign="Center"
+                                        >
+                                            <Text
+                                                text="Unit of Measure"
+                                                wrapping="true"
+                                            />
+                                        </Column>
+                                        <Column
+                                            minScreenWidth="Tablet"
+                                            demandPopin="true"
+                                            popinDisplay="Inline"
+                                            hAlign="Center"
+                                        >
+                                            <Text
+                                                text="Net Price"
+                                                wrapping="true"
+                                            />
+                                        </Column>
+                                        <Column
+                                            minScreenWidth="Tablet"
+                                            demandPopin="true"
+                                            popinDisplay="Inline"
+                                            hAlign="Center"
+                                        >
+                                            <Text
+                                                text="Currency"
+                                                wrapping="true"
+                                            />
+                                        </Column>
+                                        <Column
+                                            minScreenWidth="Tablet"
+                                            demandPopin="true"
+                                            popinDisplay="Inline"
+                                            hAlign="Center"
+                                        >
+                                            <Text
+                                                text="Per"
+                                                wrapping="true"
+                                            />
+                                        </Column>
+                                        <Column
+                                            minScreenWidth="Tablet"
+                                            demandPopin="true"
+                                            popinDisplay="Inline"
+                                            hAlign="Center"
+                                        >
+                                            <Text
+                                                text="Material Group"
+                                                wrapping="true"
+                                            />
+                                        </Column>
+                                        <Column
+                                            minScreenWidth="Tablet"
+                                            demandPopin="true"
+                                            popinDisplay="Inline"
+                                            hAlign="Center"
+                                        >
+                                            <Text
+                                                text="Plant"
+                                                wrapping="true"
+                                            />
+                                        </Column>
+                                        <Column
+                                            minScreenWidth="Tablet"
+                                            demandPopin="true"
+                                            popinDisplay="Inline"
+                                            hAlign="Center"
+                                        >
+                                            <Text
+                                                text="Storage Location"
+                                                wrapping="true"
+                                            />
+                                        </Column>
+
+                                        <Column
+                                            minScreenWidth="Tablet"
+                                            demandPopin="true"
+                                            popinDisplay="Inline"
+                                            hAlign="Center"
+                                        >
+                                            <Text
+                                                text="Delivery Date"
+                                                wrapping="true"
+                                            />
+                                        </Column>
+                                        <Column minScreenWidth="10000px" demandPopin="true" popinDisplay="WithoutHeader">
+                                            <Text text="Additional Details" />
+                                        </Column>
+                                    </columns>
+                                    <items>
+                                    <!-- press=".onConfirmationRowPress" -->
+                                        <ColumnListItem
+                                            
+                                            press=".onSubShowExpanded"
+                                            type="Active"
+                                        >
+                                            <cells>
+                                                <Text
+                                                    text="{excelModel>LineItemNumber}"
+                                                    wrapping="true"
+                                                />
+                                                <Text
+                                                    text="{excelModel>Material}"
+                                                    wrapping="true"
+                                                />
+                                                <Text
+                                                    text="{excelModel>MaterialDesc}"
+                                                    wrapping="true"
+                                                />
+                                                <Text
+                                                    text="{excelModel>POQuantity}"
+                                                    wrapping="true"
+                                                />
+                                                <Text
+                                                    text="{excelModel>UOM}"
+                                                    wrapping="true"
+                                                />
+                                                <Text
+                                                    text="{excelModel>NetPrice}"
+                                                    wrapping="true"
+                                                />
+                                                <Text
+                                                    text="{excelModel>Currency}"
+                                                    wrapping="true"
+                                                />
+                                                <Text
+                                                    text="{excelModel>Per}"
+                                                    wrapping="true"
+                                                />
+                                                <Text
+                                                    text="{excelModel>MaterialGroup}"
+                                                    wrapping="true"
+                                                />
+                                                <Text
+                                                    text="{excelModel>Plant}"
+                                                    wrapping="true"
+                                                />
+                                                <Text
+                                                    text="{excelModel>StorageLocation}"
+                                                    wrapping="true"
+                                                />
+                                                <Text
+                                                    text="{excelModel>DeliveryDate}"
+                                                    wrapping="true"
+                                                />
+                                                <Panel visible="{excelModel>NextPanelVisible}" width="auto" accessibleRole="Region">
+															<content>
+															<Table
+                                                                id="idPOItemsDataTable"
+                                                                showSeparators="All"
+                                                                class="sapUiSizeCompact sapUiSmallMarginTop blueTableHighlight customLightBlueTable"
+                                                                items="{excelModel>children}"
+                                                            >
+                                                                <headerToolbar >
+                                                                    <OverflowToolbar > 
+                                                                        <content>
+                                                                            <Title
+                                                                                text="PO Confirmation Lines"
+                                                                                level="H2"
+                                                                            />
+                                                                            <ToolbarSpacer />
+                                                                            <Button
+                                                                                text="+ Add row"
+                                                                                type="Transparent"
+                                                                                press=".onAddVendorRowSP"
+                                                                            />
+                                                                        </content>
+                                                                    </OverflowToolbar>
+                                                                </headerToolbar>
+                                                                <columns>
+                                                                    <Column
+                                                                        minScreenWidth="Tablet"
+                                                                        demandPopin="true"
+                                                                        popinDisplay="Inline"
+                                                                        hAlign="Center"
+                                                                    >
+                                                                        <Text
+                                                                            text="CC"
+                                                                            tooltip="Confirmation Category"
+                                                                            wrapping="true"
+                                                                        />
+                                                                    </Column>
+
+                                                                    <Column
+                                                                        minScreenWidth="Tablet"
+                                                                        demandPopin="true"
+                                                                        popinDisplay="Inline"
+                                                                        hAlign="Center"
+                                                                        width="2rem"
+                                                                    >
+                                                                        <Text
+                                                                            text="D"
+                                                                            tooltip="Delivery Date Category"
+                                                                            wrapping="true"
+                                                                        />
+                                                                    </Column>
+
+                                                                    <Column
+                                                                        minScreenWidth="Tablet"
+                                                                        demandPopin="true"
+                                                                        popinDisplay="Inline"
+                                                                        hAlign="Center"
+                                                                    >
+                                                                        <Text
+                                                                            text="Reference"
+                                                                            wrapping="true"
+                                                                        />
+                                                                    </Column>
+
+                                                                    
+
+                                                                    <Column
+                                                                        minScreenWidth="Tablet"
+                                                                        demandPopin="true"
+                                                                        popinDisplay="Inline"
+                                                                        hAlign="Center"
+                                                                    >
+                                                                        <Text
+                                                                            text="Inbound Delivery"
+                                                                            wrapping="true"
+                                                                        />
+                                                                    </Column>
+
+                                                                    <Column
+                                                                        minScreenWidth="Tablet"
+                                                                        demandPopin="true"
+                                                                        popinDisplay="Inline"
+                                                                        hAlign="Center"
+                                                                    >
+                                                                        <Text
+                                                                            text="Item"
+                                                                            wrapping="true"
+                                                                        />
+                                                                    </Column>
+
+                                                                    <Column
+                                                                        minScreenWidth="Desktop"
+                                                                        demandPopin="true"
+                                                                        popinDisplay="Inline"
+                                                                        hAlign="Center"
+                                                                    >
+                                                                        <Text
+                                                                            text="HL Item"
+                                                                            wrapping="true"
+                                                                        />
+                                                                    </Column>
+
+                                                                    <Column
+                                                                        minScreenWidth="Tablet"
+                                                                        demandPopin="true"
+                                                                        popinDisplay="Inline"
+                                                                        hAlign="Center"
+                                                                    >
+                                                                        <Text
+                                                                            text="Batch"
+                                                                            wrapping="true"
+                                                                        />
+                                                                    </Column>
+
+                                                                    <Column
+                                                                        minScreenWidth="Desktop"
+                                                                        demandPopin="true"
+                                                                        popinDisplay="Inline"
+                                                                        hAlign="Center"
+                                                                    >
+                                                                        <Text
+                                                                            text="Qty Reduced"
+                                                                            wrapping="true"
+                                                                        />
+                                                                    </Column>
+
+                                                                    <Column
+                                                                        minScreenWidth="Desktop"
+                                                                        demandPopin="true"
+                                                                        popinDisplay="Inline"
+                                                                        hAlign="Center"
+                                                                    >
+                                                                        <Text
+                                                                            text="MRP Relevant"
+                                                                            wrapping="true"
+                                                                        />
+                                                                    </Column>
+
+                                                                    <Column
+                                                                        minScreenWidth="Tablet"
+                                                                        demandPopin="true"
+                                                                        popinDisplay="Inline"
+                                                                        hAlign="Center"
+                                                                    >
+                                                                        <Text
+                                                                            text="MRP Material"
+                                                                            wrapping="true"
+                                                                        />
+                                                                    </Column>
+
+                                                                    <Column
+                                                                        minScreenWidth="Desktop"
+                                                                        demandPopin="true"
+                                                                        popinDisplay="Inline"
+                                                                        hAlign="Center"
+                                                                        tooltip="Creation Indicator"
+                                                                        width="2rem"
+                                                                    >
+                                                                        <Text
+                                                                            text="CI"
+                                                                            tooltip="Creation Indicator"
+                                                                            wrapping="true"
+                                                                            
+                                                                        />
+                                                                    </Column>
+
+                                                                    <Column
+                                                                        minScreenWidth="Desktop"
+                                                                        demandPopin="true"
+                                                                        popinDisplay="Inline"
+                                                                        hAlign="Center"
+                                                                        tooltip="Sequence Number"
+                                                                        width="2rem"
+                                                                    >
+                                                                        <Text
+                                                                            text="SN"
+                                                                            tooltip="Sequence Number"
+                                                                            wrapping="true"
+                                                                        />
+                                                                    </Column>
+
+                                                                    <Column
+                                                                        minScreenWidth="Tablet"
+                                                                        demandPopin="true"
+                                                                        popinDisplay="Inline"
+                                                                        hAlign="Center"
+                                                                    >
+                                                                        <Text
+                                                                            text="Quantity"
+                                                                            wrapping="true"
+                                                                        />
+                                                                    </Column>
+
+                                                                    <Column
+                                                                        minScreenWidth="Desktop"
+                                                                        demandPopin="true"
+                                                                        popinDisplay="Inline"
+                                                                        hAlign="Center"
+                                                                        width="9rem"
+                                                                    >
+                                                                        <Text
+                                                                            text="Delivery Date"
+                                                                            wrapping="true"
+                                                                        />
+                                                                    </Column>
+
+                                                                    <Column
+                                                                        minScreenWidth="Tablet"
+                                                                        demandPopin="true"
+                                                                        popinDisplay="Inline"
+                                                                        hAlign="Center"
+                                                                    >
+                                                                        <Text
+                                                                            text="Action"
+                                                                            wrapping="true"
+                                                                        />
+                                                                    </Column>
+                                                                    <Column
+                                                                        minScreenWidth="Tablet"
+                                                                        demandPopin="true"
+                                                                        popinDisplay="Inline"
+                                                                        hAlign="Center"
+                                                                    >
+                                                                        <Text
+                                                                            text="Status"
+                                                                            wrapping="true"
+                                                                        />
+                                                                    </Column>
+                                                                    <Column
+                                                                        minScreenWidth="Tablet"
+                                                                        demandPopin="true"
+                                                                        popinDisplay="Inline"
+                                                                        hAlign="Center"
+                                                                    >
+                                                                        <Text
+                                                                            text="Remarks"
+                                                                            wrapping="true"
+                                                                        />
+                                                                    </Column>
+                                                                </columns>
+                                                                <items>
+                                                                    <ColumnListItem
+                                                                        type="Active" press="onSubShowExpanded"
+                                                                    >
+                                                                        <cells>
+                                                                            <Text
+                                                                                text="{excelModel>ConfirmationCategory}"
+                                                                                wrapping="true"
+                                                                            />
+
+                                                                            <Text
+                                                                                text="{excelModel>FDDCategory}"
+                                                                                wrapping="true"
+                                                                            />
+
+                                                                            <Input
+                                                                                value="{excelModel>Reference}"
+                                                                                editable="{excelModel>newRecFlag}"
+                                                                                tooltip="{excelModel>Reference}"
+                                                                            />
+                                                                            
+
+                                                                            <Text
+                                                                                text="{excelModel>InboundDelivery}"
+                                                                                wrapping="true"
+                                                                            />
+
+                                                                            <Text
+                                                                                text="{excelModel>Item}"
+                                                                                wrapping="true"
+                                                                            />
+
+                                                                            <Text
+                                                                                text="{excelModel>HLItem}"
+                                                                                wrapping="true"
+                                                                            />
+
+                                                                            <Input
+                                                                                value="{excelModel>Batch}"
+                                                                                editable="{excelModel>newRecFlag}"
+                                                                                tooltip="{excelModel>Batch}"
+                                                                                
+                                                                            />
+
+                                                                            <Text
+                                                                                text="{excelModel>QtyReduced}"
+                                                                                wrapping="true"
+                                                                            />
+
+                                                                            <Text
+                                                                                text="{excelModel>MRPRelevant}"
+                                                                                wrapping="true"
+                                                                            />
+
+                                                                            <Input
+                                                                                value="{excelModel>MRPMaterial}"
+                                                                                editable="{excelModel>newRecFlag}"
+                                                                                tooltip="{excelModel>MRPMaterial}"
+                                                                            />
+
+                                                                            <Text
+                                                                                text="{excelModel>CreationIndicator}"
+                                                                                wrapping="true"
+                                                                            />
+
+                                                                            <Text
+                                                                                text="{excelModel>SequenceNumber}"
+                                                                                wrapping="true"
+                                                                            />
+                                                                            <Input
+                                                                                value="{excelModel>Quantity}"
+                                                                                editable="{= ${excelModel>ConfirmationCategory} === 'LA' ? false : true }"
+                                                                                tooltip="{excelModel>Quantity}"
+                                                                            />
+                                                                            <DatePicker
+                                                                                value="{excelModel>CreationDate}"
+                                                                                valueFormat="yyyy-MM-dd"
+                                                                                displayFormat="MM/dd/yyyy"
+                                                                                enabled="{= ${excelModel>ConfirmationCategory} === 'LA' ? false : true }"
+                                                                                tooltip="{excelModel>CreationDate}"
+                                                                            />
+                                                                            <FlexBox >
+                                                                                <Button
+                                                                                    icon="sap-icon://delete"
+                                                                                    type="Reject"
+                                                                                    press=".onDeleteVendorTreeRow"
+                                                                                    enabled="{= ${excelModel>ConfirmationCategory} === 'LA' ? false : true }"
+                                                                                />
+                                                                                <Button
+                                                                                    icon="sap-icon://decline"
+                                                                                    type="Negative"
+                                                                                    press=".onRejectVendorTreeRow"
+                                                                                    enabled="{= ${excelModel>RejectFlag} === 'X' ? false : true }"
+                                                                                />
+                                                                            </FlexBox>
+                                                                            <ObjectStatus
+                                                                                inverted="true"
+                                                                                text="{= ${excelModel>RejectFlag} === 'X' ? 'Rejected' : 'NA'}"
+                                                                                state="{= ${excelModel>RejectFlag} === 'X' ? 'Error' : 'Information'}"
+                                                                            />
+                                                                            <Button
+                                                                                icon="sap-icon://comment"
+                                                                                type="Emphasized"
+                                                                                press=".handlePopoverPress"
+                                                                                enabled="{= ${excelModel>RejectFlag} !== 'X' ? false : true }"
+                                                                            />
+                                                                        </cells>
+                                                                    </ColumnListItem>
+                                                                </items>
+                                                            </Table>
+															</content>
+														</Panel>
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+
+                                
+                            </VBox>
+                        </content>
+                    </Panel>
+                </cells>
+            </ColumnListItem>
+        </items>
+    </Table>
+</core:FragmentDefinition>
