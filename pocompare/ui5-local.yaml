@@ -29,3 +29,17 @@ server:
       afterMiddleware: compression
       configuration:
         ignoreCertErrors: false # If set to true, certificate errors will be ignored. E.g. self-signed certificates will be accepted
+        backend:
+          - path: /odata
+            url: https://harman-becker-automotive-systems-gmbh-sap-build-process1f9f3b2c.cfapps.eu10-004.hana.ondemand.com
+            destination: EMAIL_CFG_CAP
+    - name: sap-fe-mockserver
+      beforeMiddleware: csp
+      configuration:
+        mountPath: /
+        services:
+          - urlPath: /odata/v4/stateless
+            metadataPath: ./webapp/localService/mainService/metadata.xml
+            mockdataPath: ./webapp/localService/mainService/data
+            generateMockData: true
+        annotations: []

@@ -16,6 +16,14 @@
       "toolsId": "a2bc0d2f-15fb-4e96-bdc6-d8420b1dd0bb"
     },
     "dataSources": {
+      "mainService": {
+        "uri": "/odata/v4/outlet/",
+        "type": "OData",
+        "settings": {
+          "annotations": [],
+          "odataVersion": "4.0"
+        }
+      }
     },
     "crossNavigation": {
       "inbounds": {
@@ -66,6 +74,15 @@
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
           "bundleName": "com.sap.pocompare.i18n.i18n"
+        }
+      },
+      "capService": {
+        "dataSource": "mainService",
+        "preload": true,
+        "settings": {
+          "operationMode": "Server",
+          "autoExpandSelect": true,
+          "earlyRequests": true
         }
       }
     },
