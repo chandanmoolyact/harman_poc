@@ -181,8 +181,7 @@ sap.ui.define([
                         VendorCode: item.VendorCode,
                         VendorName: item.VendorName,
                         PODate: item.PODate,
-                        POLineItem: item.POLineItem,
-                        LineItemNumber: item.POLineItem, // Using actual PO Line Item instead of mock
+                        POLineItem: item.POLineItem, // Using actual PO Line Item instead of mock
                         Material: item.Material,
                         MaterialDesc: item.MaterialDesc,
                         POQuantity: item.POQuantity,
@@ -208,7 +207,6 @@ sap.ui.define([
                     VendorName: item.VendorName,
                     PODate: item.PODate,
                     POLineItem: item.POLineItem,
-                    LineItemNumber: item.POLineItem,
                     SequenceNumber: item.SequenceNumber, // The differentiator for Level 3
                     DeliveryDate: item.DeliveryDate,
                     ConfirmationCategory: item.ConfirmationCategory,
@@ -513,30 +511,6 @@ sap.ui.define([
             this.getOwnerComponent().setModel(oSPJSONModel, "alSidePanel");
              
         },
-        onAddVendorRow: function (oEvent) {
-            var oButton = oEvent.getSource();
-            var oContext = oButton.getBindingContext("excelModel");
-            var sOuterRowPath = oContext.getPath(); // e.g., "/data/0"
-            var oModel = this.getOwnerComponent().getModel("excelModel");
-            var aVendorInputTable = oModel.getProperty(sOuterRowPath + "/children");
-            var iLINumber;
-            if(aVendorInputTable.length!=0){
-                var iMaxTabLength=aVendorInputTable.length
-                var iMaxLINumber=aVendorInputTable[iMaxTabLength-1].LineItemNumber
-                iLINumber=(Number(iMaxLINumber)+10).toString()
-            }else{
-                iLINumber=10
-            }
-            aVendorInputTable.push({
-                LineItemNumber: iLINumber,
-                Quantity: 0,
-                DeliveryDate: "",
-                Status:1,
-                StatusMsg:formatter.stateFormatter("1"),
-                StatusState:formatter.statusDescription("1")
-            });
-            oModel.setProperty(sOuterRowPath + "/children", aVendorInputTable);
-        },
         onAddVendorRowSP: function (oEvent) {
             this.convertLIFlag(false)
             var oButton = oEvent.getSource();
@@ -635,20 +609,13 @@ sap.ui.define([
                                 return;
                             }
 
-                            // 1. Set the Reject Flag
-                            oModel.setProperty(sRejPath + "/RejectFlag", "X");
-                            
-                            // 2. Set the Reject Reason from TextArea
-                            oModel.setProperty(sRejPath + "/RejectReason", sReason);
-                            
-                            // 3. Set the Reject Date (Current Date)
-                            // You can format this as a string or keep it as a Date object
+                            var sActivePath = this.oRejectDialog.data("activePath");
+
+                            oModel.setProperty(sActivePath + "/RejectFlag", "X");
+                            oModel.setProperty(sActivePath + "/RejectReason", sReason);
                             var oToday = new Date().toLocaleDateString(); 
-                            oModel.setProperty(sRejPath + "/RejectDate", oToday);
-
-                            // Refresh the model to update the UI (especially if you have formatters/bindings)
+                            oModel.setProperty(sActivePath + "/RejectDate", oToday);
                             oModel.refresh(true);
-
                             sap.m.MessageToast.show("Record rejected successfully.");
                             
                             // Close and clean up
@@ -664,7 +631,7 @@ sap.ui.define([
                     })
                 });
             }
-
+            this.oRejectDialog.data("activePath", sRejPath);
             this.oRejectDialog.open();
         },
         onApprovePress: function (oEvent) {
