@@ -236,7 +236,7 @@
                                         >
                                             <cells>
                                                 <Text
-                                                    text="{excelModel>LineItemNumber}"
+                                                    text="{excelModel>POLineItem}"
                                                     wrapping="true"
                                                 />
                                                 <Text

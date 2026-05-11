@@ -134,7 +134,7 @@ sap.ui.define([
                 });
 
                 let newData= that.transformDataForTreeTable(formattedData)
-                that.aOldData=newData;
+                that.aOldData=JSON.parse(JSON.stringify(newData));
 
                 that.getOwnerComponent().getModel("excelModel").setProperty("/data", newData);
                 // that._headerFB.setVisible(true)
@@ -337,16 +337,19 @@ sap.ui.define([
                 oSheet.destroy();
             });
 
-            this.aOldData=treeData;
+            // this.aOldData=treeData;
 
-            this.onGenSaveMessage(sGeneratedMsg)
+            this.onGenSaveMessage(sGeneratedMsg,treeData)
         },
-        onGenSaveMessage: function (sMsg) {
+        onGenSaveMessage: function (sMsg,treeData) {
+            var that=this
 			MessageBox.success(sMsg, {
 				actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
 				emphasizedAction: MessageBox.Action.OK,
 				onClose: function (sAction) {
 					MessageToast.show(sMsg);
+                    that.aOldData=treeData
+                    that.aOldData=JSON.parse(JSON.stringify(treeData));
 				},
 				dependentOn: this.getView()
 			});
@@ -751,8 +754,14 @@ sap.ui.define([
                 } else {
                     // 2. Check if an existing record was modified
                     // Find the matching record in the original snapshot by SequenceNumber
-                    const oldRec = oldRecords.find(r => r.SequenceNumber === newRec.SequenceNumber);
-                    
+                    // const oldRec = oldRecords.find(r => r.SequenceNumber === newRec.SequenceNumber);
+                    const oldRec = oldRecords.find(r =>   
+                        r.SequenceNumber == newRec.SequenceNumber &&
+                        r.POLineItem     == newRec.POLineItem     &&
+                        r.VendorCode     == newRec.VendorCode     &&
+                        r.PONumber       == newRec.PONumber
+                    )
+                                        
                     if (oldRec) {
                         // Compare relevant fields (Quantity, DeliveryDate, etc.)
                         // We stringify to do a quick "dirty" deep comparison
