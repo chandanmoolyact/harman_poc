@@ -269,8 +269,20 @@ sap.ui.define([
                 oSheet.destroy();
             });
         },
-        onSaveTemplate: function (oEvent) {
+        onSaveTemplate: async function (oEvent) {
             var treeData = this.getView().getModel("excelModel").getProperty("/data");
+
+
+
+            var oCAPModel = this.getOwnerComponent().getModel("capService"); 
+            var oActionContext = oCAPModel.bindContext("/sendMailContent(...)");
+            // oActionContext.setParameter("poHeader", JSON.stringify(treeData));
+            oActionContext.setParameter("poHeader", treeData);
+            try{
+                var oResults=await oActionContext.execute()
+            }catch(oError){
+                console.log(oError)
+            }
             var flatExcelData = this.transformTreeToFlatData(treeData);
             var sGeneratedMsg=this.getChangeSummary(this.aOldData,treeData)
 

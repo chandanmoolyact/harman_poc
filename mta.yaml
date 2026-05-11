@@ -46,10 +46,6 @@ modules:
       - comsappocompare.zip
       name: comsappocompare
       target-path: resources/
-    - artifacts:
-      - project1.zip
-      name: project1
-      target-path: resources/
 - name: comsappocompare
   type: html5
   path: pocompare

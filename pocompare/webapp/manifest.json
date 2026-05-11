@@ -17,11 +17,12 @@
     },
     "dataSources": {
       "mainService": {
-        "uri": "/odata/v4/outlet/",
+        "uri": "/odata/v4/stateless/",
         "type": "OData",
         "settings": {
           "annotations": [],
-          "odataVersion": "4.0"
+          "localUri": "localService/mainService/metadata.xml",
+          "odataVersion": "4.01"
         }
       }
     },
@@ -84,6 +85,15 @@
           "autoExpandSelect": true,
           "earlyRequests": true
         }
+      },
+      "": {
+        "dataSource": "mainService",
+        "preload": true,
+        "settings": {
+          "operationMode": "Server",
+          "autoExpandSelect": true,
+          "earlyRequests": true
+        }
       }
     },
     "resources": {
@@ -115,14 +125,6 @@
         }
       ],
       "targets": {
-        "TargetMaster": {
-          "id": "Master",
-          "name": "Master"
-        },
-        "TargetMain": {
-          "id": "Main",
-          "name": "Main"
-        },
         "TargetFirst": {
           "id": "First",
           "name": "First"
