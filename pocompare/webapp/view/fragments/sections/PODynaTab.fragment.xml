@@ -494,6 +494,7 @@
                                                                         demandPopin="true"
                                                                         popinDisplay="Inline"
                                                                         hAlign="Center"
+                                                                         width="6rem"
                                                                     >
                                                                         <Text
                                                                             text="Action"
@@ -604,15 +605,17 @@
                                                                                 enabled="{= ${excelModel>ConfirmationCategory} === 'LA' ? false : true }"
                                                                                 tooltip="{excelModel>CreationDate}"
                                                                             />
-                                                                            <FlexBox >
+                                                                            <FlexBox alignContent="Center" alignItems="Center" justifyContent="SpaceAround">
                                                                                 <Button
                                                                                     icon="sap-icon://delete"
                                                                                     type="Reject"
+                                                                                    tooltip="Delete"
                                                                                     press=".onDeleteVendorTreeRow"
                                                                                     enabled="{= ${excelModel>ConfirmationCategory} === 'LA' ? false : true }"
                                                                                 />
                                                                                 <Button
                                                                                     icon="sap-icon://decline"
+                                                                                    tooltip="Reject"
                                                                                     type="Negative"
                                                                                     press=".onRejectVendorTreeRow"
                                                                                     enabled="{= ${excelModel>RejectFlag} === 'X' ? false : true }"

@@ -337,8 +337,7 @@ sap.ui.define([
                 oSheet.destroy();
             });
 
-            // this.aOldData=treeData;
-
+            // this.aOldData=JSON.parse(JSON.stringify(treeData));
             this.onGenSaveMessage(sGeneratedMsg,treeData)
         },
         onGenSaveMessage: function (sMsg,treeData) {
@@ -348,8 +347,21 @@ sap.ui.define([
 				emphasizedAction: MessageBox.Action.OK,
 				onClose: function (sAction) {
 					MessageToast.show(sMsg);
-                    that.aOldData=treeData
-                    that.aOldData=JSON.parse(JSON.stringify(treeData));
+
+
+                    const resetNewRecFlag = (data) => {
+                        data.forEach(parent => {
+                            parent.children?.forEach(lineItem => {
+                                lineItem.children?.forEach(record => {
+                                    record.newRecFlag = false;
+                                });
+                            });
+                        });
+                        return data;
+                    };
+                    var aOldExcelList= resetNewRecFlag(treeData);
+                    that.aOldData=JSON.parse(JSON.stringify(aOldExcelList));
+                    this.getView().getModel("excelModel").setProperty("/data",that.aOldData)
 				},
 				dependentOn: this.getView()
 			});
@@ -744,7 +756,24 @@ sap.ui.define([
                 return results;
             };
 
-            const oldRecords = flatten(originalData);
+
+            const flattenReset = (data) => {
+                let results = [];
+                data.forEach(parent => {
+                    // Ensure children exist to avoid errors
+                    parent.children?.forEach(lineItem => {
+                        lineItem.children?.forEach(record => {
+                            // Set the property to false
+                            record.newRecFlag = false; 
+                            
+                            results.push(record);
+                        });
+                    });
+                });
+                return results;
+            };
+
+            const oldRecords = flattenReset(originalData);
             const newRecords = flatten(currentData);
 
             newRecords.forEach(newRec => {
