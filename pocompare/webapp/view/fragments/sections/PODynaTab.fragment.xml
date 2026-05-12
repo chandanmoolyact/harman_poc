@@ -98,6 +98,7 @@
                                         >
                                             <Text
                                                 text="Item No."
+                                                tooltip="Item No."
                                                 wrapping="true"
                                             />
                                         </Column>
@@ -109,6 +110,7 @@
                                         >
                                             <Text
                                                 text="Material"
+                                                tooltip="Material"
                                                 wrapping="true"
                                             />
                                         </Column>
@@ -119,7 +121,8 @@
                                             hAlign="Center"
                                         >
                                             <Text
-                                                text="Material Description"
+                                                text="Mat Desc"
+                                                tooltip="Material Description"
                                                 wrapping="true"
                                             />
                                         </Column>
@@ -130,7 +133,8 @@
                                             hAlign="Center"
                                         >
                                             <Text
-                                                text="PO Quantity"
+                                                text="PO Oty"
+                                                tooltip="PO Quantity"
                                                 wrapping="true"
                                             />
                                         </Column>
@@ -141,7 +145,8 @@
                                             hAlign="Center"
                                         >
                                             <Text
-                                                text="Unit of Measure"
+                                                text="UOM"
+                                                tooltip="Unit of Measure"
                                                 wrapping="true"
                                             />
                                         </Column>
@@ -153,6 +158,7 @@
                                         >
                                             <Text
                                                 text="Net Price"
+                                                tooltip="Net Price"
                                                 wrapping="true"
                                             />
                                         </Column>
@@ -163,7 +169,8 @@
                                             hAlign="Center"
                                         >
                                             <Text
-                                                text="Currency"
+                                                text="Curr."
+                                                tooltip="Currency"
                                                 wrapping="true"
                                             />
                                         </Column>
@@ -175,6 +182,7 @@
                                         >
                                             <Text
                                                 text="Per"
+                                                tooltip="Percentage"
                                                 wrapping="true"
                                             />
                                         </Column>
@@ -186,6 +194,7 @@
                                         >
                                             <Text
                                                 text="Material Group"
+                                                tooltip="Mat Grp"
                                                 wrapping="true"
                                             />
                                         </Column>
@@ -197,6 +206,7 @@
                                         >
                                             <Text
                                                 text="Plant"
+                                                tooltip="Plant"
                                                 wrapping="true"
                                             />
                                         </Column>
@@ -207,7 +217,8 @@
                                             hAlign="Center"
                                         >
                                             <Text
-                                                text="Storage Location"
+                                                text="S Loc"
+                                                tooltip="Storage Location"
                                                 wrapping="true"
                                             />
                                         </Column>
@@ -219,7 +230,8 @@
                                             hAlign="Center"
                                         >
                                             <Text
-                                                text="Delivery Date"
+                                                text="Del. Date"
+                                                tooltip="Delivery Date"
                                                 wrapping="true"
                                             />
                                         </Column>
@@ -237,50 +249,62 @@
                                             <cells>
                                                 <Text
                                                     text="{excelModel>POLineItem}"
+                                                    tooltip="{excelModel>POLineItem}"
                                                     wrapping="true"
                                                 />
                                                 <Text
                                                     text="{excelModel>Material}"
+                                                    tooltip="{excelModel>Material}"
                                                     wrapping="true"
                                                 />
                                                 <Text
                                                     text="{excelModel>MaterialDesc}"
+                                                    tooltip="{excelModel>MaterialDesc}"
                                                     wrapping="true"
                                                 />
                                                 <Text
                                                     text="{excelModel>POQuantity}"
+                                                    tooltip="{excelModel>POQuantity}"
                                                     wrapping="true"
                                                 />
                                                 <Text
                                                     text="{excelModel>UOM}"
+                                                    tooltip="{excelModel>UOM}"
                                                     wrapping="true"
                                                 />
                                                 <Text
                                                     text="{excelModel>NetPrice}"
+                                                    tooltip="{excelModel>NetPrice}"
                                                     wrapping="true"
                                                 />
                                                 <Text
                                                     text="{excelModel>Currency}"
+                                                    tooltip="{excelModel>Currency}"
                                                     wrapping="true"
                                                 />
                                                 <Text
                                                     text="{excelModel>Per}"
+                                                    tooltip="{excelModel>Per}"
                                                     wrapping="true"
                                                 />
                                                 <Text
                                                     text="{excelModel>MaterialGroup}"
+                                                    tooltip="{excelModel>MaterialGroup}"
                                                     wrapping="true"
                                                 />
                                                 <Text
                                                     text="{excelModel>Plant}"
+                                                    tooltip="{excelModel>Plant}"
                                                     wrapping="true"
                                                 />
                                                 <Text
                                                     text="{excelModel>StorageLocation}"
+                                                    tooltip="{excelModel>StorageLocation}"
                                                     wrapping="true"
                                                 />
                                                 <Text
                                                     text="{excelModel>DeliveryDate}"
+                                                    tooltip="{excelModel>DeliveryDate}"
                                                     wrapping="true"
                                                 />
                                                 <Panel visible="{excelModel>NextPanelVisible}" width="auto" accessibleRole="Region">
@@ -342,7 +366,8 @@
                                                                         hAlign="Center"
                                                                     >
                                                                         <Text
-                                                                            text="Reference"
+                                                                            text="Ref."
+                                                                            tooltip="Reference"
                                                                             wrapping="true"
                                                                         />
                                                                     </Column>
@@ -356,7 +381,8 @@
                                                                         hAlign="Center"
                                                                     >
                                                                         <Text
-                                                                            text="Inbound Delivery"
+                                                                            text="Inb. Del"
+                                                                            tooltip="Inbound Delivery"
                                                                             wrapping="true"
                                                                         />
                                                                     </Column>
@@ -369,11 +395,12 @@
                                                                     >
                                                                         <Text
                                                                             text="Item"
+                                                                            tooltip="Item"
                                                                             wrapping="true"
                                                                         />
                                                                     </Column>
 
-                                                                    <Column
+                                                                    <!-- <Column
                                                                         minScreenWidth="Desktop"
                                                                         demandPopin="true"
                                                                         popinDisplay="Inline"
@@ -395,7 +422,7 @@
                                                                             text="Batch"
                                                                             wrapping="true"
                                                                         />
-                                                                    </Column>
+                                                                    </Column> -->
 
                                                                     <Column
                                                                         minScreenWidth="Desktop"
@@ -405,6 +432,7 @@
                                                                     >
                                                                         <Text
                                                                             text="Qty Reduced"
+                                                                            tooltip="Qty Reduced"
                                                                             wrapping="true"
                                                                         />
                                                                     </Column>
@@ -416,7 +444,8 @@
                                                                         hAlign="Center"
                                                                     >
                                                                         <Text
-                                                                            text="MRP Relevant"
+                                                                            text="MRP Rel."
+                                                                            tooltip="MRP Relevant"
                                                                             wrapping="true"
                                                                         />
                                                                     </Column>
@@ -428,7 +457,8 @@
                                                                         hAlign="Center"
                                                                     >
                                                                         <Text
-                                                                            text="MRP Material"
+                                                                            text="MRP Mat."
+                                                                            tooltip="MRP Material"
                                                                             wrapping="true"
                                                                         />
                                                                     </Column>
@@ -471,7 +501,8 @@
                                                                         hAlign="Center"
                                                                     >
                                                                         <Text
-                                                                            text="Quantity"
+                                                                            text="Qty"
+                                                                            tooltip="Quantity"
                                                                             wrapping="true"
                                                                         />
                                                                     </Column>
@@ -484,7 +515,8 @@
                                                                         width="9rem"
                                                                     >
                                                                         <Text
-                                                                            text="Delivery Date"
+                                                                            text="Del. Date"
+                                                                            tooltip="Delivery Date"
                                                                             wrapping="true"
                                                                         />
                                                                     </Column>
@@ -498,6 +530,7 @@
                                                                     >
                                                                         <Text
                                                                             text="Action"
+                                                                            tooltip="Action"
                                                                             wrapping="true"
                                                                         />
                                                                     </Column>
@@ -509,6 +542,7 @@
                                                                     >
                                                                         <Text
                                                                             text="Status"
+                                                                            tooltip="Status"
                                                                             wrapping="true"
                                                                         />
                                                                     </Column>
@@ -520,6 +554,7 @@
                                                                     >
                                                                         <Text
                                                                             text="Remarks"
+                                                                            tooltip="Remarks"
                                                                             wrapping="true"
                                                                         />
                                                                     </Column>
@@ -531,11 +566,13 @@
                                                                         <cells>
                                                                             <Text
                                                                                 text="{excelModel>ConfirmationCategory}"
+                                                                                tooltip="{excelModel>ConfirmationCategory}"
                                                                                 wrapping="true"
                                                                             />
 
                                                                             <Text
                                                                                 text="{excelModel>FDDCategory}"
+                                                                                tooltip="{excelModel>FDDCategory}"
                                                                                 wrapping="true"
                                                                             />
 
@@ -548,15 +585,17 @@
 
                                                                             <Text
                                                                                 text="{excelModel>InboundDelivery}"
+                                                                                tooltip="{excelModel>InboundDelivery}"
                                                                                 wrapping="true"
                                                                             />
 
                                                                             <Text
                                                                                 text="{excelModel>Item}"
+                                                                                tooltip="{excelModel>Item}"
                                                                                 wrapping="true"
                                                                             />
 
-                                                                            <Text
+                                                                            <!-- <Text
                                                                                 text="{excelModel>HLItem}"
                                                                                 wrapping="true"
                                                                             />
@@ -566,15 +605,17 @@
                                                                                 editable="{excelModel>newRecFlag}"
                                                                                 tooltip="{excelModel>Batch}"
                                                                                 
-                                                                            />
+                                                                            /> -->
 
                                                                             <Text
                                                                                 text="{excelModel>QtyReduced}"
+                                                                                tooltip="{excelModel>QtyReduced}"
                                                                                 wrapping="true"
                                                                             />
 
                                                                             <Text
                                                                                 text="{excelModel>MRPRelevant}"
+                                                                                tooltip="{excelModel>MRPRelevant}"
                                                                                 wrapping="true"
                                                                             />
 
@@ -586,11 +627,13 @@
 
                                                                             <Text
                                                                                 text="{excelModel>CreationIndicator}"
+                                                                                tooltip="{excelModel>CreationIndicator}"
                                                                                 wrapping="true"
                                                                             />
 
                                                                             <Text
                                                                                 text="{excelModel>SequenceNumber}"
+                                                                                tooltip="{excelModel>SequenceNumber}"
                                                                                 wrapping="true"
                                                                             />
                                                                             <Input
@@ -623,12 +666,14 @@
                                                                             </FlexBox>
                                                                             <ObjectStatus
                                                                                 inverted="true"
+                                                                                tooltip="{= ${excelModel>RejectFlag} === 'X' ? 'Rejected' : 'NA'}"
                                                                                 text="{= ${excelModel>RejectFlag} === 'X' ? 'Rejected' : 'NA'}"
                                                                                 state="{= ${excelModel>RejectFlag} === 'X' ? 'Error' : 'Information'}"
                                                                             />
                                                                             <Button
                                                                                 icon="sap-icon://comment"
                                                                                 type="Emphasized"
+                                                                                tooltip="Comment"
                                                                                 press=".handlePopoverPress"
                                                                                 enabled="{= ${excelModel>RejectFlag} !== 'X' ? false : true }"
                                                                             />

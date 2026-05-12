@@ -517,8 +517,6 @@ sap.ui.define([
             var oItem = oEvent.getSource();
             var oCtx  = oItem.getBindingContext("excelModel");
             var oModel = this.getOwnerComponent().getModel("excelModel");
-            var oCPath = oCtx.getPath() + "/children";
-            this.sCurrentPath = oCPath;
             var oExcelTabData = oModel.getProperty(oCPath);
             oExcelTabData.newRecFlag=false;
             var aCopiedData = JSON.parse(JSON.stringify(oExcelTabData));
@@ -529,9 +527,10 @@ sap.ui.define([
         onAddVendorRowSP: function (oEvent) {
             this.convertLIFlag(false)
             var oButton = oEvent.getSource();
-            var oContext = oButton.getBindingContext("alSidePanel");
+            var oContext = oButton.getBindingContext("excelModel");
             var oModel = this.getOwnerComponent().getModel("excelModel");
-            var oSPModel = this.getOwnerComponent().getModel("alSidePanel");
+            // var oSPModel = this.getOwnerComponent().getModel("alSidePanel");
+            this.sCurrentPath=oContext.getPath()+"/children"
             var aVendorInputTable=oModel.getProperty(this.sCurrentPath)
             var iSNum;
             var oVendorObject;
@@ -564,8 +563,8 @@ sap.ui.define([
                 StatusMsg:formatter.statusDescription("1"),
                 StatusState:formatter.stateFormatter("1")
             });
-            oSPModel.refresh(true);
-            oSPModel.setProperty("/",aVendorInputTable)
+            // oSPModel.refresh(true);
+            // oSPModel.setProperty("/",aVendorInputTable)
             oModel.setProperty(this.sCurrentPath, aVendorInputTable);
         },
         onDeleteVendorTreeRow: function (oEvent) {
@@ -684,17 +683,6 @@ sap.ui.define([
                 });
             }
         },
-        // onConfirmationRowPress: function (oEvent) {   
-        //     var oItem = oEvent.getSource();
-        //     var oCtx  = oItem.getBindingContext("excelModel");
-        //     var oModel=this.getOwnerComponent().getModel("excelModel")
-        //     var oCPath=oCtx.getPath()+"/children"
-        //     this.sCurrentPath=oCPath;
-        //     var oExcelTabData=oCtx.getModel("excelData").getProperty(oCPath)
-        //     var oSPJSONModel=new JSONModel(oExcelTabData)
-        //     // this.getView().byId("idPOLIDataTable").bindItems(oCPath)
-        //     this.getOwnerComponent().setModel(oSPJSONModel,"alSidePanel")
-        // },
         onConfirmationRowPress: function (oEvent) {   
             // oEvent.cancelBubble()
             // oEvent.getParameter("event").stopPropagation();
@@ -721,18 +709,6 @@ sap.ui.define([
             var aCopiedData = JSON.parse(JSON.stringify(oExcelTabData));
             var oSPJSONModel = new JSONModel(aCopiedData);
             this.getOwnerComponent().setModel(oSPJSONModel, "alSidePanel");
-        },
-        onRowSelect: function(oEvent) {
-            
-            // var oItem = oEvent.getSource();
-            // var oCtx  = oItem.getBindingContext("excelModel");
-            // var oModel = this.getOwnerComponent().getModel("excelModel");
-            // var oCPath = oCtx.getPath() + "/children";
-            // this.sCurrentPath = oCPath;
-            // var oExcelTabData = oModel.getProperty(oCPath);
-            // var aCopiedData = JSON.parse(JSON.stringify(oExcelTabData));
-            // var oSPJSONModel = new JSONModel(aCopiedData);
-            // this.getOwnerComponent().setModel(oSPJSONModel, "alSidePanel");
         },
         onCloseDialog: function () {
             if (this._oDialog) {
