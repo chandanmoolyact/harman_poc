@@ -6,26 +6,19 @@ sap.ui.define([
     "sap/ui/export/Spreadsheet",
     "com/sap/pocompare/model/formatter",
     "sap/ui/core/Fragment"
-], (Controller,JSONModel,MessageToast,MessageBox,Spreadsheet,formatter,Fragment) => {
+], (Controller, JSONModel, MessageToast, MessageBox, Spreadsheet, formatter, Fragment) => {
     "use strict";
-    var that=this;
+    var that = this;
 
     return Controller.extend("com.sap.pocompare.controller.First", {
-        formattter:formatter,
+        formattter: formatter,
         onInit() {
             // Initialize the model that will hold our Excel data
             var oModel = new JSONModel({
                 data: []
             });
             this.getOwnerComponent().setModel(oModel, "excelModel");
-            this.lineItemFlag=true
-
-            // this._loadExternalLibrary("https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js").then(function() {
-            //     this._readExcel(oFile);
-            // }.bind(this))
-            // .catch(function() {
-            //     sap.m.MessageToast.show("Failed to load the Excel library from CDN.");
-            // });
+            this.lineItemFlag = true
         },
 
         // Triggered when a file is selected via the FileUploader
@@ -33,23 +26,21 @@ sap.ui.define([
             var aFiles = oEvent.getParameter("files");
             if (aFiles && aFiles.length > 0) {
                 var oFile = aFiles[0];
-                this._loadExternalLibrary("https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js").then(function() {
+                this._loadExternalLibrary("https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js").then(function () {
                     this._readExcel(oFile);
                 }.bind(this))
-                .catch(function() {
-                    sap.m.MessageToast.show("Failed to load the Excel library from CDN.");
-                });
+                    .catch(function () {
+                        sap.m.MessageToast.show("Failed to load the Excel library from CDN.");
+                    });
             }
         },
         onClearFile: function () {
             this.byId("excelUploader").clear();
             this.getView().getModel("excelModel").setProperty("/data", []);
-            // this._headerFB.setVisible(false)
         },
         onCancelTemplate: function () {
             this.byId("excelUploader").clear();
             this.getView().getModel("excelModel").setProperty("/data", []);
-            // this._headerFB.setVisible(false)
         },
 
         // Helper function using SheetJS (XLSX)
@@ -59,12 +50,12 @@ sap.ui.define([
 
             reader.onload = function (e) {
                 var data = e.target.result;
-                
+
                 // Parse the workbook
                 var workbook = XLSX.read(data, { type: 'binary', cellDates: true });
                 var firstSheetName = workbook.SheetNames[0];
                 var worksheet = workbook.Sheets[firstSheetName];
-                
+
                 // Get headers only (first row)
                 var headers = XLSX.utils.sheet_to_json(worksheet, { header: 1 })[0];
 
@@ -72,9 +63,9 @@ sap.ui.define([
                     "Vendor",
                     "Material",
                     "Material Desc",
-                    "PO Number", 
-                    "Line Item", 
-                    "Quantity", 
+                    "PO Number",
+                    "Line Item",
+                    "Quantity",
                     "Delivery Date",
                     "Schedule Line Category"
                 ];
@@ -85,58 +76,132 @@ sap.ui.define([
                 });
 
                 // Map columns
-                var formattedData = jsonData.map(function(row) {
+                // var formattedData = jsonData.map(function(row) {
+                //     return {
+                //         //Level 1 Start
+                //         VendorCode: row["Vendor Code"],
+                //         VendorName: row["Vendor Name"]||row["Vendor name"],
+                //         PONumber: row["PO Number"] || row["PONumber"]||row["PO/PR No."],
+                //         PODate: new Date(row["PO date"])?.toISOString()?.split('T')[0],
+                //         PanelVisible:false,
+                //         //Level 2 Start
+                //         POLineItem: row["PO Line Item"] || row["LineItem"],
+                //         Material: row["Material"],
+                //         MaterialDesc: row["Material Description"],
+                //         POQuantity: row["PO Quantity"],
+                //         UOM: row["Unit of Measure"],
+                //         DeliveryDate: new Date(row["Delivery Date"])?.toISOString()?.split('T')[0],
+                //         NetPrice: row["Net Price"],
+                //         Currency: row["Currency"],
+                //         Per: row["Per"],
+                //         MaterialGroup: row["Material Group"],
+                //         Plant : row["Plant"],
+                //         StorageLocation : row["Storage Location"],
+                //         //Level 3 Start
+                //         ConfirmationCategory:row["Confirmation category"]||row["Confirmation Category"],
+                //         FDDCategory:row["Fdelivery Date category"]||row["FDelivery Date Category"]||row["Delivery Date Category"],
+                //         Quantity: row["Quantity"],
+                //         Reference: row["Reference"],
+                //         CreationDate: new Date(row["Created on Date"])?.toISOString()?.split('T')[0],
+                //         InboundDelivery: row["Inbound Delivery"],
+                //         Item: row["Item"],
+                //         HLItem: row["Higher Level Item"],
+                //         Batch: row["Batch"],
+                //         QtyReduced: row["Quantity Reduced"],
+                //         MRPRelevant: row["MRP relevant"]||row["MRP Relevent"],
+                //         MRPMaterial: row["MPN Material"]||row["MPN material"],
+                //         CreationIndicator: row["Creation Indicator"]||row["Creation Indicator"],
+                //         SequenceNumber: row["Sequence Number"]||row["Sequence number"],
+                //         RejectFlag: row["Rejected"],
+                //         RejectReason: row["Comment"],
+                //         RejectDate: row["Rejection Date"],   
+                //         RejectDate: new Date(row["Rejection Date"]?.toISOString()?.split('T')[0], 
+
+                //         QlikQty: row["Qlik Qty"]||row["QLIK Qty"],  
+                //         QlikDate: new Date(row["Qlik Date"]||row["QLIK Date"])?.toISOString()?.split('T')[0],
+                //         //Status 4
+                //         StatusCode:"1",
+                //         Status:"New",
+                //         StatusState:formatter.stateFormatter("1"),
+                //         StatusMsg:formatter.statusDescription("1"),
+                //     };
+                // });
+
+
+                var formattedData = jsonData.map(function (row) {
+                    // Helper function to safely format dates to YYYY-MM-DD
+                    var formatDate = function (dateVal) {
+                        if (!dateVal) return "";
+                        var d = new Date(dateVal);
+                        if (isNaN(d.getTime())) return "";
+
+                        var month = (d.getUTCMonth() + 1).toString().padStart(2, '0');
+                        var day = d.getUTCDate().toString().padStart(2, '0');
+                        var year = d.getUTCFullYear();
+                        return month + "/" + day + "/" + year;
+                    };
+
                     return {
-                        //Level 1 Start
+                        // Level 1
                         VendorCode: row["Vendor Code"],
-                        VendorName: row["Vendor Name"]||row["Vendor name"],
-                        PONumber: row["PO Number"] || row["PONumber"]||row["PO/PR No."],
-                        PODate: new Date(row["PO date"])?.toISOString()?.split('T')[0],
-                        PanelVisible:false,
-                        //Level 2 Start
-                        // LineItem: row["Line Item"] || row["LineItem"],
+                        VendorName: row["Vendor Name"] || row["Vendor name"],
+                        PONumber: row["PO Number"] || row["PONumber"] || row["PO/PR No."],
+                        PODate: formatDate(row["PO date"]),
+                        PanelVisible: false,
+
+                        // Level 2
                         POLineItem: row["PO Line Item"] || row["LineItem"],
                         Material: row["Material"],
                         MaterialDesc: row["Material Description"],
                         POQuantity: row["PO Quantity"],
                         UOM: row["Unit of Measure"],
-                        DeliveryDate: new Date(row["Delivery Date"])?.toISOString()?.split('T')[0],
+                        DeliveryDate: formatDate(row["Delivery Date"]),
                         NetPrice: row["Net Price"],
                         Currency: row["Currency"],
                         Per: row["Per"],
                         MaterialGroup: row["Material Group"],
-                        Plant : row["Plant"],
-                        StorageLocation : row["Storage Location"],
-                        //Level 3 Start
-                        ConfirmationCategory:row["Confirmation category"]||row["Confirmation Category"],
-                        FDDCategory:row["Fdelivery Date category"]||row["FDelivery Date Category"],
+                        Plant: row["Plant"],
+                        StorageLocation: row["Storage Location"],
+
+                        // Level 3
+                        ConfirmationCategory: row["Confirmation category"] || row["Confirmation Category"],
+                        FDDCategory: row["Fdelivery Date category"] || row["FDelivery Date Category"] || row["Delivery Date Category"],
                         Quantity: row["Quantity"],
                         Reference: row["Reference"],
-                        CreationDate: row["Created on Date"],
+                        CreationDate: formatDate(row["Created on Date"]),
                         InboundDelivery: row["Inbound Delivery"],
                         Item: row["Item"],
                         HLItem: row["Higher Level Item"],
                         Batch: row["Batch"],
                         QtyReduced: row["Quantity Reduced"],
-                        MRPRelevant: row["MRP relevant"]||row["MRP Relevent"],
-                        MRPMaterial: row["MPN Material"]||row["MPN material"],
-                        CreationIndicator: row["Creation Indicator"]||row["Creation Indicator"],
-                        SequenceNumber: row["Sequence Number"]||row["Sequence number"],
+                        MRPRelevant: row["MRP relevant"] || row["MRP Relevent"],
+                        MRPMaterial: row["MPN Material"] || row["MPN material"],
+                        CreationIndicator: row["Creation Indicator"],
+                        SequenceNumber: row["Sequence Number"] || row["Sequence number"],
                         RejectFlag: row["Rejected"],
                         RejectReason: row["Comment"],
-                        RejectDate: row["Rejection Date"],   
-                        //Status 4
-                        StatusCode:"1",
-                        Status:"New",
-                        StatusState:formatter.stateFormatter("1"),
-                        StatusMsg:formatter.statusDescription("1"),
+                        RejectDate: formatDate(row["Rejection Date"]),
+
+                        QlikQty: row["Qlik Qty"] || row["QLIK Qty"],
+                        QlikDate: formatDate(row["Qlik Date"] || row["QLIK Date"]),
+
+                        // Status Initial States
+                        StatusCode: "1",
+                        Status: "New",
+                        DateState: "None",
+                        DateMsg: "",
+                        // These are the properties our validation logic uses!
+                        StatusState: formatter.stateFormatter("1"), // e.g., "None" or "Information"
+                        StatusMsg: formatter.statusDescription("1")
                     };
                 });
 
-                let newData= that.transformDataForTreeTable(formattedData)
-                that.aOldData=JSON.parse(JSON.stringify(newData));
+                let newData = that.transformDataForTreeTable(formattedData)
 
-                that.getOwnerComponent().getModel("excelModel").setProperty("/data", newData);
+                let aDateNewData=that._processData(newData)
+                that.aOldData = JSON.parse(JSON.stringify(aDateNewData));
+
+                that.getOwnerComponent().getModel("excelModel").setProperty("/data", aDateNewData);
                 // that._headerFB.setVisible(true)
                 MessageToast.show("Excel loaded for preview.");
             };
@@ -226,9 +291,13 @@ sap.ui.define([
                     newRecFlag:false,
                     RejectFlag:item.RejectFlag,
                     RejectReason:item.RejectReason,
+                    QlikQty: item.QlikQty,
+                    QlikDate: item.QlikDate,
                     RejectDate:item.RejectDate,   
                     StatusState: formatter.stateFormatter("1"),
-                    StatusMsg: formatter.statusDescription("1")
+                    StatusMsg: formatter.statusDescription("1"),
+                    DateState: "None",
+                    DateMsg: "",
                 };
                 // Push the Level 3 detail into the correct Level 2 node's children array
                 groupedData[level1Key]._level2ItemsMap[level2Key].children.push(level3Node);
@@ -247,6 +316,37 @@ sap.ui.define([
 
             return treeData;
         },
+        _processData: function (aData) {
+            aData.forEach(level1 => {
+                if (level1.children) {
+                    level1.children.forEach(level2 => {
+                        if (level2.children) {
+                            level2.children.forEach(level3 => {
+                                // 1. Get the dates
+                                const oDelDate = new Date(level3.DeliveryDate);
+                                const oCreDate = new Date(level3.CreationDate);
+
+                                // 2. Calculate the difference in time
+                                const iDiffInTime = oCreDate.getTime() - oDelDate.getTime();
+                                
+                                // 3. Convert time to days
+                                const iDiffInDays = iDiffInTime / (1000 * 3600 * 24);
+
+                                // 4. Check logic: +- 5 days
+                                if (Math.abs(iDiffInDays) <= 5) {
+                                    level3.DateState = "Success"; // Green
+                                    level3.DateMsg = "Within 5-day range";
+                                } else {
+                                    level3.DateState = "Error";   // Red
+                                    level3.DateMsg = "Outside 5-day range";
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+            return aData;
+        },
         onDownloadTemplate: function () {
             // Fetch the specific column configuration for the PO template
             var aCols = this._createColumnConfig();
@@ -256,14 +356,14 @@ sap.ui.define([
                 workbook: {
                     columns: aCols
                 },
-                dataSource: [], 
+                dataSource: [],
                 fileName: 'PO_Template.xlsx',
-                worker: false 
+                worker: false
             };
 
             // Generate and trigger the download of the spreadsheet
             var oSheet = new Spreadsheet(oSettings);
-            oSheet.build().finally(function() {
+            oSheet.build().finally(function () {
                 oSheet.destroy();
             });
         },
@@ -272,17 +372,17 @@ sap.ui.define([
 
 
 
-            var oCAPModel = this.getOwnerComponent().getModel("capService"); 
+            var oCAPModel = this.getOwnerComponent().getModel("capService");
             var oActionContext = oCAPModel.bindContext("/sendMailContent(...)");
             // oActionContext.setParameter("poHeader", JSON.stringify(treeData));
             oActionContext.setParameter("poHeader", treeData);
-            try{
-                var oResults=await oActionContext.execute()
-            }catch(oError){
+            try {
+                var oResults = await oActionContext.execute()
+            } catch (oError) {
                 console.log(oError)
             }
             var flatExcelData = this.transformTreeToFlatData(treeData);
-            var sGeneratedMsg=this.getChangeSummary(this.aOldData,treeData)
+            var sGeneratedMsg = this.getChangeSummary(this.aOldData, treeData)
 
             var aCols = [
                 // Level 1
@@ -305,7 +405,7 @@ sap.ui.define([
                 { label: 'Storage Location', property: 'StorageLocation', type: 'string' },
                 // Level 3
                 { label: 'Confirmation category', property: 'ConfirmationCategory', type: 'string' },
-                { label: 'Fdelivery Date Category', property: 'FDDCategory', type: 'string' },
+                { label: 'Delivery Date Category', property: 'FDDCategory', type: 'string' },
                 { label: 'Quantity', property: 'Quantity', type: 'string' },
                 { label: 'Reference', property: 'Reference', type: 'string' },
                 { label: 'Created on Date', property: 'CreationDate', type: 'string' },
@@ -320,6 +420,8 @@ sap.ui.define([
                 { label: 'Sequence Number', property: 'SequenceNumber', type: 'string' },
                 { label: 'Rejected', property: 'RejectFlag', type: 'string' },
                 { label: 'Comment', property: 'RejectReason', type: 'string' },
+                { label: 'Qlik Qty', property: 'QlikQty', type: 'string' },
+                { label: 'Qlik Date', property: 'QlikDate', type: 'string' },
                 { label: 'Rejection Date', property: 'RejectDate', type: 'string' },
                 // Level 4
                 { label: 'Status', property: 'Status', type: 'string' },
@@ -333,20 +435,20 @@ sap.ui.define([
             };
 
             var oSheet = new Spreadsheet(oSettings);
-            oSheet.build().finally(function() {
+            oSheet.build().finally(function () {
                 oSheet.destroy();
             });
 
             // this.aOldData=JSON.parse(JSON.stringify(treeData));
-            this.onGenSaveMessage(sGeneratedMsg,treeData)
+            this.onGenSaveMessage(sGeneratedMsg, treeData)
         },
-        onGenSaveMessage: function (sMsg,treeData) {
-            var that=this
-			MessageBox.success(sMsg, {
-				actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
-				emphasizedAction: MessageBox.Action.OK,
-				onClose: function (sAction) {
-					MessageToast.show(sMsg);
+        onGenSaveMessage: function (sMsg, treeData) {
+            var that = this
+            MessageBox.success(sMsg, {
+                actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
+                emphasizedAction: MessageBox.Action.OK,
+                onClose: function (sAction) {
+                    MessageToast.show(sMsg);
 
 
                     const resetNewRecFlag = (data) => {
@@ -359,14 +461,169 @@ sap.ui.define([
                         });
                         return data;
                     };
-                    var aOldExcelList= resetNewRecFlag(treeData);
-                    that.aOldData=JSON.parse(JSON.stringify(aOldExcelList));
-                    this.getView().getModel("excelModel").setProperty("/data",that.aOldData)
-				},
-				dependentOn: this.getView()
-			});
-		},
-        transformTreeToFlatData:function(treeData) {
+                    var aOldExcelList = resetNewRecFlag(treeData);
+                    that.aOldData = JSON.parse(JSON.stringify(aOldExcelList));
+                    this.getView().getModel("excelModel").setProperty("/data", that.aOldData)
+                },
+                dependentOn: this.getView()
+            });
+        },
+        // This function is called on the 'change' or 'liveChange' event of the input
+        onQuantityLiveChange: function (oEvent) {
+            const oInput = oEvent.getSource();
+            const sNewValue = oEvent.getParameter("newValue");
+
+            // 1. Get the Binding Context for the current line (Third Level)
+            const oContext = oInput.getBindingContext("excelModel");
+            const sPath = oContext.getPath();
+
+            // 2. Identify the Parent Path (Second Level - PO Line Item)
+            // Example path: /0/children/1/children/2 -> Parent: /0/children/1
+            const aPathParts = sPath.split("/");
+            aPathParts.pop(); // Remove current index
+            aPathParts.pop(); // Remove "children" literal
+            const sParentPath = aPathParts.join("/");
+
+            const oModel = oContext.getModel("excelModel");
+            const oParentData = oModel.getProperty(sParentPath);
+
+            // 3. Get PO Quantity (Total allowed)
+            const fPOQuantity = parseFloat(oParentData.POQuantity || 0);
+
+            // 4. Calculate sum of all AB lines under this parent
+            const aConfirmations = oParentData.children || [];
+            let fTotalConfirmedQty = 0;
+
+            aConfirmations.forEach((item, index) => {
+                // Use the live value for the row being edited, otherwise use the model value
+                if (oContext.getPath() === sParentPath + "/children/" + index) {
+                    fTotalConfirmedQty += parseFloat(sNewValue || 0);
+                } else {
+                    // Only sum items with Category "AB"
+                    if (item.ConfirmationCategory === "AB") {
+                        fTotalConfirmedQty += parseFloat(item.Quantity || 0);
+                    }
+                }
+            });
+
+            // 5. Validation Check
+            if (fTotalConfirmedQty > fPOQuantity) {
+                oInput.setValueState("Error");
+                oInput.setValueStateText("The sum of Confirmation quantity exceeds the PO line quantity");
+            } else {
+                oInput.setValueState("None");
+                oInput.setValueStateText("");
+                const oTable = oEvent.getSource().getParent().getParent() // Ensure you have the ID of your TreeTable
+                const aRows = oTable.getItems();
+
+                aRows.forEach(oRow => {
+                    const oRowContext = oRow.getBindingContext("excelModel");
+                    if (oRowContext) {
+                        const sRowPath = oRowContext.getPath();
+
+                        // Check if this row belongs to the same parent PO Line
+                        if (sRowPath.startsWith(sParentPath + "/children/")) {
+                            // Find the Input control within the row (usually inside a template/cell)
+                            // Adjust the index [n] based on which column your Quantity input is in
+                            const oRowInput = oRow.getCells()[10];
+                            // const oRowInput = oRow.getCells().find(oCell => oCell.getMetadata().getName() === "sap.m.Input");
+                            oRowInput.setValueState("None");
+                            oRowInput.setValueStateText("");
+                        }
+                    }
+                });
+
+            }
+        },
+        onDateLiveChange: function (oEvent) {
+            const oDP = oEvent.getSource();
+            const oModel = this.getView().getModel("excelModel");
+            const oContext = oDP.getBindingContext("excelModel");
+            const sNewDateValue = oEvent.getParameter("value");
+
+            if (!sNewDateValue) return;
+
+            // 1. Navigate to Parent Delivery Date
+            const sPath = oContext.getPath();
+            const sParentPath = sPath.substring(0, sPath.lastIndexOf("/children/"));
+            const sParentDateStr = oModel.getProperty(sParentPath + "/DeliveryDate");
+
+            const dParent = new Date(sParentDateStr);
+            const dChild = new Date(sNewDateValue);
+
+            // 2. Calculate Day Difference
+            const iDiffInMs = Math.abs(dChild - dParent);
+            const iDiffInDays = iDiffInMs / (1000 * 60 * 60 * 24);
+
+            // 3. Determine State
+            const sState = (iDiffInDays <= 5) ? "Success" : "Error";
+            const sMsg = (iDiffInDays <= 5) ? "Within ±5 day range" : "Beyond 5 days of PO Delivery Date";
+
+            // 4. Update the Model
+            oModel.setProperty(sPath + "/DateState", sState);
+            oModel.setProperty(sPath + "/DateMsg", sMsg);
+        },
+
+        // onQuantityLiveChange: function (oEvent) {
+        //     const oCurrentInput = oEvent.getSource();
+        //     const oContext = oCurrentInput.getBindingContext("excelModel");
+        //     const oModel = oContext.getModel("excelModel");
+
+        //     // 1. Navigate to the Parent (Level 2)
+        //     const sPath = oContext.getPath();
+        //     const aPathParts = sPath.split("/");
+        //     aPathParts.splice(-2); // Remove index and "children" to get parent path
+        //     const sParentPath = aPathParts.join("/");
+
+        //     const oParentData = oModel.getProperty(sParentPath);
+        //     const fPOQuantity = parseFloat(oParentData.POQuantity || 0);
+        //     const aConfirmations = oParentData.children || [];
+
+        //     // 2. Calculate the current total of all AB lines
+        //     // Note: We use the live value for the row being edited, model value for others
+        //     let fTotalConfirmedQty = 0;
+        //     aConfirmations.forEach((item, index) => {
+        //         if (item.ConfirmationCategory === "AB") {
+        //             const sItemPath = sParentPath + "/children/" + index;
+        //             const fQty = (sItemPath === sPath) 
+        //                 ? parseFloat(oEvent.getParameter("newValue") || 0) 
+        //                 : parseFloat(item.Quantity || 0);
+        //             fTotalConfirmedQty += fQty;
+        //         }
+        //     });
+
+        //     // 3. Find all rendered Input controls for this specific PO Line
+        //     // We use the Table's rows to find siblings and update their states
+        //     const bIsInvalid = fTotalConfirmedQty > fPOQuantity;
+        //     const oTable = oEvent.getSource().getParent().getParent() // Ensure you have the ID of your TreeTable
+        //     const aRows = oTable.getItems();
+
+        //     aRows.forEach(oRow => {
+        //         const oRowContext = oRow.getBindingContext("excelModel");
+        //         if (oRowContext) {
+        //             const sRowPath = oRowContext.getPath();
+
+        //             // Check if this row belongs to the same parent PO Line
+        //             if (sRowPath.startsWith(sParentPath + "/children/")) {
+        //                 // Find the Input control within the row (usually inside a template/cell)
+        //                 // Adjust the index [n] based on which column your Quantity input is in
+        //                 const oRowInput = oRow.getCells().find(oCell => oCell.getMetadata().getName() === "sap.m.Input");
+
+        //                 if (oRowInput) {
+        //                     if (bIsInvalid) {
+        //                         oRowInput.setValueState("Error");
+        //                         oRowInput.setValueStateText("The sum of Confirmation quantity exceeds the PO line quantity");
+        //                     } else {
+        //                         oRowInput.setValueState("None");
+        //                         oRowInput.setValueStateText("");
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     });
+        // },
+
+        transformTreeToFlatData: function (treeData) {
             const flatData = [];
             // Loop through Level 1 (The PO / Vendor groups)
             treeData.forEach(groupNode => {
@@ -386,7 +643,7 @@ sap.ui.define([
                                     PONumber: poNumber,
                                     VendorCode: vendorCode,
                                     VendorName: vendorName,
-                                    PODate:poDate,
+                                    PODate: poDate,
                                     //Level 2 Start
                                     POLineItem: itemNode.POLineItem,
                                     Material: itemNode.Material,
@@ -397,12 +654,12 @@ sap.ui.define([
                                     NetPrice: itemNode.NetPrice,
                                     Currency: itemNode.Currency,
                                     Per: itemNode.Per,
-                                    MaterialGroup:itemNode.MaterialGroup,
-                                    Plant : itemNode.Plant,
-                                    StorageLocation : itemNode.StorageLocation,
+                                    MaterialGroup: itemNode.MaterialGroup,
+                                    Plant: itemNode.Plant,
+                                    StorageLocation: itemNode.StorageLocation,
                                     //Level 3 Start
-                                    ConfirmationCategory:subItemNode.ConfirmationCategory,
-                                    FDDCategory:subItemNode.FDDCategory,
+                                    ConfirmationCategory: subItemNode.ConfirmationCategory,
+                                    FDDCategory: subItemNode.FDDCategory,
                                     Quantity: subItemNode.Quantity,
                                     Reference: subItemNode.Reference,
                                     CreationDate: subItemNode.CreationDate,
@@ -416,13 +673,15 @@ sap.ui.define([
                                     CreationIndicator: subItemNode.CreationIndicator,
                                     SequenceNumber: subItemNode.SequenceNumber,
 
-                                    RejectFlag:subItemNode.RejectFlag,
-                                    RejectReason:subItemNode.RejectReason,
-                                    RejectDate:subItemNode.RejectDate, 
+                                    RejectFlag: subItemNode.RejectFlag,
+                                    RejectReason: subItemNode.RejectReason,
+                                    QlikQty: subItemNode.QlikQty,
+                                    QlikDate: subItemNode.QlikDate,
+                                    RejectDate: subItemNode.RejectDate,
 
 
-                                    Status:subItemNode.Status,
-                                    StatusMsg:subItemNode.StatusMsg
+                                    Status: subItemNode.Status,
+                                    StatusMsg: subItemNode.StatusMsg
                                 };
                                 flatData.push(flatRow);
                             });
@@ -434,12 +693,12 @@ sap.ui.define([
             return flatData;
         },
 
-        _createColumnConfig: function() {
+        _createColumnConfig: function () {
             return [
                 {
                     label: 'PO Number',
                     property: 'poNumber',
-                    type: 'string', 
+                    type: 'string',
                     width: 20
                 },
                 {
@@ -458,48 +717,48 @@ sap.ui.define([
                     label: 'Delivery Date',
                     property: 'deliveryDate',
                     type: 'date',
-                    format: 'yyyy-MM-dd', 
+                    format: 'yyyy-MM-dd',
                     width: 20
                 }
             ];
         },
-        onShowExpanded:function(oEvent){
+        onShowExpanded: function (oEvent) {
 
-            if(this.lineItemFlag){
-                let oSource=oEvent.getSource()
-                let oBindingContext=oSource.getBindingContext("excelModel")
-                let oPath=oBindingContext.getPath()
-                let oPanelVisiblePath=oPath+"/PanelVisible"
+            if (this.lineItemFlag) {
+                let oSource = oEvent.getSource()
+                let oBindingContext = oSource.getBindingContext("excelModel")
+                let oPath = oBindingContext.getPath()
+                let oPanelVisiblePath = oPath + "/PanelVisible"
 
-                let bVisiblePath=this.getOwnerComponent().getModel("excelModel").getProperty(oPanelVisiblePath)
-                if(bVisiblePath){
-                    this.getOwnerComponent().getModel("excelModel").setProperty(oPanelVisiblePath,false)
+                let bVisiblePath = this.getOwnerComponent().getModel("excelModel").getProperty(oPanelVisiblePath)
+                if (bVisiblePath) {
+                    this.getOwnerComponent().getModel("excelModel").setProperty(oPanelVisiblePath, false)
                     // oSource.setIcon("sap-icon://dropdown")
-                    
-                }else{
-                    this.getOwnerComponent().getModel("excelModel").setProperty(oPanelVisiblePath,true)
+
+                } else {
+                    this.getOwnerComponent().getModel("excelModel").setProperty(oPanelVisiblePath, true)
                     // oSource.setIcon("sap-icon://slim-arrow-up")
                 }
             }
             this.convertLIFlag(true)
         },
-        convertLIFlag:function(bFlag){
-            this.lineItemFlag=bFlag
+        convertLIFlag: function (bFlag) {
+            this.lineItemFlag = bFlag
         },
-        onSubShowExpanded:function(oEvent){
+        onSubShowExpanded: function (oEvent) {
             this.convertLIFlag(false)
-            let oSource=oEvent.getSource()
-            let oBindingContext=oSource.getBindingContext("excelModel")
-            let oPath=oBindingContext.getPath()
-            let oPanelVisiblePath=oPath+"/NextPanelVisible"
+            let oSource = oEvent.getSource()
+            let oBindingContext = oSource.getBindingContext("excelModel")
+            let oPath = oBindingContext.getPath()
+            let oPanelVisiblePath = oPath + "/NextPanelVisible"
 
-            let bVisiblePath=this.getOwnerComponent().getModel("excelModel").getProperty(oPanelVisiblePath)
-            if(bVisiblePath){
-                this.getOwnerComponent().getModel("excelModel").setProperty(oPanelVisiblePath,false)
+            let bVisiblePath = this.getOwnerComponent().getModel("excelModel").getProperty(oPanelVisiblePath)
+            if (bVisiblePath) {
+                this.getOwnerComponent().getModel("excelModel").setProperty(oPanelVisiblePath, false)
                 // oSource.setIcon("sap-icon://dropdown")
-            }else{
-             this.getOwnerComponent().getModel("excelModel").setProperty(oPanelVisiblePath,true)
-            //  oSource.setIcon("sap-icon://slim-arrow-up")
+            } else {
+                this.getOwnerComponent().getModel("excelModel").setProperty(oPanelVisiblePath, true)
+                //  oSource.setIcon("sap-icon://slim-arrow-up")
             }
 
 
@@ -509,20 +768,20 @@ sap.ui.define([
             if (this.prevRecord) {
                 this.prevRecord.removeStyleClass("myCustomHighlight");
             }
-            
+
             oCurrentItem.addStyleClass("myCustomHighlight");
-            
+
             // 3. Store this item as the "previous" for the next time a row is pressed
             this.prevRecord = oCurrentItem;
-            var oItem = oEvent.getSource();
-            var oCtx  = oItem.getBindingContext("excelModel");
-            var oModel = this.getOwnerComponent().getModel("excelModel");
-            var oExcelTabData = oModel.getProperty(oCPath);
-            oExcelTabData.newRecFlag=false;
-            var aCopiedData = JSON.parse(JSON.stringify(oExcelTabData));
-            var oSPJSONModel = new JSONModel(aCopiedData);
-            this.getOwnerComponent().setModel(oSPJSONModel, "alSidePanel");
-             
+            // var oItem = oEvent.getSource();
+            // var oCtx  = oItem.getBindingContext("excelModel");
+            // var oModel = this.getOwnerComponent().getModel("excelModel");
+            // var oExcelTabData = oModel.getProperty(oCPath);
+            // oExcelTabData.newRecFlag=false;
+            // var aCopiedData = JSON.parse(JSON.stringify(oExcelTabData));
+            // var oSPJSONModel = new JSONModel(aCopiedData);
+            // this.getOwnerComponent().setModel(oSPJSONModel, "alSidePanel");
+
         },
         onAddVendorRowSP: function (oEvent) {
             this.convertLIFlag(false)
@@ -530,28 +789,28 @@ sap.ui.define([
             var oContext = oButton.getBindingContext("excelModel");
             var oModel = this.getOwnerComponent().getModel("excelModel");
             // var oSPModel = this.getOwnerComponent().getModel("alSidePanel");
-            this.sCurrentPath=oContext.getPath()+"/children"
-            var aVendorInputTable=oModel.getProperty(this.sCurrentPath)
+            this.sCurrentPath = oContext.getPath() + "/children"
+            var aVendorInputTable = oModel.getProperty(this.sCurrentPath)
             var iSNum;
             var oVendorObject;
-            if(aVendorInputTable.length!=0){
-                oVendorObject=aVendorInputTable[0]
-                var iMaxTabLength=aVendorInputTable.length
-                var iMaxSN=aVendorInputTable[iMaxTabLength-1].SequenceNumber
-                iSNum=(Number(iMaxSN)+1).toString()
-            }else{
-                oVendorObject={}
-                iSNum=1
+            if (aVendorInputTable.length != 0) {
+                oVendorObject = aVendorInputTable[0]
+                var iMaxTabLength = aVendorInputTable.length
+                var iMaxSN = aVendorInputTable[iMaxTabLength - 1].SequenceNumber
+                iSNum = (Number(iMaxSN) + 1).toString()
+            } else {
+                oVendorObject = {}
+                iSNum = 1
             }
             aVendorInputTable.push({
                 // LineItemNumber: iLINumber,
-                ConfirmationCategory:oVendorObject?.ConfirmationCategory,
-                FDDCategory:oVendorObject?.FDDCategory,
-                Quantity: oVendorObject?.Quantity,
+                ConfirmationCategory: oVendorObject?.ConfirmationCategory,
+                FDDCategory: oVendorObject?.FDDCategory,
+                Quantity: 0,
                 Reference: oVendorObject?.Reference,
                 CreationDate: oVendorObject?.CreationDate,
                 InboundDelivery: oVendorObject?.InboundDelivery,
-                Item:oVendorObject?.Item,
+                Item: oVendorObject?.Item,
                 HLItem: oVendorObject?.HLItem,
                 Batch: oVendorObject?.Batch,
                 QtyReduced: oVendorObject?.QtyReduced,
@@ -559,12 +818,10 @@ sap.ui.define([
                 MRPMaterial: oVendorObject?.MRPMaterial,
                 CreationIndicator: oVendorObject?.CreationIndicator,
                 SequenceNumber: iSNum,
-                newRecFlag:true,
-                StatusMsg:formatter.statusDescription("1"),
-                StatusState:formatter.stateFormatter("1")
+                newRecFlag: true,
+                StatusMsg: formatter.statusDescription("1"),
+                StatusState: formatter.stateFormatter("1")
             });
-            // oSPModel.refresh(true);
-            // oSPModel.setProperty("/",aVendorInputTable)
             oModel.setProperty(this.sCurrentPath, aVendorInputTable);
         },
         onDeleteVendorTreeRow: function (oEvent) {
@@ -585,13 +842,13 @@ sap.ui.define([
             // 3. Remove the item directly from the model's data
             if (Array.isArray(aParentCollection)) {
                 aParentCollection.splice(iIndex, 1);
-                oModel.refresh(true); 
+                oModel.refresh(true);
             }
         },
         onRejectVendorTreeRow: function (oEvent) {
             var oResourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
             var oModel = this.getOwnerComponent().getModel("excelModel");
-            
+
             // Get the binding context of the row where the button was clicked
             var oContext = oEvent.getSource().getBindingContext("excelModel");
             var sRejPath = oContext.getPath();
@@ -617,7 +874,7 @@ sap.ui.define([
                         text: "Confirm",
                         press: function () {
                             var sReason = sap.ui.getCore().byId("rejectionTextArea").getValue();
-                            
+
                             if (!sReason) {
                                 sap.m.MessageToast.show("Please enter a reason before submitting.");
                                 return;
@@ -627,11 +884,11 @@ sap.ui.define([
 
                             oModel.setProperty(sActivePath + "/RejectFlag", "X");
                             oModel.setProperty(sActivePath + "/RejectReason", sReason);
-                            var oToday = new Date().toLocaleDateString(); 
+                            var oToday = new Date().toLocaleDateString();
                             oModel.setProperty(sActivePath + "/RejectDate", oToday);
                             oModel.refresh(true);
                             sap.m.MessageToast.show("Record rejected successfully.");
-                            
+
                             // Close and clean up
                             this.oRejectDialog.close();
                             sap.ui.getCore().byId("rejectionTextArea").setValue(""); // Clear for next time
@@ -656,24 +913,24 @@ sap.ui.define([
             MessageToast.show("Line Item Rejected!");
             this._closeDialog();
         },
-        onActionTaken:function(oEvent){
-            let sButtonText=oEvent.getSource().getText()
+        onActionTaken: function (oEvent) {
+            let sButtonText = oEvent.getSource().getText()
             var oButton = oEvent.getSource();
             var oContext = oButton.getBindingContext("alSidePanel");
             var sInnerRowPath = oContext.getPath();
             var oModel = this.getOwnerComponent().getModel("excelModel");
             var oSPModel = this.getOwnerComponent().getModel("alSidePanel");
-            let sChangePropertyStatus=sInnerRowPath+"/Status"
-            let sChangePropertyStatusMsg=sInnerRowPath+"/StatusMsg"
-            let sChangePropertyStatusState=sInnerRowPath+"/StatusState"
-            if(sButtonText=="Approve"){
-                oSPModel.setProperty(sChangePropertyStatus,2);
-                oSPModel.setProperty(sChangePropertyStatusMsg,formatter.statusDescription("2"));
-                oSPModel.setProperty(sChangePropertyStatusState,formatter.stateFormatter("2"));
-            }else if(sButtonText=="Reject"){
-                oSPModel.setProperty(sChangePropertyStatus,3);
-                oSPModel.setProperty(sChangePropertyStatusMsg,formatter.statusDescription("3"));
-                oSPModel.setProperty(sChangePropertyStatusState,formatter.stateFormatter("3"));
+            let sChangePropertyStatus = sInnerRowPath + "/Status"
+            let sChangePropertyStatusMsg = sInnerRowPath + "/StatusMsg"
+            let sChangePropertyStatusState = sInnerRowPath + "/StatusState"
+            if (sButtonText == "Approve") {
+                oSPModel.setProperty(sChangePropertyStatus, 2);
+                oSPModel.setProperty(sChangePropertyStatusMsg, formatter.statusDescription("2"));
+                oSPModel.setProperty(sChangePropertyStatusState, formatter.stateFormatter("2"));
+            } else if (sButtonText == "Reject") {
+                oSPModel.setProperty(sChangePropertyStatus, 3);
+                oSPModel.setProperty(sChangePropertyStatusMsg, formatter.statusDescription("3"));
+                oSPModel.setProperty(sChangePropertyStatusState, formatter.stateFormatter("3"));
             }
         },
         _closeDialog: function () {
@@ -683,10 +940,7 @@ sap.ui.define([
                 });
             }
         },
-        onConfirmationRowPress: function (oEvent) {   
-            // oEvent.cancelBubble()
-            // oEvent.getParameter("event").stopPropagation();
-            // 1. Get the current pressed row
+        onConfirmationRowPress: function (oEvent) {
             this.convertLIFlag(false)
             var oCurrentItem = oEvent.getSource();
 
@@ -694,18 +948,18 @@ sap.ui.define([
             if (this.prevRecord) {
                 this.prevRecord.removeStyleClass("myCustomHighlight");
             }
-            
+
             oCurrentItem.addStyleClass("myCustomHighlight");
-            
+
             // 3. Store this item as the "previous" for the next time a row is pressed
             this.prevRecord = oCurrentItem;
             var oItem = oEvent.getSource();
-            var oCtx  = oItem.getBindingContext("excelModel");
+            var oCtx = oItem.getBindingContext("excelModel");
             var oModel = this.getOwnerComponent().getModel("excelModel");
             var oCPath = oCtx.getPath() + "/children";
             this.sCurrentPath = oCPath;
             var oExcelTabData = oModel.getProperty(oCPath);
-            oExcelTabData.newRecFlag=false;
+            oExcelTabData.newRecFlag = false;
             var aCopiedData = JSON.parse(JSON.stringify(oExcelTabData));
             var oSPJSONModel = new JSONModel(aCopiedData);
             this.getOwnerComponent().setModel(oSPJSONModel, "alSidePanel");
@@ -715,7 +969,7 @@ sap.ui.define([
                 this._oDialog.close();
             }
         },
-        getChangeSummary:function(originalData, currentData) {
+        getChangeSummary: function (originalData, currentData) {
             let updatedCount = 0;
             let addedCount = 0;
 
@@ -740,8 +994,8 @@ sap.ui.define([
                     parent.children?.forEach(lineItem => {
                         lineItem.children?.forEach(record => {
                             // Set the property to false
-                            record.newRecFlag = false; 
-                            
+                            record.newRecFlag = false;
+
                             results.push(record);
                         });
                     });
@@ -760,13 +1014,13 @@ sap.ui.define([
                     // 2. Check if an existing record was modified
                     // Find the matching record in the original snapshot by SequenceNumber
                     // const oldRec = oldRecords.find(r => r.SequenceNumber === newRec.SequenceNumber);
-                    const oldRec = oldRecords.find(r =>   
+                    const oldRec = oldRecords.find(r =>
                         r.SequenceNumber == newRec.SequenceNumber &&
-                        r.POLineItem     == newRec.POLineItem     &&
-                        r.VendorCode     == newRec.VendorCode     &&
-                        r.PONumber       == newRec.PONumber
+                        r.POLineItem == newRec.POLineItem &&
+                        r.VendorCode == newRec.VendorCode &&
+                        r.PONumber == newRec.PONumber
                     )
-                                        
+
                     if (oldRec) {
                         // Compare relevant fields (Quantity, DeliveryDate, etc.)
                         // We stringify to do a quick "dirty" deep comparison
@@ -777,47 +1031,27 @@ sap.ui.define([
                 }
             });
 
-             
-            let sResMessage=this.generateMessage(addedCount, updatedCount);
+
+            let sResMessage = this.generateMessage(addedCount, updatedCount);
             return sResMessage;
         },
 
-        generateMessage:function(added, updated) {
+        generateMessage: function (added, updated) {
             if (added === 0 && updated === 0) return "No changes to save.";
-            
+
             let msg = "Your data has been saved";
             let details = [];
-            
+
             if (updated > 0) details.push(`${updated} record${updated > 1 ? 's' : ''} updated`);
             if (added > 0) details.push(`${added} record${added > 1 ? 's' : ''} added`);
-            
+
             return `${msg}, ${details.join(", ")}`;
         },
-        // handlePopoverPress: function (oEvent) {
-		// 	var oButton = oEvent.getSource(),
-		// 		oView = this.getView();
-
-		// 	// create popover
-		// 	if (!this._pPopover) {
-		// 		this._pPopover = Fragment.load({
-		// 			id: oView.getId(),
-		// 			name: "com.sap.pocompare.view.fragments.CommentPopover",
-		// 			controller: this
-		// 		}).then(function(oPopover) {
-		// 			oView.addDependent(oPopover);
-		// 			oPopover.bindElement("/ProductCollection/0");
-		// 			return oPopover;
-		// 		});
-		// 	}
-		// 	this._pPopover.then(function(oPopover) {
-		// 		oPopover.openBy(oButton);
-		// 	});
-		// },
         handlePopoverPress: function (oEvent) {
             var oButton = oEvent.getSource(),
                 oView = this.getView(),
                 // Capture the specific row context from the clicked button
-                oContext = oButton.getBindingContext("excelModel"); 
+                oContext = oButton.getBindingContext("excelModel");
 
             // Create popover if it doesn't exist
             if (!this._pPopover) {
@@ -825,21 +1059,45 @@ sap.ui.define([
                     id: oView.getId(),
                     name: "com.sap.pocompare.view.fragments.CommentPopover",
                     controller: this
-                }).then(function(oPopover) {
+                }).then(function (oPopover) {
                     oView.addDependent(oPopover);
                     return oPopover;
                 });
             }
 
-            this._pPopover.then(function(oPopover) {
+            this._pPopover.then(function (oPopover) {
+                // Bind the popover to the specific row's context
+                oPopover.setBindingContext(oContext, "excelModel");
+                oPopover.openBy(oButton);
+            });
+        },
+        handleQlikPopoverPress: function (oEvent) {
+            var oButton = oEvent.getSource(),
+                oView = this.getView(),
+                // Capture the specific row context from the clicked button
+                oContext = oButton.getBindingContext("excelModel");
+
+            // Create popover if it doesn't exist
+            if (!this._pqPopover) {
+                this._pqPopover = sap.ui.core.Fragment.load({
+                    id: oView.getId(),
+                    name: "com.sap.pocompare.view.fragments.QlikCommentPopover",
+                    controller: this
+                }).then(function (oPopover) {
+                    oView.addDependent(oPopover);
+                    return oPopover;
+                });
+            }
+
+            this._pqPopover.then(function (oPopover) {
                 // Bind the popover to the specific row's context
                 oPopover.setBindingContext(oContext, "excelModel");
                 oPopover.openBy(oButton);
             });
         },
 
-        onClosePopover: function() {
-            this._pPopover.then(function(oPopover) {
+        onClosePopover: function () {
+            this._pPopover.then(function (oPopover) {
                 oPopover.close();
             });
         },

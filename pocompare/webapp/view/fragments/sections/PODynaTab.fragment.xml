@@ -72,6 +72,7 @@
                     <ObjectIdentifier title="{excelModel>PONumber}" />
                     <Text text="{excelModel>VendorCode}" />
                     <Text text="{excelModel>VendorName}" />
+                    <!-- <Text text="{excelModel>PODate}" /> -->
                     <Text text="{excelModel>PODate}" />
 
                     <Panel
@@ -305,6 +306,7 @@
                                                 <Text
                                                     text="{excelModel>DeliveryDate}"
                                                     tooltip="{excelModel>DeliveryDate}"
+                                                    
                                                     wrapping="true"
                                                 />
                                                 <Panel visible="{excelModel>NextPanelVisible}" width="auto" accessibleRole="Region">
@@ -558,6 +560,18 @@
                                                                             wrapping="true"
                                                                         />
                                                                     </Column>
+                                                                    <Column
+                                                                        minScreenWidth="Tablet"
+                                                                        demandPopin="true"
+                                                                        popinDisplay="Inline"
+                                                                        hAlign="Center"
+                                                                    >
+                                                                        <Text
+                                                                            text="Qlik"
+                                                                            tooltip="Qlik Details"
+                                                                            wrapping="true"
+                                                                        />
+                                                                    </Column>
                                                                 </columns>
                                                                 <items>
                                                                     <ColumnListItem
@@ -640,13 +654,17 @@
                                                                                 value="{excelModel>Quantity}"
                                                                                 editable="{= ${excelModel>ConfirmationCategory} === 'LA' ? false : true }"
                                                                                 tooltip="{excelModel>Quantity}"
+                                                                                liveChange=".onQuantityLiveChange"
                                                                             />
                                                                             <DatePicker
+                                                                                valueState="{excelModel>DateState}"
+                                                                                valueStateText="{excelModel>DateMsg}"
                                                                                 value="{excelModel>CreationDate}"
                                                                                 valueFormat="yyyy-MM-dd"
                                                                                 displayFormat="MM/dd/yyyy"
                                                                                 enabled="{= ${excelModel>ConfirmationCategory} === 'LA' ? false : true }"
                                                                                 tooltip="{excelModel>CreationDate}"
+                                                                                change="onDateLiveChange"
                                                                             />
                                                                             <FlexBox alignContent="Center" alignItems="Center" justifyContent="SpaceAround">
                                                                                 <Button
@@ -676,6 +694,12 @@
                                                                                 tooltip="Comment"
                                                                                 press=".handlePopoverPress"
                                                                                 enabled="{= ${excelModel>RejectFlag} !== 'X' ? false : true }"
+                                                                            />
+                                                                            <Button
+                                                                                icon="sap-icon://detail-view"
+                                                                                type="Emphasized"
+                                                                                tooltip="Qlik Details"
+                                                                                press=".handleQlikPopoverPress"
                                                                             />
                                                                         </cells>
                                                                     </ColumnListItem>
