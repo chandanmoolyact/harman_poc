@@ -5,7 +5,7 @@
         id="myPopover"
         title="Rejection Date: {excelModel>RejectDate}"
         class="sapUiContentPadding"
-        placement="Bottom"
+        placement="Left"
         initialFocus="idClose">
         <footer>
             <OverflowToolbar>

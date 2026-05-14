@@ -576,8 +576,7 @@
                                                                     </Column>
                                                                 </columns>
                                                                 <items>
-                                                                    <ColumnListItem
-                                                                        type="Active" press="onSubShowExpanded"
+                                                                    <ColumnListItem type="Active" press=".onSubSubRowPress"
                                                                     >
                                                                         <cells>
                                                                             <Text
@@ -653,6 +652,7 @@
                                                                                 wrapping="true"
                                                                             />
                                                                             <Input
+                                                                            type="Number"
                                                                                 value="{excelModel>Quantity}"
                                                                                 editable="{= ${excelModel>ConfirmationCategory} === 'LA' ? false : true }"
                                                                                 tooltip="{excelModel>Quantity}"

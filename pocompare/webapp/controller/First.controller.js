@@ -745,34 +745,41 @@ sap.ui.define([
         convertLIFlag: function (bFlag) {
             this.lineItemFlag = bFlag
         },
+        convertSubLIFlag: function (bFlag) {
+            this.sublineItemFlag = bFlag
+        },
         onSubShowExpanded: function (oEvent) {
-            this.convertLIFlag(false)
-            let oSource = oEvent.getSource()
-            let oBindingContext = oSource.getBindingContext("excelModel")
-            let oPath = oBindingContext.getPath()
-            let oPanelVisiblePath = oPath + "/NextPanelVisible"
+            if (this.sublineItemFlag) {
+                this.convertLIFlag(false)
+                let oSource = oEvent.getSource()
+                let oBindingContext = oSource.getBindingContext("excelModel")
+                let oPath = oBindingContext.getPath()
+                let oPanelVisiblePath = oPath + "/NextPanelVisible"
 
-            let bVisiblePath = this.getOwnerComponent().getModel("excelModel").getProperty(oPanelVisiblePath)
-            if (bVisiblePath) {
-                this.getOwnerComponent().getModel("excelModel").setProperty(oPanelVisiblePath, false)
-                // oSource.setIcon("sap-icon://dropdown")
-            } else {
-                this.getOwnerComponent().getModel("excelModel").setProperty(oPanelVisiblePath, true)
-                //  oSource.setIcon("sap-icon://slim-arrow-up")
+                let bVisiblePath = this.getOwnerComponent().getModel("excelModel").getProperty(oPanelVisiblePath)
+                if (bVisiblePath) {
+                    this.getOwnerComponent().getModel("excelModel").setProperty(oPanelVisiblePath, false)
+                    // oSource.setIcon("sap-icon://dropdown")
+                } else {
+                    this.getOwnerComponent().getModel("excelModel").setProperty(oPanelVisiblePath, true)
+                    //  oSource.setIcon("sap-icon://slim-arrow-up")
+                }
+
+
+                var oCurrentItem = oEvent.getSource();
+
+                // 2. Manage the highlight logic
+                if (this.prevRecord) {
+                    this.prevRecord.removeStyleClass("myCustomHighlight");
+                }
+
+                oCurrentItem.addStyleClass("myCustomHighlight");
+
+                // 3. Store this item as the "previous" for the next time a row is pressed
+                this.prevRecord = oCurrentItem;
             }
-
-
-            var oCurrentItem = oEvent.getSource();
-
-            // 2. Manage the highlight logic
-            if (this.prevRecord) {
-                this.prevRecord.removeStyleClass("myCustomHighlight");
-            }
-
-            oCurrentItem.addStyleClass("myCustomHighlight");
-
-            // 3. Store this item as the "previous" for the next time a row is pressed
-            this.prevRecord = oCurrentItem;
+            this.convertSubLIFlag(true)
+            
             // var oItem = oEvent.getSource();
             // var oCtx  = oItem.getBindingContext("excelModel");
             // var oModel = this.getOwnerComponent().getModel("excelModel");
@@ -785,6 +792,7 @@ sap.ui.define([
         },
         onAddVendorRowSP: function (oEvent) {
             this.convertLIFlag(false)
+            this.convertSubLIFlag(false)
             var oButton = oEvent.getSource();
             var oContext = oButton.getBindingContext("excelModel");
             var oModel = this.getOwnerComponent().getModel("excelModel");
@@ -826,6 +834,7 @@ sap.ui.define([
         },
         onDeleteVendorTreeRow: function (oEvent) {
             this.convertLIFlag(false);
+            this.convertSubLIFlag(false)
 
             var oModel = this.getOwnerComponent().getModel("excelModel");
             var oContext = oEvent.getSource().getBindingContext("excelModel");
@@ -846,6 +855,8 @@ sap.ui.define([
             }
         },
         onRejectVendorTreeRow: function (oEvent) {
+            this.convertLIFlag(false);
+            this.convertSubLIFlag(false)
             var oResourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
             var oModel = this.getOwnerComponent().getModel("excelModel");
 
@@ -940,29 +951,9 @@ sap.ui.define([
                 });
             }
         },
-        onConfirmationRowPress: function (oEvent) {
-            this.convertLIFlag(false)
-            var oCurrentItem = oEvent.getSource();
-
-            // 2. Manage the highlight logic
-            if (this.prevRecord) {
-                this.prevRecord.removeStyleClass("myCustomHighlight");
-            }
-
-            oCurrentItem.addStyleClass("myCustomHighlight");
-
-            // 3. Store this item as the "previous" for the next time a row is pressed
-            this.prevRecord = oCurrentItem;
-            var oItem = oEvent.getSource();
-            var oCtx = oItem.getBindingContext("excelModel");
-            var oModel = this.getOwnerComponent().getModel("excelModel");
-            var oCPath = oCtx.getPath() + "/children";
-            this.sCurrentPath = oCPath;
-            var oExcelTabData = oModel.getProperty(oCPath);
-            oExcelTabData.newRecFlag = false;
-            var aCopiedData = JSON.parse(JSON.stringify(oExcelTabData));
-            var oSPJSONModel = new JSONModel(aCopiedData);
-            this.getOwnerComponent().setModel(oSPJSONModel, "alSidePanel");
+        onSubSubRowPress: function (oEvent) {
+            this.convertLIFlag(false);
+            this.convertSubLIFlag(false)
         },
         onCloseDialog: function () {
             if (this._oDialog) {
@@ -1048,6 +1039,8 @@ sap.ui.define([
             return `${msg}, ${details.join(", ")}`;
         },
         handlePopoverPress: function (oEvent) {
+             this.convertLIFlag(false);
+            this.convertSubLIFlag(false)
             var oButton = oEvent.getSource(),
                 oView = this.getView(),
                 // Capture the specific row context from the clicked button
@@ -1072,6 +1065,8 @@ sap.ui.define([
             });
         },
         handleQlikPopoverPress: function (oEvent) {
+             this.convertLIFlag(false);
+            this.convertSubLIFlag(false)
             var oButton = oEvent.getSource(),
                 oView = this.getView(),
                 // Capture the specific row context from the clicked button
@@ -1099,6 +1094,11 @@ sap.ui.define([
         onClosePopover: function () {
             this._pPopover.then(function (oPopover) {
                 oPopover.close();
+            });
+        },
+        onCloseQlikPopover: function () {
+            this._pqPopover.then(function (oPopover) {
+                oPopover.close();   
             });
         },
 

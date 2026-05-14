@@ -5,7 +5,7 @@
         id="myQlikPopover"
         title="Qlik Details"
         class="sapUiContentPadding"
-        placement="Bottom"
+        placement="Left"
         initialFocus="idClose">
         <footer>
             <OverflowToolbar>
@@ -13,7 +13,7 @@
                 <Button
                     id="idQlikClose"
                     text="Close"
-                    press=".onClosePopover" />
+                    press=".onCloseQlikPopover" />
             </OverflowToolbar>
         </footer>
         <VBox>
