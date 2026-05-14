@@ -1,0 +1,128 @@
+/* --- Global Panel Styles --- */
+.customPanelBorder {
+    border: 1px solid #d9d9d9;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* ============================================================
+   BLUE TABLE STYLES (Bottom Table)
+   ============================================================ */
+
+.blueTableHighlight .sapMListTbl {
+    background-color: #e6f7ff !important;
+}
+
+.blueTableHighlight .sapMListTblHeader {
+    background-color: #bae7ff !important;
+}
+
+.customLightBlueTable .sapMListTblRow,
+.customLightBlueTable .sapMListTblCell,
+.customLightBlueTable .sapUiTableTr,
+.customLightBlueTable .sapUiTableTd {
+    background-color: #e3f2fd !important;
+}
+
+.customLightBlueTable .sapMListTblHeaderCell {
+    background: #bbdefb !important;
+    color: #0d47a1 !important; /* Adjusted for better contrast */
+    font-size: 0.70rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.02em !important;
+    padding: 0.3rem 0.4rem !important;
+    white-space: nowrap !important;
+}
+
+.customLightBlueTable .sapUiTableCol {
+    background-color: #bbdefb !important;
+}
+
+.customLightBlueTable .sapMTB {
+    background-color: #bae7ff !important;
+    border-bottom: 1px solid #bae7ff !important;
+}
+
+
+/* ============================================================
+   GREEN TABLE STYLES (Middle Table - FIXED)
+   ============================================================ */
+
+.greenTableHighlight .sapMListTbl {
+    background-color: #f6ffed !important;
+}
+
+.greenTableHighlight .sapMListTblHeader {
+    background-color: #d9f7be !important;
+}
+
+.customLightGreenTable .sapMListTblRow,
+.customLightGreenTable .sapMListTblCell,
+.customLightGreenTable .sapUiTableTr,
+.customLightGreenTable .sapUiTableTd {
+    background-color: #e8f5e9 !important;
+}
+
+.customLightGreenTable .sapMListTblHeaderCell {
+    background: #c8e6c9 !important;
+    color: #2e7d32 !important; 
+    font-size: 0.70rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.02em !important;
+    padding: 0.3rem 0.4rem !important;
+    white-space: nowrap !important;
+}
+
+.customLightGreenTable .sapUiTableCol {
+    background-color: #c8e6c9 !important;
+}
+
+.customLightGreenTable .sapMTB {
+    background-color: #d9f7be !important;
+    border-bottom: 1px solid #d9f7be !important;
+}
+
+/* General Green Highlight */
+.myCustomHighlight {
+    background-color: #f0f9eb !important;
+    border: 2px solid #28a745 !important;
+}
+
+
+/* ============================================================
+   YELLOW TABLE STYLES (Top Table)
+   ============================================================ */
+
+.yellowTableHighlight .sapMListTbl {
+    background-color: #fffbe6 !important;
+}
+
+.yellowTableHighlight .sapMListTblHeader {
+    background-color: #fff1b8 !important;
+}
+
+.customLightYellowTable .sapMListTblRow,
+.customLightYellowTable .sapLightYellowTable .sapMListTblCell,
+.customLightYellowTable .sapUiTableTr,
+.customLightYellowTable .sapUiTableTd {
+    background-color: #fffde7 !important;
+}
+
+.customLightYellowTable .sapMListTblHeaderCell {
+    background: #ffe082 !important;
+    color: #5d4037 !important;
+    font-size: 0.70rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.02em !important;
+    padding: 0.3rem 0.4rem !important;
+    white-space: nowrap !important;
+}
+
+.customLightYellowTable .sapUiTableCol {
+    background-color: #ffe082 !important;
+}
+
+.customLightYellowTable .sapMTB {
+    background-color: #fff1b8 !important;
+    border-bottom: 1px solid #ffe082 !important;
+}

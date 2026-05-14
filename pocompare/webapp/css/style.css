@@ -1,4 +1,4 @@
-/* Enter your custom styles here */
+/* Enter your custom styles here
 
 
 /* Add a border to the Panel */
@@ -19,10 +19,6 @@
 .blueTableHighlight .sapMListTblHeader {
     background-color: #bae7ff !important;
 }
-
-
-
-
 /* Target the rows and cells specifically */
 .customLightBlueTable .sapMListTblRow,
 .customLightBlueTable .sapMListTblCell,
@@ -32,7 +28,16 @@
 }
 
 /* Optional: Adjust the header to match */
-.customLightBlueTable .sapMListTblHeaderCell,
+.customLightBlueTable .sapMListTblHeaderCell{
+    background: #bbdefb !important;
+    color: #bbdefb !important;
+    font-size: 0.70rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.02em !important;
+    padding: 0.3rem 0.4rem !important;
+    white-space: nowrap !important;
+}
+
 .customLightBlueTable .sapUiTableCol {
     background-color: #bbdefb !important;
 }
@@ -42,10 +47,89 @@
     border-bottom: 1px solid  #bae7ff;
 }
 
+/* Green Table Top  */
 
+/* Highlight the Table in Green */
+/* Note: Targeting the internal table element for a clean look */
+.greenTableHighlight .sapMListTbl {
+    background-color: #f6ffed; /* Light green background */
+}
+
+/* Optional: Highlight the header specifically */
+.greenTableHighlight .sapMListTblHeader {
+    background-color: #d9f7be ;
+}
+
+/* Target the rows and cells specifically */
+.customLightGreenTable .sapMListTblRow,
+.customLightGreenTable .sapMListTblCell,
+.customLightGreenTable .sapUiTableTr,
+.customLightGreenTable .sapUiTableTd {
+    background-color: #e8f5e9; /* A soft light green */
+}
+
+/* Optional: Adjust the header to match */
+.customLightGreenTable .sapMListTblHeaderCell {
+    background: #c8e6c9 ;
+    color: #2e7d32 ; /* Darker green text for readability */
+    font-size: 0.70rem ;
+    font-weight: 700 ;
+    letter-spacing: 0.02em ;
+    padding: 0.3rem 0.4rem ;
+    white-space: nowrap ;
+}
+
+.customLightGreenTable .sapUiTableCol {
+    background-color: #c8e6c9 ;
+}
+
+.customLightGreenTable .sapMTB {
+    background-color: #d9f7be ;
+    border-bottom: 1px solid #d9f7be;
+}
 
 /* Table highlight */
 .myCustomHighlight {
-    background-color: #e6f2ff !important; /* Light blue tint */
-    border: 2px solid #0056b3 !important; /* Blue border to show focus */
+    background-color: #f0f9eb ; /* Light green tint */
+    border: 2px solid #28a745 ; /* Green border to show focus */
 }
+
+/* Highlight the Table in Yellow */
+.yellowTableHighlight .sapMListTbl {
+    background-color: #fffbe6 ; /* Very light yellow background */
+}
+
+/* Optional: Highlight the header specifically */
+.yellowTableHighlight .sapMListTblHeader {
+    background-color: #fff1b8 ;
+}
+
+/* Target the rows and cells specifically */
+.customLightYellowTable .sapMListTblRow,
+.customLightYellowTable .sapMListTblCell,
+.customLightYellowTable .sapUiTableTr,
+.customLightYellowTable .sapUiTableTd {
+    background-color: #fffde7 ; /* A soft creamy yellow */
+}
+
+/* Optional: Adjust the header to match */
+.customLightYellowTable .sapMListTblHeaderCell {
+    background: #ffe082 ; /* Deeper gold for better contrast */
+    color: #5d4037 ; /* Dark brown text for readability on yellow */
+    font-size: 0.70rem ;
+    font-weight: 700 ;
+    letter-spacing: 0.02em ;
+    padding: 0.3rem 0.4rem ;
+    white-space: nowrap ;
+}
+
+.customLightYellowTable .sapUiTableCol {
+    background-color: #ffe082 ;
+}
+
+.customLightYellowTable .sapMTB {
+    background-color: #fff1b8 ;
+    border-bottom: 1px solid #ffe082;
+}
+
+/* Table highlight */

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:layout="sap.ui.layout" xmlns:uxap="sap.uxap">
+   <!-- Main PO Table -->
+   <Table 
+      id="idPOTable" 
+      items="{path: 'excelModel>/data'}" 
+      sticky="ColumnHeaders,HeaderToolbar" 
+      alternateRowColors="true" 
+      fixedLayout="false"
+      growing="true"
+      growingThreshold="20">
+      <columns>
+         <Column minScreenWidth="Tablet" demandPopin="true" hAlign="Center">
+            <Text text="PO Number" wrapping="true" />
+         </Column>
+         <Column minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" hAlign="Center">
+            <Text text="Vendor" wrapping="true" />
+         </Column>
+         <Column minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" hAlign="Center">
+            <Text text="Vendor Description" wrapping="true" />
+         </Column>
+         <Column minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" hAlign="Center">
+            <Text text="PO Date" wrapping="true" />
+         </Column>
+         <Column minScreenWidth="XXLarge" demandPopin="true" popinDisplay="WithoutHeader" visible="true">
+            <Text text="Additional Details" />
+         </Column>
+      </columns>
+      <items>
+         <ColumnListItem type="Active" press=".onShowExpanded">
+            <cells>
+               <ObjectIdentifier title="{excelModel>PONumber}" />
+               <Text text="{excelModel>VendorCode}" />
+               <Text text="{excelModel>VendorName}" />
+               <Text text="{excelModel>PODate}" />
+               
+               <!-- First Level Nested Table: Items -->
+               <Panel visible="{excelModel>PanelVisible}" width="auto" accessibleRole="Region" backgroundDesign="Transparent">
+                  <content>
+                     <VBox class="sapUiTinyMarginTop customPanelBorder">
+                        <Table 
+                           id="confirmationsTable" 
+                           showSeparators="All" 
+                           backgroundDesign="Transparent" 
+                           class="sapUiSizeCompact" 
+                           items="{excelModel>children}" 
+                           mode="None"
+                           alternateRowColors="true">
+                           <columns>
+                              <Column minScreenWidth="Tablet" demandPopin="true" hAlign="Center"><Text text="Item No." tooltip="Item No." /></Column>
+                              <Column minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" hAlign="Center"><Text text="Material" tooltip="Material" /></Column>
+                              <Column minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" hAlign="Center"><Text text="Mat Desc" tooltip="Material Description" /></Column>
+                              <Column minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" hAlign="Center"><Text text="PO Qty" tooltip="PO Quantity" /></Column>
+                              <Column minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" hAlign="Center"><Text text="UOM" tooltip="Unit of Measure" /></Column>
+                              <Column minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" hAlign="Center"><Text text="Net Price" tooltip="Net Price" /></Column>
+                              <Column minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" hAlign="Center"><Text text="Curr." tooltip="Currency" /></Column>
+                              <Column minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" hAlign="Center"><Text text="Per" tooltip="Percentage" /></Column>
+                              <Column minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" hAlign="Center"><Text text="Material Group" tooltip="Mat Grp" /></Column>
+                              <Column minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" hAlign="Center"><Text text="Plant" tooltip="Plant" /></Column>
+                              <Column minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" hAlign="Center"><Text text="S Loc" tooltip="Storage Location" /></Column>
+                              <Column minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" hAlign="Center"><Text text="Del. Date" tooltip="Delivery Date" /></Column>
+                              <Column minScreenWidth="XXLarge" demandPopin="true" popinDisplay="WithoutHeader"><Text text="Additional Details" /></Column>
+                           </columns>
+                           <items>
+                              <ColumnListItem press=".onSubShowExpanded" type="Active">
+                                 <cells>
+                                    <Text text="{excelModel>POLineItem}" />
+                                    <Text text="{excelModel>Material}" />
+                                    <Text text="{excelModel>MaterialDesc}" />
+                                    <Text text="{excelModel>POQuantity}" />
+                                    <Text text="{excelModel>UOM}" />
+                                    <Text text="{excelModel>NetPrice}" />
+                                    <Text text="{excelModel>Currency}" />
+                                    <Text text="{excelModel>Per}" />
+                                    <Text text="{excelModel>MaterialGroup}" />
+                                    <Text text="{excelModel>Plant}" />
+                                    <Text text="{excelModel>StorageLocation}" />
+                                    <Text text="{excelModel>DeliveryDate}" />
+
+                                    <!-- Second Level Nested Table: Confirmation Lines -->
+                                    <Panel visible="{excelModel>NextPanelVisible}" width="auto" accessibleRole="Region">
+                                       <content>
+                                          <Table 
+                                             id="idPOItemsDataTable" 
+                                             showSeparators="All" 
+                                             class="sapUiSizeCompact sapUiSmallMarginTop blueTableHighlight customLightBlueTable" 
+                                             items="{excelModel>children}"
+                                             sticky="ColumnHeaders,HeaderToolbar">
+                                             <headerToolbar>
+                                                <OverflowToolbar>
+                                                   <content>
+                                                      <Title text="PO Confirmation Lines" level="H2" />
+                                                      <ToolbarSpacer />
+                                                      <Button text="Add row" icon="sap-icon://add" type="Transparent" press=".onAddVendorRowSP" />
+                                                   </content>
+                                                </OverflowToolbar>
+                                             </headerToolbar>
+                                             <columns>
+                                                <Column hAlign="Center"><Text text="CC" tooltip="Confirmation Category" /></Column>
+                                                <Column hAlign="Center" width="3rem"><Text text="D" tooltip="Delivery Date Category" /></Column>
+                                                <Column hAlign="Center"><Text text="Ref." tooltip="Reference" /></Column>
+                                                <Column hAlign="Center"><Text text="Inb. Del" tooltip="Inbound Delivery" /></Column>
+                                                <Column hAlign="Center"><Text text="Item" tooltip="Item" /></Column>
+                                                <Column hAlign="Center"><Text text="Qty Reduced" /></Column>
+                                                <Column hAlign="Center"><Text text="MRP Rel." /></Column>
+                                                <Column hAlign="Center"><Text text="MRP Mat." /></Column>
+                                                <Column hAlign="Center" width="3rem"><Text text="CI" tooltip="Creation Indicator" /></Column>
+                                                <Column hAlign="Center" width="3rem"><Text text="SN" tooltip="Sequence Number" /></Column>
+                                                <Column hAlign="Center"><Text text="Qty" /></Column>
+                                                <Column hAlign="Center" width="10rem"><Text text="Del. Date" /></Column>
+                                                <Column hAlign="Center" width="7rem"><Text text="Action" /></Column>
+                                                <Column hAlign="Center"><Text text="Status" /></Column>
+                                                <Column hAlign="Center"><Text text="Remarks" /></Column>
+                                                <Column hAlign="Center"><Text text="Qlik" /></Column>
+                                             </columns>
+                                             <items>
+                                                <ColumnListItem type="Active" press="onSubShowExpanded">
+                                                   <cells>
+                                                      <Text text="{excelModel>ConfirmationCategory}" />
+                                                      <Text text="{excelModel>FDDCategory}" />
+                                                      <Input value="{excelModel>Reference}" editable="{excelModel>newRecFlag}" />
+                                                      <Text text="{excelModel>InboundDelivery}" />
+                                                      <Text text="{excelModel>Item}" />
+                                                      <Text text="{excelModel>QtyReduced}" />
+                                                      <Text text="{excelModel>MRPRelevant}" />
+                                                      <Input value="{excelModel>MRPMaterial}" editable="{excelModel>newRecFlag}" />
+                                                      <Text text="{excelModel>CreationIndicator}" />
+                                                      <Text text="{excelModel>SequenceNumber}" />
+                                                      <Input value="{excelModel>Quantity}" 
+                                                             editable="{= ${excelModel>ConfirmationCategory} === 'LA' ? false : true }" 
+                                                             liveChange=".onQuantityLiveChange" />
+                                                      <DatePicker valueState="{excelModel>DateState}" 
+                                                                  valueStateText="{excelModel>DateMsg}" 
+                                                                  value="{excelModel>CreationDate}" 
+                                                                  valueFormat="yyyy-MM-dd" 
+                                                                  displayFormat="MM/dd/yyyy" 
+                                                                  enabled="{= ${excelModel>ConfirmationCategory} === 'LA' ? false : true }" 
+                                                                  change="onDateLiveChange" />
+                                                      <FlexBox alignContent="Center" alignItems="Center" justifyContent="SpaceAround">
+                                                         <Button icon="sap-icon://delete" type="Reject" press=".onDeleteVendorTreeRow" 
+                                                                 enabled="{= ${excelModel>ConfirmationCategory} === 'LA' ? false : true }" />
+                                                         <Button icon="sap-icon://decline" type="Negative" press=".onRejectVendorTreeRow" 
+                                                                 enabled="{= ${excelModel>RejectFlag} === 'X' ? false : true }" />
+                                                      </FlexBox>
+                                                      <ObjectStatus inverted="true" 
+                                                                    text="{= ${excelModel>RejectFlag} === 'X' ? 'Rejected' : 'NA'}" 
+                                                                    state="{= ${excelModel>RejectFlag} === 'X' ? 'Error' : 'Information'}" />
+                                                      <Button icon="sap-icon://comment" type="Emphasized" press=".handlePopoverPress" 
+                                                              enabled="{= ${excelModel>RejectFlag} !== 'X' ? false : true }" />
+                                                      <Button icon="sap-icon://detail-view" type="Emphasized" press=".handleQlikPopoverPress" />
+                                                   </cells>
+                                                </ColumnListItem>
+                                             </items>
+                                          </Table>
+                                       </content>
+                                    </Panel>
+                                 </cells>
+                              </ColumnListItem>
+                           </items>
+                        </Table>
+                     </VBox>
+                  </content>
+               </Panel>
+            </cells>
+         </ColumnListItem>
+      </items>
+   </Table>
+</core:FragmentDefinition>

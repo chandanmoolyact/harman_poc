@@ -6,6 +6,8 @@
 >
     <Table
         id="idPOTable"
+        class="sapUiSizeCompact"
+        alternateRowColors="true"
         items="{
 						path: 'excelModel>/data'
 					}"
@@ -82,12 +84,12 @@
                         accessibleRole="Region"
                     >
                         <content>
-                            <VBox class="sapUiTinyMarginTop customPanelBorder">
+                            <VBox class="sapUiTinyMarginTop customPanelBorder ">
                                 <Table
                                     id="confirmationsTable"
                                     showSeparators="All"
                                     backgroundDesign="Transparent"
-                                    class="sapUiSizeCompact"
+                                    class="sapUiSizeCompact customLightGreenTable greenTableHighlight"
                                     items="{excelModel>children}"
                                     mode="None" 
                                 >

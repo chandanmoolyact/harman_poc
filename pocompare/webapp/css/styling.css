@@ -1,0 +1,104 @@
+/* ==========================================
+   LEVEL 1: YELLOW (Outer Table)
+   ========================================== */
+.poLinesTableYellow {
+    border: 1px solid #ffe082 !important; 
+    border-radius: 4px !important;
+    background: #fffdf2 !important;
+}
+
+/* Target only the direct headers and rows of the Yellow table */
+.poLinesTableYellow > .sapMListInner > thead > tr > .sapMListTblHeaderCell {
+    background: #ffecb3 !important;
+    color: #5d4037 !important;
+    font-size: 0.70rem !important;
+    font-weight: 700 !important;
+    border-right: 1px solid #ffd54f !important;
+    border-bottom: 2px solid #ffca28 !important;
+}
+
+.poLinesTableYellow > .sapMListInner > tbody > .sapMListTblRow {
+    background: #fffef7 !important;
+}
+
+.poLinesTableYellow > .sapMListInner > tbody > .sapMListTblRow:nth-child(even) {
+    background: #fff9e6 !important;
+}
+
+
+/* ==========================================
+   LEVEL 2: GREEN (Middle Table)
+   ========================================== */
+.poLinesTable {
+    border: 1px solid #b2dfdb !important;
+    border-radius: 4px !important;
+    background: #f2faf9 !important;
+}
+
+/* Ensure green styles apply to the specific poLinesTable and its immediate children */
+.poLinesTable > .sapMListInner > thead > tr > .sapMListTblHeaderCell {
+    background: #c8e6e4 !important;
+    color: #004d40 !important;
+    font-size: 0.70rem !important;
+    font-weight: 700 !important;
+    border-right: 1px solid #a5d6d3 !important;
+    border-bottom: 2px solid #80cbc4 !important;
+}
+
+.poLinesTable .sapMListTblRow {
+    background: #f5fcfb !important;
+}
+
+.poLinesTable .sapMListTblRow:nth-child(even) {
+    background: #eaf7f5 !important;
+}
+
+.poLinesTable .sapMLIBHoverable:hover {
+    background: #d4efec !important;
+}
+
+.poLinesTable .sapMListTblCell {
+    color: #004d40 !important;
+    border-right: 1px solid #e0f2f1 !important;
+}
+
+
+/* ==========================================
+   LEVEL 3: BLUE (Innermost Table)
+   ========================================== */
+/* We combine the classes here to ensure maximum specificity */
+.blueTableHighlight.customLightBlueTable {
+    border: 1px solid #90caf9 !important;
+}
+
+.blueTableHighlight.customLightBlueTable .sapMListTblHeaderCell {
+    background: #bbdefb !important;
+    color: #01579b !important; /* Dark blue text */
+    border-right: 1px solid #90caf9 !important;
+    border-bottom: 2px solid #64b5f6 !important;
+}
+
+.blueTableHighlight.customLightBlueTable .sapMListTblRow,
+.blueTableHighlight.customLightBlueTable .sapMListTblCell {
+    background-color: #e3f2fd !important;
+    color: #01579b !important;
+}
+
+.blueTableHighlight.customLightBlueTable .sapMTB {
+    background-color: #bae7ff !important;
+    border-bottom: 1px solid #90caf9;
+}
+
+/* Shared Utilities */
+.customPanelBorder {
+    border: 1px solid #d9d9d9;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.sapMListTblCell {
+    font-size: 0.70rem !important;
+    padding: 0.25rem 0.4rem !important;
+    vertical-align: middle !important;
+    white-space: nowrap !important;
+}

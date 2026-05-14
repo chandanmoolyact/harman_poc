@@ -7,7 +7,7 @@
                 <TreeTable
                     id="TreeTableBasic"
                     rows="{path:'excelModel>/data', parameters: {arrayNames:['children']}}"
-                    selectionMode="MultiToggle"
+                    selectionMode="None"
                     enableSelectAll="false"
                     ariaLabelledBy="title">
                 <extension>
@@ -42,13 +42,13 @@
                     <Column width="13rem">
                         <m:Label text="Document Date"/>
                         <template>
-                            <m:Text text="{excelModel>DocumentDate}" wrapping="false" />
+                            <m:Text text="{excelModel>PODate}" wrapping="false" />
                         </template>
                     </Column>
                     <Column width="9rem">
                         <m:Label text="Item No."/>
                         <template>
-                            <m:Text text="{excelModel>LineItemNumber}" wrapping="false" />
+                            <m:Text text="{excelModel>POLineItem}" wrapping="false" />
                         </template>
                     </Column>
                     <Column width="11rem">
@@ -57,16 +57,58 @@
                             <m:Text text="{excelModel>Material}" wrapping="false" />
                         </template>
                     </Column>
-                    <Column width="13rem">
-                        <m:Label text="Delivery Date"/>
+                    <Column width="11rem">
+                        <m:Label text="Material Description"/>
                         <template>
-                            <m:Text text="{excelModel>DeliveryDate}" wrapping="false" />
+                            <m:Text text="{excelModel>MaterialDesc}" wrapping="false" />
+                        </template>
+                    </Column>
+                    <Column width="11rem">
+                        <m:Label text="PO Quantity"/>
+                        <template>
+                            <m:Text text="{excelModel>POQuantity}" wrapping="false" />
+                        </template>
+                    </Column>
+                    <Column width="11rem">
+                        <m:Label text="UOM"/>
+                        <template>
+                            <m:Text text="{excelModel>UOM}" wrapping="false" />
+                        </template>
+                    </Column>
+                    <Column width="13rem">
+                        <m:Label text="Net Price"/>
+                        <template>
+                            <m:Text text="{excelModel>NetPrice}" wrapping="false" />
                         </template>
                     </Column>
                     <Column width="9rem">
-                        <m:Label text="Quantity"/>
+                        <m:Label text="Currency"/>
                         <template>
-                            <m:Text text="{excelModel>Quantity}" wrapping="false" />
+                            <m:Text text="{excelModel>Currency}" wrapping="false" />
+                        </template>
+                    </Column>
+                    <Column width="9rem">
+                        <m:Label text="Per"/>
+                        <template>
+                            <m:Text text="{excelModel>Per}" wrapping="false" />
+                        </template>
+                    </Column>
+                    <Column width="9rem">
+                        <m:Label text="MaterialGroup"/>
+                        <template>
+                            <m:Text text="{excelModel>MaterialGroup}" wrapping="false" />
+                        </template>
+                    </Column>
+                    <Column width="9rem">
+                        <m:Label text="Plant"/>
+                        <template>
+                            <m:Text text="{excelModel>Plant}" wrapping="false" />
+                        </template>
+                    </Column>
+                    <Column width="9rem">
+                        <m:Label text="StorageLocation"/>
+                        <template>
+                            <m:Text text="{excelModel>StorageLocation}" wrapping="false" />
                         </template>
                     </Column>
                     <Column width="11rem">
@@ -75,12 +117,175 @@
                             <m:Text text="{excelModel>DeliveryDate}" wrapping="false" />
                         </template>
                     </Column>
-                    <Column width="13rem">
-                        <m:Label text="Action"/>
-                        <template>
-                            <m:Button icon="sap-icon://delete" type="Reject" press=".onDeleteVendorRow" />
-                        </template>
-                    </Column>
+                    <Column width="15rem">
+                        <m:Label text="CC" />
+                            <template>
+                                <m:Text text="{excelModel>ConfirmationCategory}" wrapping="false" />
+                            </template>
+                        </Column>
+
+                        <!-- 2. Delivery Date Category -->
+                        <Column width="5rem">
+                            <m:Label text="D" />
+                            <template>
+                                <m:Text text="{excelModel>FDDCategory}" />
+                            </template>
+                        </Column>
+
+                        <!-- 3. Reference -->
+                        <Column width="10rem">
+                            <m:Label text="Ref." />
+                            <template>
+                                <m:Input value="{excelModel>Reference}" editable="{excelModel>newRecFlag}" tooltip="{excelModel>Reference}" />
+                            </template>
+                        </Column>
+
+                        <!-- 4. Inbound Delivery -->
+                        <Column width="10rem">
+                            <m:Label text="Inb. Del" />
+                            <template>
+                                <m:Text text="{excelModel>InboundDelivery}" />
+                            </template>
+                        </Column>
+
+                        <!-- 5. Item -->
+                        <Column width="5rem">
+                            <m:Label text="Item" />
+                            <template>
+                                <m:Text text="{excelModel>Item}" />
+                            </template>
+                        </Column>
+
+                        <!-- 6. Qty Reduced -->
+                        <Column width="8rem">
+                            <m:Label text="Qty Reduced" />
+                            <template>
+                                <m:Text text="{excelModel>QtyReduced}" />
+                            </template>
+                        </Column>
+
+                        <Column width="8rem">
+                            <m:Label text="MRP Rel." />
+                            <template>
+                                <m:Text text="{excelModel>MRPRelevant}" />
+                            </template>
+                        </Column>
+                        <Column width="8rem">
+                            <m:Label text="MRP Mater." />
+                            <template>
+                                <m:Input value="{excelModel>MRPMaterial}" editable="{excelModel>newRecFlag}" tooltip="{excelModel>MRPMaterial}"/>
+                            </template>
+                        </Column>
+                        <Column width="8rem">
+                            <m:Label text="CI." />
+                            <template>
+                                <m:Text
+                                                                                text="{excelModel>CreationIndicator}"
+                                                                                tooltip="{excelModel>CreationIndicator}"
+                                                                                wrapping="true"/>
+                            </template>
+                        </Column>
+                        <Column width="8rem">
+                            <m:Label text="SN" />
+                            <template>
+                                <m:Text
+                                                                                text="{excelModel>SequenceNumber}"
+                                                                                tooltip="{excelModel>SequenceNumber}"
+                                                                                wrapping="true"
+                                                                            />
+                            </template>
+                        </Column>
+
+                        <!-- 7. Quantity -->
+                        <Column width="7rem">
+                            <m:Label text="Qty" />
+                            <template>
+                                <m:Input
+                                                                                value="{excelModel>Quantity}"
+                                                                                editable="{= ${excelModel>ConfirmationCategory} === 'LA' ? false : true }"
+                                                                                tooltip="{excelModel>Quantity}"
+                                                                                liveChange=".onQuantityLiveChange"
+                                                                            />
+                            </template>
+                        </Column>
+
+                        <!-- 8. Delivery Date -->
+                        <Column width="9rem">
+                            <m:Label text="Del. Date" />
+                            <template>
+                                <m:DatePicker
+                                                                                valueState="{excelModel>DateState}"
+                                                                                valueStateText="{excelModel>DateMsg}"
+                                                                                value="{excelModel>CreationDate}"
+                                                                                valueFormat="yyyy-MM-dd"
+                                                                                displayFormat="MM/dd/yyyy"
+                                                                                enabled="{= ${excelModel>ConfirmationCategory} === 'LA' ? false : true }"
+                                                                                tooltip="{excelModel>CreationDate}"
+                                                                                change="onDateLiveChange"
+                                                                            />
+                            </template>
+                        </Column>
+
+                        <!-- 9. Status -->
+                        <Column width="8rem">
+                            <m:Label text="Action" />
+                            <template>
+                                <m:FlexBox alignContent="Center" alignItems="Center" justifyContent="SpaceAround">
+                                                                                <m:Button
+                                                                                    icon="sap-icon://delete"
+                                                                                    type="Reject"
+                                                                                    tooltip="Delete"
+                                                                                    press=".onDeleteVendorTreeRow"
+                                                                                    enabled="{= ${excelModel>ConfirmationCategory} === 'LA' ? false : true }"
+                                                                                />
+                                                                                <m:Button
+                                                                                    icon="sap-icon://decline"
+                                                                                    tooltip="Reject"
+                                                                                    type="Negative"
+                                                                                    press=".onRejectVendorTreeRow"
+                                                                                    enabled="{= ${excelModel>RejectFlag} === 'X' ? false : true }"
+                                                                                />
+                                                                                </m:FlexBox>
+                            </template>
+                        </Column>
+                        <Column width="8rem">
+                            <m:Label text="Status" />
+                            <template>
+                                <m:ObjectStatus
+                                                                                inverted="true"
+                                                                                tooltip="{= ${excelModel>RejectFlag} === 'X' ? 'Rejected' : 'NA'}"
+                                                                                text="{= ${excelModel>RejectFlag} === 'X' ? 'Rejected' : 'NA'}"
+                                                                                state="{= ${excelModel>RejectFlag} === 'X' ? 'Error' : 'Information'}"
+                                                                            />
+                            </template>
+                        </Column>
+
+                        <!-- 10. Remarks -->
+                        <Column width="12rem">
+                            <m:Label text="Remarks" />
+                            <template>
+                                <m:Button
+                                                                                icon="sap-icon://comment"
+                                                                                type="Emphasized"
+                                                                                tooltip="Comment"
+                                                                                press=".handlePopoverPress"
+                                                                                enabled="{= ${excelModel>RejectFlag} !== 'X' ? false : true }"
+                                                                            />
+                            </template>
+                        </Column>
+
+                        <!-- 11. Qlik Details -->
+                        <Column width="6rem">
+                            <m:Label text="Qlik" />
+                            <template>
+                                <m:Button
+                                                                                icon="sap-icon://detail-view"
+                                                                                type="Emphasized"
+                                                                                tooltip="Qlik Details"
+                                                                                press=".handleQlikPopoverPress"
+                                                                            />
+                            </template>
+                        </Column>
                 </columns>
             </TreeTable>
 </core:FragmentDefinition>
