@@ -681,7 +681,7 @@
                                                                                     tooltip="Reject"
                                                                                     type="Negative"
                                                                                     press=".onRejectVendorTreeRow"
-                                                                                    enabled="{= ${excelModel>RejectFlag} === 'X' ? false : true }"
+                                                                                    enabled="{= ${excelModel>ConfirmationCategory} === 'LA' || ${excelModel>RejectFlag} === 'X' ? false : true }"
                                                                                 />
                                                                             </FlexBox>
                                                                             <ObjectStatus
