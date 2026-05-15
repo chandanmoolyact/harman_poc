@@ -519,8 +519,8 @@
                                                                         width="9rem"
                                                                     >
                                                                         <Text
-                                                                            text="Del. Date"
-                                                                            tooltip="Delivery Date"
+                                                                            text="Conf. Date"
+                                                                            tooltip="Confirmation Delivery Date"
                                                                             wrapping="true"
                                                                         />
                                                                     </Column>
@@ -652,8 +652,13 @@
                                                                                 wrapping="true"
                                                                             />
                                                                             <Input
-                                                                            type="Number"
-                                                                                value="{excelModel>Quantity}"
+                                                                                value="{
+                                                                                    path: 'excelModel>Quantity',
+                                                                                    type: 'sap.ui.model.type.String',
+                                                                                    constraints: {
+                                                                                        search: '^[0-9]+$'
+                                                                                    }
+                                                                                }"
                                                                                 editable="{= ${excelModel>ConfirmationCategory} === 'LA' ? false : true }"
                                                                                 tooltip="{excelModel>Quantity}"
                                                                                 liveChange=".onQuantityLiveChange"

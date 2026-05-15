@@ -335,10 +335,10 @@ sap.ui.define([
                                 // 4. Check logic: +- 5 days
                                 if (Math.abs(iDiffInDays) <= 5) {
                                     level3.DateState = "Success"; // Green
-                                    level3.DateMsg = "Within 5-day range";
+                                    level3.DateMsg = "Dates are within the allowed 5-day window";
                                 } else {
                                     level3.DateState = "Error";   // Red
-                                    level3.DateMsg = "Outside 5-day range";
+                                    level3.DateMsg = "Dates fall outside the allowed 5-day window";
                                 }
                             });
                         }
@@ -445,7 +445,7 @@ sap.ui.define([
         onGenSaveMessage: function (sMsg, treeData) {
             var that = this
             MessageBox.success(sMsg, {
-                actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
+                actions: [MessageBox.Action.OK],
                 emphasizedAction: MessageBox.Action.OK,
                 onClose: function (sAction) {
                     MessageToast.show(sMsg);
@@ -472,6 +472,11 @@ sap.ui.define([
         onQuantityLiveChange: function (oEvent) {
             const oInput = oEvent.getSource();
             const sNewValue = oEvent.getParameter("newValue");
+            var sFixedValue = sNewValue.replace(/[^0-9]/g, "");
+            
+            if (sNewValue !== sFixedValue) {
+                oInput.setValue(sFixedValue);
+            }
 
             // 1. Get the Binding Context for the current line (Third Level)
             const oContext = oInput.getBindingContext("excelModel");
@@ -557,7 +562,7 @@ sap.ui.define([
 
             // 3. Determine State
             const sState = (iDiffInDays <= 5) ? "Success" : "Error";
-            const sMsg = (iDiffInDays <= 5) ? "Within ±5 day range" : "Beyond 5 days of PO Delivery Date";
+            const sMsg = (iDiffInDays <= 5) ? "Dates are within the allowed 5-day window" : "Dates fall outside the allowed 5-day window";
 
             // 4. Update the Model
             oModel.setProperty(sPath + "/DateState", sState);
@@ -832,27 +837,65 @@ sap.ui.define([
             });
             oModel.setProperty(this.sCurrentPath, aVendorInputTable);
         },
-        onDeleteVendorTreeRow: function (oEvent) {
-            this.convertLIFlag(false);
-            this.convertSubLIFlag(false)
+        // onDeleteVendorTreeRow: function (oEvent) {
 
+        //     this.convertLIFlag(false);
+        //     this.convertSubLIFlag(false)
+
+        //     var oModel = this.getOwnerComponent().getModel("excelModel");
+        //     var oContext = oEvent.getSource().getBindingContext("excelModel");
+        //     var sPath = oContext.getPath(); // e.g., "/nodes/0/nodes/1/nodes/5"
+
+        //     // 1. Find the last slash to separate the index from the parent path
+        //     var iLastSlashIndex = sPath.lastIndexOf("/");
+        //     var sParentPath = sPath.substring(0, iLastSlashIndex);
+        //     var iIndex = sPath.substring(iLastSlashIndex + 1);
+
+        //     // 2. Get the actual array from the model (the parent collection)
+        //     var aParentCollection = oModel.getProperty(sParentPath);
+
+        //     // 3. Remove the item directly from the model's data
+        //     if (Array.isArray(aParentCollection)) {
+        //         aParentCollection.splice(iIndex, 1);
+        //         oModel.refresh(true);
+        //     }
+        // },
+        // Make sure to add "sap/m/MessageBox" to your define array at the top of the controller
+        onDeleteVendorTreeRow: function (oEvent) {
+            // 1. Store the context and data you need before opening the MessageBox
+            // (In some cases, oEvent.getSource() might be lost if accessed inside the callback)
             var oModel = this.getOwnerComponent().getModel("excelModel");
             var oContext = oEvent.getSource().getBindingContext("excelModel");
-            var sPath = oContext.getPath(); // e.g., "/nodes/0/nodes/1/nodes/5"
+            var sPath = oContext.getPath();
+            
+            // 2. Open the Confirmation Dialog
+            sap.m.MessageBox.confirm("Are you sure you want to delete this item?", {
+                title: "Confirm Deletion",
+                onClose: function (oAction) {
+                    // 3. Only proceed if the user clicked 'OK'
+                    if (oAction === sap.m.MessageBox.Action.OK) {
+                        
+                        this.convertLIFlag(false);
+                        this.convertSubLIFlag(false);
 
-            // 1. Find the last slash to separate the index from the parent path
-            var iLastSlashIndex = sPath.lastIndexOf("/");
-            var sParentPath = sPath.substring(0, iLastSlashIndex);
-            var iIndex = sPath.substring(iLastSlashIndex + 1);
+                        // Find the last slash to separate the index from the parent path
+                        var iLastSlashIndex = sPath.lastIndexOf("/");
+                        var sParentPath = sPath.substring(0, iLastSlashIndex);
+                        var iIndex = sPath.substring(iLastSlashIndex + 1);
 
-            // 2. Get the actual array from the model (the parent collection)
-            var aParentCollection = oModel.getProperty(sParentPath);
+                        // Get the actual array from the model
+                        var aParentCollection = oModel.getProperty(sParentPath);
 
-            // 3. Remove the item directly from the model's data
-            if (Array.isArray(aParentCollection)) {
-                aParentCollection.splice(iIndex, 1);
-                oModel.refresh(true);
-            }
+                        // Remove the item directly from the model's data
+                        if (Array.isArray(aParentCollection)) {
+                            aParentCollection.splice(iIndex, 1);
+                            oModel.refresh(true);
+                            
+                            sap.m.MessageToast.show("Item deleted successfully");
+                        }
+                    }
+                }.bind(this) // Crucial: bind 'this' so you can still access this.convertLIFlag
+            });
         },
         onRejectVendorTreeRow: function (oEvent) {
             this.convertLIFlag(false);
