@@ -1,13 +1,3 @@
-/* Enter your custom styles here
-
-
-/* Add a border to the Panel */
-.customPanelBorder {
-    border: 1px solid #d9d9d9;
-    border-radius: 0.5rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
 /* Highlight the Table in Blue */
 /* Note: Targeting the internal table element for a clean look */
 .blueTableHighlight .sapMListTbl {
@@ -45,6 +35,7 @@
 .customLightBlueTable .sapMTB {
     background-color: #bae7ff !important;
     border-bottom: 1px solid  #bae7ff;
+    border-radius: 0 !important;
 }
 
 /* Green Table Top  */
@@ -89,47 +80,34 @@
 }
 
 /* Table highlight */
-.myCustomHighlight {
-    background-color: #f0f9eb ; /* Light green tint */
-    border: 2px solid #28a745 ; /* Green border to show focus */
+
+/* Panel  */
+/* This targets the panel container and its inner content */
+.bluePanel {
+    background-color: #E5F0FA !important; /* Very light SAP-friendly blue */
+    border: 1px solid #ADD8E6 !important;
+    border-radius: 0 !important; 
 }
 
-/* Highlight the Table in Yellow */
-.yellowTableHighlight .sapMListTbl {
-    background-color: #fffbe6 ; /* Very light yellow background */
+/* This ensures the inner content area also takes the color */
+.bluePanel .sapMPanelContent {
+    background-color: #E5F0FA !important;
+    border-radius: 0 !important;
 }
 
-/* Optional: Highlight the header specifically */
-.yellowTableHighlight .sapMListTblHeader {
-    background-color: #fff1b8 ;
+/* Optional: If you want the header to be blue as well */
+.bluePanel .sapMPanelHdr {
+    background-color: #D0E4F5 !important;
+    border-bottom: 1px solid #ADD8E6 !important;
+    border-radius: 0 !important;
 }
 
-/* Target the rows and cells specifically */
-.customLightYellowTable .sapMListTblRow,
-.customLightYellowTable .sapMListTblCell,
-.customLightYellowTable .sapUiTableTr,
-.customLightYellowTable .sapUiTableTd {
-    background-color: #fffde7 ; /* A soft creamy yellow */
-}
 
-/* Optional: Adjust the header to match */
-.customLightYellowTable .sapMListTblHeaderCell {
-    background: #ffe082 ; /* Deeper gold for better contrast */
-    color: #5d4037 ; /* Dark brown text for readability on yellow */
-    font-size: 0.70rem ;
-    font-weight: 700 ;
-    letter-spacing: 0.02em ;
-    padding: 0.3rem 0.4rem ;
-    white-space: nowrap ;
-}
+/* 
+.smallFontText {
+    font-size: 0.75rem !important; 
+} */
 
-.customLightYellowTable .sapUiTableCol {
-    background-color: #ffe082 ;
+.smallFontText.sapMText {
+    font-size: 12px !important;
 }
-
-.customLightYellowTable .sapMTB {
-    background-color: #fff1b8 ;
-    border-bottom: 1px solid #ffe082;
-}
-
-/* Table highlight */

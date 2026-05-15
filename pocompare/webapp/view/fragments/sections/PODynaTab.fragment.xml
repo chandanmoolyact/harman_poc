@@ -16,33 +16,36 @@
             <Column
                 minScreenWidth="Tablet"
                 demandPopin="true"
-                hAlign="Center"
+                hAlign="End"
             >
                 <Text
                     text="PO Number"
                     wrapping="true"
+                    textAlign="End"
                 />
             </Column>
             <Column
                 minScreenWidth="Tablet"
                 demandPopin="true"
                 popinDisplay="Inline"
-                hAlign="Center"
+                hAlign="Begin"
             >
                 <Text
                     text="Vendor"
                     wrapping="true"
+                    textAlign="Begin"
                 />
             </Column>
             <Column
                 minScreenWidth="Tablet"
                 demandPopin="true"
                 popinDisplay="Inline"
-                hAlign="Center"
+                hAlign="Begin"
             >
                 <Text
                     text="Vendor Description"
                     wrapping="true"
+                    textAlign="Begin"
                 />
             </Column>
             <Column
@@ -77,15 +80,16 @@
                     <!-- <Text text="{excelModel>PODate}" /> -->
                     <Text text="{excelModel>PODate}" />
 
-                    <Panel
+                    <!-- <Panel
                     
                         visible="{excelModel>PanelVisible}"
                         width="auto"
                         accessibleRole="Region"
                     >
                         <content>
-                            <VBox class="sapUiTinyMarginTop customPanelBorder ">
+                            <VBox class="sapUiTinyMarginTop customPanelBorder "> -->
                                 <Table
+                                visible="{excelModel>PanelVisible}"
                                     id="confirmationsTable"
                                     showSeparators="All"
                                     backgroundDesign="Transparent"
@@ -97,132 +101,143 @@
                                         <Column
                                             minScreenWidth="Tablet"
                                             demandPopin="true"
-                                            hAlign="Center"
+                                            hAlign="End"
                                         >
                                             <Text
                                                 text="Item No."
                                                 tooltip="Item No."
                                                 wrapping="true"
+                                                textAlign="End"
                                             />
                                         </Column>
                                         <Column
                                             minScreenWidth="Tablet"
                                             demandPopin="true"
                                             popinDisplay="Inline"
-                                            hAlign="Center"
+                                            hAlign="Begin"
                                         >
                                             <Text
                                                 text="Material"
                                                 tooltip="Material"
                                                 wrapping="true"
+                                                textAlign="Begin"
                                             />
                                         </Column>
                                         <Column
                                             minScreenWidth="Tablet"
                                             demandPopin="true"
                                             popinDisplay="Inline"
-                                            hAlign="Center"
+                                            hAlign="Begin"
                                         >
                                             <Text
                                                 text="Mat Desc"
                                                 tooltip="Material Description"
                                                 wrapping="true"
+                                                textAlign="Begin"
                                             />
                                         </Column>
                                         <Column
                                             minScreenWidth="Tablet"
                                             demandPopin="true"
                                             popinDisplay="Inline"
-                                            hAlign="Center"
+                                            hAlign="End"
                                         >
                                             <Text
                                                 text="PO Oty"
                                                 tooltip="PO Quantity"
                                                 wrapping="true"
+                                                textAlign="End"
                                             />
                                         </Column>
                                         <Column
                                             minScreenWidth="Tablet"
                                             demandPopin="true"
                                             popinDisplay="Inline"
-                                            hAlign="Center"
+                                            hAlign="Begin"
                                         >
                                             <Text
                                                 text="UOM"
                                                 tooltip="Unit of Measure"
                                                 wrapping="true"
+                                                textAlign="Begin"
                                             />
                                         </Column>
                                         <Column
                                             minScreenWidth="Tablet"
                                             demandPopin="true"
                                             popinDisplay="Inline"
-                                            hAlign="Center"
+                                            hAlign="End"
                                         >
                                             <Text
                                                 text="Net Price"
                                                 tooltip="Net Price"
                                                 wrapping="true"
+                                                textAlign="End"
                                             />
                                         </Column>
                                         <Column
                                             minScreenWidth="Tablet"
                                             demandPopin="true"
                                             popinDisplay="Inline"
-                                            hAlign="Center"
+                                            hAlign="End"
                                         >
                                             <Text
                                                 text="Curr."
                                                 tooltip="Currency"
                                                 wrapping="true"
+                                                textAlign="End"
                                             />
                                         </Column>
                                         <Column
                                             minScreenWidth="Tablet"
                                             demandPopin="true"
                                             popinDisplay="Inline"
-                                            hAlign="Center"
+                                            hAlign="End"
                                         >
                                             <Text
                                                 text="Per"
                                                 tooltip="Percentage"
                                                 wrapping="true"
+                                                textAlign="End"
                                             />
                                         </Column>
                                         <Column
                                             minScreenWidth="Tablet"
                                             demandPopin="true"
                                             popinDisplay="Inline"
-                                            hAlign="Center"
+                                            hAlign="Begin"
                                         >
                                             <Text
                                                 text="Material Group"
                                                 tooltip="Mat Grp"
                                                 wrapping="true"
+                                                textAlign="Begin"
                                             />
                                         </Column>
                                         <Column
                                             minScreenWidth="Tablet"
                                             demandPopin="true"
                                             popinDisplay="Inline"
-                                            hAlign="Center"
+                                            hAlign="End"
                                         >
                                             <Text
                                                 text="Plant"
                                                 tooltip="Plant"
                                                 wrapping="true"
+                                                textAlign="End"
                                             />
                                         </Column>
                                         <Column
                                             minScreenWidth="Tablet"
                                             demandPopin="true"
                                             popinDisplay="Inline"
-                                            hAlign="Center"
+                                            hAlign="End"
                                         >
                                             <Text
                                                 text="S Loc"
                                                 tooltip="Storage Location"
                                                 wrapping="true"
+                                                textAlign="End"
                                             />
                                         </Column>
 
@@ -236,6 +251,7 @@
                                                 text="Del. Date"
                                                 tooltip="Delivery Date"
                                                 wrapping="true"
+                                                textAlign="Center"
                                             />
                                         </Column>
                                         <Column minScreenWidth="10000px" demandPopin="true" popinDisplay="WithoutHeader">
@@ -254,64 +270,75 @@
                                                     text="{excelModel>POLineItem}"
                                                     tooltip="{excelModel>POLineItem}"
                                                     wrapping="true"
+                                                    textAlign="End"
                                                 />
                                                 <Text
                                                     text="{excelModel>Material}"
                                                     tooltip="{excelModel>Material}"
                                                     wrapping="true"
+                                                    textAlign="Begin"
                                                 />
                                                 <Text
                                                     text="{excelModel>MaterialDesc}"
                                                     tooltip="{excelModel>MaterialDesc}"
                                                     wrapping="true"
+                                                    textAlign="Begin"
                                                 />
                                                 <Text
                                                     text="{excelModel>POQuantity}"
                                                     tooltip="{excelModel>POQuantity}"
                                                     wrapping="true"
+                                                    textAlign="End"
                                                 />
                                                 <Text
                                                     text="{excelModel>UOM}"
                                                     tooltip="{excelModel>UOM}"
                                                     wrapping="true"
+                                                    textAlign="Begin"
                                                 />
                                                 <Text
                                                     text="{excelModel>NetPrice}"
                                                     tooltip="{excelModel>NetPrice}"
                                                     wrapping="true"
+                                                    textAlign="End"
                                                 />
                                                 <Text
                                                     text="{excelModel>Currency}"
                                                     tooltip="{excelModel>Currency}"
                                                     wrapping="true"
+                                                    textAlign="End"
                                                 />
                                                 <Text
                                                     text="{excelModel>Per}"
                                                     tooltip="{excelModel>Per}"
                                                     wrapping="true"
+                                                    textAlign="End"
                                                 />
                                                 <Text
                                                     text="{excelModel>MaterialGroup}"
                                                     tooltip="{excelModel>MaterialGroup}"
                                                     wrapping="true"
+                                                    textAlign="Begin"
                                                 />
                                                 <Text
                                                     text="{excelModel>Plant}"
                                                     tooltip="{excelModel>Plant}"
                                                     wrapping="true"
+                                                    textAlign="End"
                                                 />
                                                 <Text
                                                     text="{excelModel>StorageLocation}"
                                                     tooltip="{excelModel>StorageLocation}"
                                                     wrapping="true"
+                                                    textAlign="End"
                                                 />
                                                 <Text
                                                     text="{excelModel>DeliveryDate}"
                                                     tooltip="{excelModel>DeliveryDate}"
-                                                    
+                                                    textAlign="Center"  
                                                     wrapping="true"
                                                 />
-                                                <Panel visible="{excelModel>NextPanelVisible}" width="auto" accessibleRole="Region">
+                                                <Panel class="bluePanel" visible="{excelModel>NextPanelVisible}" width="auto" accessibleRole="Region">
 															<content>
 															<Table
                                                                 id="idPOItemsDataTable"
@@ -340,12 +367,13 @@
                                                                         minScreenWidth="Tablet"
                                                                         demandPopin="true"
                                                                         popinDisplay="Inline"
-                                                                        hAlign="Center"
+                                                                        hAlign="Begin"
                                                                     >
-                                                                        <Text
+                                                                        <Text class="smallFontText" 
                                                                             text="CC"
                                                                             tooltip="Confirmation Category"
                                                                             wrapping="true"
+                                                                            textAlign="Begin"
                                                                         />
                                                                     </Column>
 
@@ -353,13 +381,14 @@
                                                                         minScreenWidth="Tablet"
                                                                         demandPopin="true"
                                                                         popinDisplay="Inline"
-                                                                        hAlign="Center"
+                                                                        hAlign="Begin"
                                                                         width="2rem"
                                                                     >
-                                                                        <Text
+                                                                        <Text class="smallFontText"
                                                                             text="D"
                                                                             tooltip="Delivery Date Category"
                                                                             wrapping="true"
+                                                                            textAlign="Begin"
                                                                         />
                                                                     </Column>
 
@@ -367,12 +396,13 @@
                                                                         minScreenWidth="Tablet"
                                                                         demandPopin="true"
                                                                         popinDisplay="Inline"
-                                                                        hAlign="Center"
+                                                                        hAlign="Begin"
                                                                     >
-                                                                        <Text
+                                                                        <Text class="smallFontText"
                                                                             text="Ref."
                                                                             tooltip="Reference"
                                                                             wrapping="true"
+                                                                            textAlign="Begin"
                                                                         />
                                                                     </Column>
 
@@ -382,12 +412,13 @@
                                                                         minScreenWidth="Tablet"
                                                                         demandPopin="true"
                                                                         popinDisplay="Inline"
-                                                                        hAlign="Center"
+                                                                        hAlign="End"
                                                                     >
-                                                                        <Text
+                                                                        <Text class="smallFontText"
                                                                             text="Inb. Del"
                                                                             tooltip="Inbound Delivery"
                                                                             wrapping="true"
+                                                                            textAlign="End"
                                                                         />
                                                                     </Column>
 
@@ -395,12 +426,13 @@
                                                                         minScreenWidth="Tablet"
                                                                         demandPopin="true"
                                                                         popinDisplay="Inline"
-                                                                        hAlign="Center"
+                                                                        hAlign="End"
                                                                     >
-                                                                        <Text
+                                                                        <Text class="smallFontText"
                                                                             text="Item"
                                                                             tooltip="Item"
                                                                             wrapping="true"
+                                                                            textAlign="End"
                                                                         />
                                                                     </Column>
 
@@ -432,12 +464,13 @@
                                                                         minScreenWidth="Desktop"
                                                                         demandPopin="true"
                                                                         popinDisplay="Inline"
-                                                                        hAlign="Center"
+                                                                        hAlign="End"
                                                                     >
-                                                                        <Text
-                                                                            text="Qty Reduced"
+                                                                        <Text class="smallFontText"
+                                                                            text="Qty Rd."
                                                                             tooltip="Qty Reduced"
                                                                             wrapping="true"
+                                                                            textAlign="End"
                                                                         />
                                                                     </Column>
 
@@ -445,12 +478,13 @@
                                                                         minScreenWidth="Desktop"
                                                                         demandPopin="true"
                                                                         popinDisplay="Inline"
-                                                                        hAlign="Center"
+                                                                        hAlign="Begin"
                                                                     >
-                                                                        <Text
+                                                                        <Text class="smallFontText"
                                                                             text="MRP Rel."
                                                                             tooltip="MRP Relevant"
                                                                             wrapping="true"
+                                                                            textAlign="Begin"
                                                                         />
                                                                     </Column>
 
@@ -458,12 +492,13 @@
                                                                         minScreenWidth="Tablet"
                                                                         demandPopin="true"
                                                                         popinDisplay="Inline"
-                                                                        hAlign="Center"
+                                                                        hAlign="Begin"
                                                                     >
-                                                                        <Text
+                                                                        <Text class="smallFontText"
                                                                             text="MRP Mat."
                                                                             tooltip="MRP Material"
                                                                             wrapping="true"
+                                                                            textAlign="Begin"
                                                                         />
                                                                     </Column>
 
@@ -471,14 +506,15 @@
                                                                         minScreenWidth="Desktop"
                                                                         demandPopin="true"
                                                                         popinDisplay="Inline"
-                                                                        hAlign="Center"
+                                                                        hAlign="Begin"
                                                                         tooltip="Creation Indicator"
                                                                         width="2rem"
                                                                     >
-                                                                        <Text
+                                                                        <Text class="smallFontText"
                                                                             text="CI"
                                                                             tooltip="Creation Indicator"
                                                                             wrapping="true"
+                                                                            textAlign="Begin"
                                                                             
                                                                         />
                                                                     </Column>
@@ -487,14 +523,15 @@
                                                                         minScreenWidth="Desktop"
                                                                         demandPopin="true"
                                                                         popinDisplay="Inline"
-                                                                        hAlign="Center"
+                                                                        hAlign="End"
                                                                         tooltip="Sequence Number"
-                                                                        width="2rem"
+                                                                        width="2.5rem"
                                                                     >
-                                                                        <Text
+                                                                        <Text class="smallFontText"
                                                                             text="SN"
                                                                             tooltip="Sequence Number"
                                                                             wrapping="true"
+                                                                            textAlign="End"
                                                                         />
                                                                     </Column>
 
@@ -502,12 +539,13 @@
                                                                         minScreenWidth="Tablet"
                                                                         demandPopin="true"
                                                                         popinDisplay="Inline"
-                                                                        hAlign="Center"
+                                                                        hAlign="End"
                                                                     >
-                                                                        <Text
+                                                                        <Text class="smallFontText"
                                                                             text="Qty"
                                                                             tooltip="Quantity"
                                                                             wrapping="true"
+                                                                            textAlign="End"
                                                                         />
                                                                     </Column>
 
@@ -516,12 +554,13 @@
                                                                         demandPopin="true"
                                                                         popinDisplay="Inline"
                                                                         hAlign="Center"
-                                                                        width="9rem"
+                                                                        width="8rem"
                                                                     >
-                                                                        <Text
+                                                                        <Text class="smallFontText"
                                                                             text="Conf. Date"
                                                                             tooltip="Confirmation Delivery Date"
                                                                             wrapping="true"
+                                                                            textAlign="Center"
                                                                         />
                                                                     </Column>
 
@@ -530,12 +569,13 @@
                                                                         demandPopin="true"
                                                                         popinDisplay="Inline"
                                                                         hAlign="Center"
-                                                                         width="6rem"
+                                                                         width="5rem"
                                                                     >
-                                                                        <Text
+                                                                        <Text class="smallFontText"
                                                                             text="Action"
                                                                             tooltip="Action"
                                                                             wrapping="true"
+                                                                            textAlign="Center"
                                                                         />
                                                                     </Column>
                                                                     <Column
@@ -543,11 +583,13 @@
                                                                         demandPopin="true"
                                                                         popinDisplay="Inline"
                                                                         hAlign="Center"
+                                                                        width="4rem"
                                                                     >
-                                                                        <Text
-                                                                            text="Status"
+                                                                        <Text class="smallFontText"
+                                                                            text="Stat"
                                                                             tooltip="Status"
                                                                             wrapping="true"
+                                                                            textAlign="Center"
                                                                         />
                                                                     </Column>
                                                                     <Column
@@ -556,10 +598,11 @@
                                                                         popinDisplay="Inline"
                                                                         hAlign="Center"
                                                                     >
-                                                                        <Text
-                                                                            text="Remarks"
+                                                                        <Text class="smallFontText"
+                                                                            text="Msg"
                                                                             tooltip="Remarks"
                                                                             wrapping="true"
+                                                                            textAlign="Center"
                                                                         />
                                                                     </Column>
                                                                     <Column
@@ -568,10 +611,11 @@
                                                                         popinDisplay="Inline"
                                                                         hAlign="Center"
                                                                     >
-                                                                        <Text
+                                                                        <Text class="smallFontText"
                                                                             text="Qlik"
                                                                             tooltip="Qlik Details"
                                                                             wrapping="true"
+                                                                            textAlign="Center"
                                                                         />
                                                                     </Column>
                                                                 </columns>
@@ -583,18 +627,21 @@
                                                                                 text="{excelModel>ConfirmationCategory}"
                                                                                 tooltip="{excelModel>ConfirmationCategory}"
                                                                                 wrapping="true"
+                                                                                textAlign="Begin"
                                                                             />
 
                                                                             <Text
                                                                                 text="{excelModel>FDDCategory}"
                                                                                 tooltip="{excelModel>FDDCategory}"
                                                                                 wrapping="true"
+                                                                                textAlign="Begin"
                                                                             />
 
                                                                             <Input
                                                                                 value="{excelModel>Reference}"
-                                                                                editable="{excelModel>newRecFlag}"
+                                                                                editable="{= ${excelModel>newRecFlag} === false || ${excelModel>RejectFlag} === 'X' ? false : true }"
                                                                                 tooltip="{excelModel>Reference}"
+                                                                                textAlign="Begin"
                                                                             />
                                                                             
 
@@ -602,12 +649,14 @@
                                                                                 text="{excelModel>InboundDelivery}"
                                                                                 tooltip="{excelModel>InboundDelivery}"
                                                                                 wrapping="true"
+                                                                                textAlign="End"
                                                                             />
 
                                                                             <Text
                                                                                 text="{excelModel>Item}"
                                                                                 tooltip="{excelModel>Item}"
                                                                                 wrapping="true"
+                                                                                textAlign="End"
                                                                             />
 
                                                                             <!-- <Text
@@ -626,30 +675,35 @@
                                                                                 text="{excelModel>QtyReduced}"
                                                                                 tooltip="{excelModel>QtyReduced}"
                                                                                 wrapping="true"
+                                                                                textAlign="End"
                                                                             />
 
                                                                             <Text
                                                                                 text="{excelModel>MRPRelevant}"
                                                                                 tooltip="{excelModel>MRPRelevant}"
                                                                                 wrapping="true"
+                                                                                textAlign="Begin"
                                                                             />
 
                                                                             <Input
                                                                                 value="{excelModel>MRPMaterial}"
-                                                                                editable="{excelModel>newRecFlag}"
                                                                                 tooltip="{excelModel>MRPMaterial}"
+                                                                                editable="{= ${excelModel>newRecFlag} === false || ${excelModel>RejectFlag} === 'X' ? false : true }"
+                                                                                textAlign="Begin"
                                                                             />
 
                                                                             <Text
                                                                                 text="{excelModel>CreationIndicator}"
                                                                                 tooltip="{excelModel>CreationIndicator}"
                                                                                 wrapping="true"
+                                                                                textAlign="Begin"
                                                                             />
 
                                                                             <Text
                                                                                 text="{excelModel>SequenceNumber}"
                                                                                 tooltip="{excelModel>SequenceNumber}"
                                                                                 wrapping="true"
+                                                                                textAlign="End"
                                                                             />
                                                                             <Input
                                                                                 value="{
@@ -659,19 +713,21 @@
                                                                                         search: '^[0-9]+$'
                                                                                     }
                                                                                 }"
-                                                                                editable="{= ${excelModel>ConfirmationCategory} === 'LA' ? false : true }"
+                                                                                editable="{= ${excelModel>ConfirmationCategory} === 'LA' || ${excelModel>RejectFlag} === 'X' ? false : true }"
                                                                                 tooltip="{excelModel>Quantity}"
                                                                                 liveChange=".onQuantityLiveChange"
+                                                                                textAlign="End"
                                                                             />
                                                                             <DatePicker
                                                                                 valueState="{excelModel>DateState}"
                                                                                 valueStateText="{excelModel>DateMsg}"
                                                                                 value="{excelModel>CreationDate}"
-                                                                                valueFormat="yyyy-MM-dd"
+                                                                                valueFormat="MM/dd/yyyy"  
                                                                                 displayFormat="MM/dd/yyyy"
-                                                                                enabled="{= ${excelModel>ConfirmationCategory} === 'LA' ? false : true }"
+                                                                                enabled="{= ${excelModel>ConfirmationCategory} === 'LA' || ${excelModel>RejectFlag} === 'X' ? false : true }"
                                                                                 tooltip="{excelModel>CreationDate}"
                                                                                 change="onDateLiveChange"
+                                                                                textAlign="Center"
                                                                             />
                                                                             <FlexBox alignContent="Center" alignItems="Center" justifyContent="SpaceAround">
                                                                                 <Button
@@ -679,7 +735,7 @@
                                                                                     type="Reject"
                                                                                     tooltip="Delete"
                                                                                     press=".onDeleteVendorTreeRow"
-                                                                                    enabled="{= ${excelModel>ConfirmationCategory} === 'LA' ? false : true }"
+                                                                                    enabled="{= ${excelModel>ConfirmationCategory} === 'LA' || ${excelModel>RejectFlag} === 'X' ? false : true }"
                                                                                 />
                                                                                 <Button
                                                                                     icon="sap-icon://decline"
@@ -690,12 +746,14 @@
                                                                                 />
                                                                             </FlexBox>
                                                                             <ObjectStatus
+
                                                                                 inverted="true"
                                                                                 tooltip="{= ${excelModel>RejectFlag} === 'X' ? 'Rejected' : 'NA'}"
                                                                                 text="{= ${excelModel>RejectFlag} === 'X' ? 'Rejected' : 'NA'}"
                                                                                 state="{= ${excelModel>RejectFlag} === 'X' ? 'Error' : 'Information'}"
                                                                             />
                                                                             <Button
+
                                                                                 icon="sap-icon://comment"
                                                                                 type="Emphasized"
                                                                                 tooltip="Comment"
@@ -720,9 +778,9 @@
                                 </Table>
 
                                 
-                            </VBox>
+                            <!-- </VBox>
                         </content>
-                    </Panel>
+                    </Panel> -->
                 </cells>
             </ColumnListItem>
         </items>

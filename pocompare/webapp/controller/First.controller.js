@@ -428,16 +428,25 @@ sap.ui.define([
                 { label: 'StatusMsg', property: 'StatusMsg', type: 'string' },
             ];
             // 3. Configure and start the export
+
+            var dNewDate=new Date().toLocaleString()
+            var sFileName=`BTP_Harman_POC_Template_${dNewDate}.xlsx`
             var oSettings = {
                 workbook: { columns: aCols },
                 dataSource: flatExcelData,
-                fileName: 'BTP_Harman_POC_Template.xlsx'
+                fileName: sFileName
             };
 
-            var oSheet = new Spreadsheet(oSettings);
-            oSheet.build().finally(function () {
-                oSheet.destroy();
-            });
+            if(sGeneratedMsg.includes("No changes to save")){
+                
+            }else{
+                var oSheet = new Spreadsheet(oSettings);
+                oSheet.build().finally(function () {
+                    oSheet.destroy();
+                });
+            }
+
+           
 
             // this.aOldData=JSON.parse(JSON.stringify(treeData));
             this.onGenSaveMessage(sGeneratedMsg, treeData)
